@@ -1,5 +1,7 @@
 require 'nokogiri'
 
+HC_BASE_URL = "http://ex.shemalejapanhardcore.com"
+
 class Shja::Parser::HcActorPage
 
   def parse(html)
@@ -33,10 +35,20 @@ class Shja::Parser::HcActorPage
       rtn['url'] = set.at_css('.videohere a.update_title')['href']
       # puts "\"#{set.at_css('.videohere a.update_title')['href']}\","
       rtn['thumbnail'] = set.at_css('.videohere img.thumbs')['src']
-      rtn['thumbnail'] = "http://ex.shemalejapanhardcore.com" + rtn['thumbnail']
+      rtn['thumbnail'] = HC_BASE_URL + rtn['thumbnail']
       rtn['date'] = Date.parse(set.at_css('p.dateadded').content.strip)
       # puts "\"#{Date.parse(set.at_css('p.dateadded').content.strip)}\","
       rtn
     end
   end
+end
+
+class Shja::Parser::HcZipPage
+
+  def parse(html)
+    page = Nokogiri::HTML.parse(html)
+    url = page.at_css('div.video_photos_zips a.memberdownload')['href']
+    "#{HC_BASE_URL}#{url}"
+  end
+
 end

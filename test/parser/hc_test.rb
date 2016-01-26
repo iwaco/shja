@@ -1,8 +1,9 @@
 require 'test_helper'
 
-class ShjaParserHcActorPageTest < Minitest::Test
 
-  HC_FIXTURES_ROOT = File.join(FIXTURES_ROOT, 'hc')
+HC_FIXTURES_ROOT = File.join(FIXTURES_ROOT, 'hc')
+
+class ShjaParserHcActorPageTest < Minitest::Test
 
   def setup
     @parser = Shja::Parser::HcActorPage.new
@@ -10,7 +11,7 @@ class ShjaParserHcActorPageTest < Minitest::Test
     @page = Nokogiri::HTML.parse(@lisa_html)
   end
 
-  def test_parse_actor_page
+  def test_parse
     movies = @parser.parse(@lisa_html)
     assert_kind_of(Array, movies)
     assert_equal(5, movies.size)
@@ -89,6 +90,20 @@ class ShjaParserHcActorPageTest < Minitest::Test
       assert_equal(MOVIE_URLS[i], set['url'])
       assert_equal(DATES[i], set['date'].to_s)
     end
+  end
+
+end
+
+class ShjaParserHcZipPageTest < Minitest::Test
+
+  def setup
+    @parser = Shja::Parser::HcZipPage.new
+    @zip_html = open(File.join(HC_FIXTURES_ROOT, 'uta.zip.html')).read
+  end
+
+  def test_parse
+    zip_url = @parser.parse(@zip_html)
+    assert_equal('http://ex.shemalejapanhardcore.com/members/content/upload/uta/151224/151224_1440highres.zip', zip_url)
   end
 
 end
