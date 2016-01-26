@@ -107,3 +107,23 @@ class ShjaParserHcZipPageTest < Minitest::Test
   end
 
 end
+
+class ShjaParserHcMoviePageTest < Minitest::Test
+
+  FORMATS = {
+    "360p" => "http://ex.shemalejapanhardcore.com/members/content/upload/uta/151224//360p/utatbhc1_1_hdmp4.mp4",
+    "480p" => "http://ex.shemalejapanhardcore.com/members/content/upload/uta/151224//480p/utatbhc1_1_hdmp4.mp4",
+    "720P" => "http://ex.shemalejapanhardcore.com/members/content/upload/uta/151224//720p/utaTBHC1_1_hdmp4.mp4",
+  }
+
+  def setup
+    @parser = Shja::Parser::HcMoviePage.new
+    @video_html = open(File.join(HC_FIXTURES_ROOT, 'uta.video.html')).read
+  end
+
+  def test_parse
+    formats = @parser.parse(@video_html)
+    assert_equal(FORMATS, formats)
+  end
+
+end

@@ -52,3 +52,18 @@ class Shja::Parser::HcZipPage
   end
 
 end
+
+class Shja::Parser::HcMoviePage
+
+  def parse(html)
+    {}.tap do |formats|
+      page = Nokogiri::HTML.parse(html)
+      div = page.at_css('div.video_size_outer div.movie_sizes')
+      div.css('a.full_download_link').each do |f|
+        format = f.content.split()[0].strip
+        formats[format] = "#{HC_BASE_URL}#{f['href']}"
+      end
+    end
+  end
+
+end
