@@ -1,6 +1,6 @@
 require 'memoist'
 
-class Shja::Client::Hc
+class Shja::Agent::Hc
   extend Memoist
 
   LOGIN_URL = "http://ex.shemalejapanhardcore.com/members/"

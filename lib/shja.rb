@@ -6,4 +6,4 @@ end
 
 require 'shja/db'
 require 'shja/parser'
-require 'shja/client'
+require 'shja/agent'
