@@ -22,6 +22,7 @@ class Shja::Parser::HcIndexPage < Shja::Parser
     page = @page
     return [].tap do |pages|
       page.css('div.pagination li a').each do |data|
+        Shja.log.debug(data['href'].strip)
         pages << data['href'].strip
       end
     end

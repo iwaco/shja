@@ -1,6 +1,9 @@
 #!/usr/bin/env ruby
+$:.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 
+require 'shja'
 require 'optparse'
+require 'logger'
 
 config = {}
 config[:username]    = ENV['SHJA_USERNAME']
@@ -24,5 +27,7 @@ unless config[:username] && config[:password] && config[:target_dir]
 end
 
 if subcommand == 'list'
-  puts 'list'
+  Shja.log.level = Logger::DEBUG
+  client = Shja::Client::Hc.new(**config)
+  client.refresh_actors(first_letter: 'S', last_letter: 'S')
 end

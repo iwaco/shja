@@ -3,7 +3,7 @@ require 'yaml'
 
 class Shja::Db
   attr_reader :db_path
-  attr_reader :actors
+  attr_reader :data
 
   def initialize(target_dir)
     unless File.directory?(target_dir)
@@ -15,17 +15,24 @@ class Shja::Db
   end
 
   def load
-    @actors = []
+    @data = {
+      'actors' => []
+    }
     if File.file?(self.db_path)
       open(self.db_path) do |io|
-        @actors = YAML.load(io.read)
+        @data = YAML.load(io.read)
       end
     end
   end
 
-  def save
+  def save(actors)
+    self.data['actors'] = actors
+    _save
+  end
+
+  def _save
     open(self.db_path, 'w') do |io|
-      io.write(self.actors.to_yaml)
+      io.write(self.data.to_yaml)
     end
   end
 

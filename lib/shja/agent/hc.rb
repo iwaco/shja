@@ -10,8 +10,8 @@ class Shja::Agent::Hc
   attr_accessor :is_login
 
   def initialize(username: username, password: password)
-    @username = username || ENV['SHJA_HC_USERNAME']
-    @password = password || ENV['SHJA_HC_PASSWORD']
+    @username = username
+    @password = password
 
     @agent = Mechanize.new
     @agent.user_agent = 'Mac Safari'
@@ -23,7 +23,9 @@ class Shja::Agent::Hc
     return if self.is_login
     page = agent.get(LOGIN_URL)
 
-    page.form_with(action: '/auth.form') do |form|
+
+    Shja::log.debug("login with, username: #{username}, password: #{password}")
+    page = page.form_with(action: '/auth.form') do |form|
       form.field_with(name: 'uid').value = self.username
       form.field_with(name: 'pwd').value = self.password
     end.submit
@@ -53,6 +55,7 @@ class Shja::Agent::Hc
 
   def _fetch_page(url)
     login unless self.is_login
+    Shja.log.debug("_fetch_page: #{url}")
 
     page = agent.get(url)
     page.content
