@@ -6,3 +6,4 @@ end
 
 require 'shja/movie'
 require 'shja/parser'
+require 'shja/client'

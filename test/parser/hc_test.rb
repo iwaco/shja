@@ -1,8 +1,5 @@
 require 'test_helper'
 
-
-HC_FIXTURES_ROOT = File.join(FIXTURES_ROOT, 'hc')
-
 class ShjaParserHcIndexPageTest < Minitest::Test
   def setup
     @index_page = open(File.join(HC_FIXTURES_ROOT, 'models.2.html')).read
