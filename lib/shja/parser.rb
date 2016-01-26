@@ -1,3 +1,4 @@
+require 'nokogiri'
 
 class Shja::Parser
 

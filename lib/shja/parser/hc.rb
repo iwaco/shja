@@ -1,4 +1,3 @@
-require 'nokogiri'
 
 HC_BASE_URL = "http://ex.shemalejapanhardcore.com"
 
