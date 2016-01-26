@@ -1,5 +1,9 @@
 
-module Shja::Parser
+class Shja::Parser
+
+  def initialize(html)
+    @page = Nokogiri::HTML.parse(html)
+  end
 
 end
 

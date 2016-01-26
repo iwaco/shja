@@ -2,10 +2,29 @@ require 'nokogiri'
 
 HC_BASE_URL = "http://ex.shemalejapanhardcore.com"
 
-class Shja::Parser::HcActorPage
+class Shja::Parser::HcIndexPage < Shja::Parser
+  def parse_actors
+    page = @page
+    return [].tap do |models|
+      page.css('div.model').each do |data|
+        model = {}
+        h4 = data.at_css('h4 a')
+        model['name'] = h4.content.strip
+        model['url']  = h4['href']
+        model['id'] = File.basename(model['url'], '.html')
+        photo = data.at_css('div.modelphoto img.thumbs')
+        model['thumbnail'] = File.join(HC_BASE_URL, photo['src'])
+        models << model
+      end
+    end
+  end
 
-  def parse(html)
-    page = Nokogiri::HTML.parse(html)
+end
+
+class Shja::Parser::HcActorPage < Shja::Parser
+
+  def parse
+    page = @page
     photosets, movies = _split_photoset_and_movie(page)
     unless photosets.size == movies.size
       raise "Invalid photosets size: #{photosets.size}, movies size: #{movies.size}"
@@ -35,7 +54,7 @@ class Shja::Parser::HcActorPage
       rtn['url'] = set.at_css('.videohere a.update_title')['href']
       # puts "\"#{set.at_css('.videohere a.update_title')['href']}\","
       rtn['thumbnail'] = set.at_css('.videohere img.thumbs')['src']
-      rtn['thumbnail'] = HC_BASE_URL + rtn['thumbnail']
+      rtn['thumbnail'] = File.join(HC_BASE_URL, rtn['thumbnail'])
       rtn['date'] = Date.parse(set.at_css('p.dateadded').content.strip)
       # puts "\"#{Date.parse(set.at_css('p.dateadded').content.strip)}\","
       rtn
@@ -43,25 +62,25 @@ class Shja::Parser::HcActorPage
   end
 end
 
-class Shja::Parser::HcZipPage
+class Shja::Parser::HcZipPage < Shja::Parser
 
-  def parse(html)
-    page = Nokogiri::HTML.parse(html)
+  def parse
+    page = @page
     url = page.at_css('div.video_photos_zips a.memberdownload')['href']
     "#{HC_BASE_URL}#{url}"
   end
 
 end
 
-class Shja::Parser::HcMoviePage
+class Shja::Parser::HcMoviePage < Shja::Parser
 
-  def parse(html)
+  def parse
     {}.tap do |formats|
-      page = Nokogiri::HTML.parse(html)
+      page = @page
       div = page.at_css('div.video_size_outer div.movie_sizes')
       div.css('a.full_download_link').each do |f|
         format = f.content.split()[0].strip
-        formats[format] = "#{HC_BASE_URL}#{f['href']}"
+        formats[format] = File.join(HC_BASE_URL, f['href'])
       end
     end
   end
