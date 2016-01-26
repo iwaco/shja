@@ -43,7 +43,7 @@ class Shja::Parser::HcActorPage < Shja::Parser
         m = movies[i]
         z = photosets[i]
         z['photoset_url'] = z['url']
-        rtn << Shja::Movie.new(z.update(m))
+        rtn << z.update(m)
       end
     end
   end

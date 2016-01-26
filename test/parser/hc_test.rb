@@ -151,7 +151,7 @@ class ShjaParserHcActorPageTest < Minitest::Test
     assert_kind_of(Array, movies)
     assert_equal(5, movies.size)
     movies.each_with_index do |movie, i|
-      assert_kind_of(Shja::Movie, movie)
+      assert_kind_of(Hash, movie)
       assert_equal('Lisa', movie['actor'])
       assert_equal(TITLES[i], movie['title'])
       assert_equal(PHOTOSET_URLS[i], movie['photoset_url'])
