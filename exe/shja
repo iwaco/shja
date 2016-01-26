@@ -1,0 +1,28 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+
+config = {}
+config[:username]    = ENV['SHJA_USERNAME']
+config[:password]    = ENV['SHJA_PASSWORD']
+config[:target_dir]  = ENV['SHJA_TARGET_DIR']
+
+parser = OptionParser.new
+
+subparsers = Hash.new {|h,k|
+  $stderr.puts "no such subcommand: #{k}"
+  exit 1
+}
+subparsers['list'] = OptionParser.new
+
+parser.order!(ARGV)
+subcommand = ARGV.shift
+subparsers[subcommand].parse!(ARGV) unless ARGV.empty?
+
+unless config[:username] && config[:password] && config[:target_dir]
+  raise "Required parameter is not specified: #{config}"
+end
+
+if subcommand == 'list'
+  puts 'list'
+end

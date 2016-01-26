@@ -5,5 +5,6 @@ module Shja
 end
 
 require 'shja/movie'
+require 'shja/db'
 require 'shja/parser'
 require 'shja/client'
