@@ -5,6 +5,12 @@ class Shja::Db
   attr_reader :db_path
   attr_reader :data
 
+  # TODO: test
+  @@dbs = {}
+  def self.get(target_dir)
+    @@dbs[target_dir] ||= self.new(target_dir)
+  end
+
   def initialize(target_dir)
     unless File.directory?(target_dir)
       FileUtils.mkdir_p(target_dir)

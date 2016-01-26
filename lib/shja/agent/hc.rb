@@ -48,7 +48,7 @@ class Shja::Agent::Hc
       parser.parse_pagination.each do |url|
         page = _fetch_page(url)
         parser = Shja::Parser::HcIndexPage.new(page)
-        actors.push( *parser.parse_actors )
+        actors.push( *parser.parse_actors.map{|a| Shja::Actor.new(a)} )
       end
     end
   end

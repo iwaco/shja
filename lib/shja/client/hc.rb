@@ -1,7 +1,8 @@
 
 class Shja::Client::Hc
   attr_reader :agent
-  attr_reader :db
+  attr_reader :actors
+  attr_reader :movies
   attr_reader :target_dir
 
   def initialize(
@@ -10,8 +11,9 @@ class Shja::Client::Hc
     target_dir: target_dir
   )
     @agent      = Shja::Agent::Hc.new(username: username, password: password)
-    @db         = Shja::Db.new(target_dir)
     @target_dir = target_dir
+    @actors     = Shja::ActorManager.new(target_dir)
+    @movies     = Shja::MovieManager.new(target_dir)
   end
 
   def refresh_actors(first_letter: 'A', last_letter: 'A')
@@ -19,7 +21,7 @@ class Shja::Client::Hc
       first_letter: first_letter,
       last_letter: last_letter
     )
-    db.save(actors)
+    actors.save(actors)
   end
 
 end

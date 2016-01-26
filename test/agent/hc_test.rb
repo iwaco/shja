@@ -21,7 +21,7 @@ class ShjaAgentHcTest < Minitest::Test
   def test_fetch_index_page
     expected_index_url = "http://ex.shemalejapanhardcore.com/members/categories/models/1/name/A/"
     expects_urls = [0, 1]
-    expects_actors = ['a', 'b']
+    expects_actors = [{'url'=>'a'}, {'url'=>'b'}]
 
     parser = mock()
     parser.expects(:parse_pagination).returns(expects_urls)
@@ -35,7 +35,8 @@ class ShjaAgentHcTest < Minitest::Test
     parser.expects(:parse_actors).returns(expects_actors).in_sequence(urls)
 
     actors = @agent.fetch_index_page
-    assert_equal(expects_actors + expects_actors, actors)
+    expects_actors = (expects_actors + expects_actors).map { |a| Shja::Actor.new(a)  }
+    assert_equal(expects_actors, actors)
   end
 
   def test__fetch_page
