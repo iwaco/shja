@@ -1,8 +1,8 @@
 require 'nokogiri'
 
-class Shja::Parser::Hc
+class Shja::Parser::HcActorPage
 
-  def parse_actor_page(html)
+  def parse(html)
     page = Nokogiri::HTML.parse(html)
     photosets, movies = _split_photoset_and_movie(page)
     unless photosets.size == movies.size

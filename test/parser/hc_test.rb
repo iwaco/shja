@@ -1,17 +1,17 @@
 require 'test_helper'
 
-class ShjaParserHcTest < Minitest::Test
+class ShjaParserHcActorPageTest < Minitest::Test
 
   HC_FIXTURES_ROOT = File.join(FIXTURES_ROOT, 'hc')
 
   def setup
-    @parser = Shja::Parser::Hc.new
+    @parser = Shja::Parser::HcActorPage.new
     @lisa_html = open(File.join(HC_FIXTURES_ROOT, 'lisa.html')).read
     @page = Nokogiri::HTML.parse(@lisa_html)
   end
 
   def test_parse_actor_page
-    movies = @parser.parse_actor_page(@lisa_html)
+    movies = @parser.parse(@lisa_html)
     assert_kind_of(Array, movies)
     assert_equal(5, movies.size)
     movies.each_with_index do |movie, i|
