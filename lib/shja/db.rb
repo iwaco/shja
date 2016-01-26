@@ -25,8 +25,23 @@ class Shja::Db
     end
   end
 
+  def find_actor_by_name(name)
+    self.data['actors'].find {|a| a['name'] == name }
+  end
+
+  def find_actor(id)
+    self.data['actors'].find {|a| a['id'] == id }
+  end
+
   def save(actors)
-    self.data['actors'] = actors
+    actors.each do |actor|
+      if org = find_actor(actor['id'])
+        org.update(actor)
+      else
+        self.data['actors'] << actor
+      end
+    end
+    self.data['actors'].sort!{|a, b| a['id'] <=> b['id']}
     _save
   end
 
