@@ -38,6 +38,8 @@ class ShjaAgentHcTest < Minitest::Test
     assert_equal(expects_actors + expects_actors, actors)
   end
 
+  # TODO: Add test if pagination size 0
+
   def test__fetch_page
     expected_url = 'URL'
     expected_content = 'CONTENT'

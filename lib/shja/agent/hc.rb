@@ -3,7 +3,9 @@ require 'memoist'
 class Shja::Agent::Hc
   extend Memoist
 
-  LOGIN_URL = "http://ex.shemalejapanhardcore.com/members/"
+  BASE_URL = "http://ex.shemalejapanhardcore.com"
+  LOGIN_URL = "#{BASE_URL}/members/"
+  CAPTCHA_URL = "http://ex.shemalejapanhardcore.com/cptcha.jpg"
   attr_reader :agent
   attr_reader :username
   attr_reader :password
@@ -22,13 +24,21 @@ class Shja::Agent::Hc
   def login
     return if self.is_login
     page = agent.get(LOGIN_URL)
-
+    agent.get("#{BASE_URL}/cptcha.jpg", referer: LOGIN_URL)
+    agent.get("#{BASE_URL}/tour/custom_assets/images/logo.png", referer: LOGIN_URL)
 
     Shja::log.debug("login with, username: #{username}, password: #{password}")
-    page = page.form_with(action: '/auth.form') do |form|
+    form = page.form_with(action: '/auth.form')
+    form.field_with(name: 'uid').value = self.username
+    form.field_with(name: 'pwd').value = self.password
+    button = form.button_with(:value => "Enter")
+    page = agent.submit(form, button)
+    if page.search('form[action="/auth.form"]').size != 0
+      form = page.form_with(action: '/auth.form')
       form.field_with(name: 'uid').value = self.username
       form.field_with(name: 'pwd').value = self.password
-    end.submit
+      button = form.button_with(:value => "Enter")
+    end
 
     self.is_login = true
   end
@@ -45,9 +55,14 @@ class Shja::Agent::Hc
     page = _fetch_index_page(letter: letter)
     parser = Shja::Parser::HcIndexPage.new(page)
     return [].tap do |actors|
-      parser.parse_pagination.each do |url|
-        page = _fetch_page(url)
-        parser = Shja::Parser::HcIndexPage.new(page)
+      pagination = parser.parse_pagination
+      if pagination.size > 0
+        pagination.each do |url|
+          page = _fetch_page(url)
+          parser = Shja::Parser::HcIndexPage.new(page)
+          actors.push( *parser.parse_actors )
+        end
+      else
         actors.push( *parser.parse_actors )
       end
     end

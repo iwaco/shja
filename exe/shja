@@ -29,5 +29,5 @@ end
 if subcommand == 'list'
   Shja.log.level = Logger::DEBUG
   client = Shja::Client::Hc.new(**config)
-  client.refresh_actors(first_letter: 'S', last_letter: 'S')
+  client.refresh_actors(first_letter: 'A', last_letter: 'A')
 end
