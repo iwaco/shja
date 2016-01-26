@@ -22,4 +22,8 @@ class Shja::Client::Hc
     db.save(actors)
   end
 
+  def download(actor_id, format='720p')
+    actor = db.find_actor(actor_id)
+    raise "Actor not found: #{actor_id}" unless actor
+  end
 end
