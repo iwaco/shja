@@ -129,6 +129,16 @@ class ShjaParserHcIndexPageTest < Minitest::Test
     end
   end
 
+  PAGES = [
+    "http://ex.shemalejapanhardcore.com/members/categories/models/1/name/S/",
+    "http://ex.shemalejapanhardcore.com/members/categories/models/2/name/S/",
+  ]
+
+  def test_parse_pagination
+    pages = @parser.parse_pagination
+    assert_equal(PAGES, pages)
+  end
+
 end
 
 class ShjaParserHcActorPageTest < Minitest::Test

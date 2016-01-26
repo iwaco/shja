@@ -19,6 +19,15 @@ class Shja::Parser::HcIndexPage < Shja::Parser
     end
   end
 
+  def parse_pagination
+    page = @page
+    return [].tap do |pages|
+      page.css('div.pagination li a').each do |data|
+        pages << data['href'].strip
+      end
+    end
+  end
+
 end
 
 class Shja::Parser::HcActorPage < Shja::Parser
