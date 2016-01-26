@@ -5,19 +5,24 @@ class Shja::Parser::Hc
   def parse_actor_page(html)
     page = Nokogiri::HTML.parse(html)
     photosets, movies = _split_photoset_and_movie(page)
-    [].tap do |movies|
-      movies << Shja::Movie.new({})
-      movies << Shja::Movie.new({})
-      movies << Shja::Movie.new({})
-      movies << Shja::Movie.new({})
-      movies << Shja::Movie.new({})
+    unless photosets.size == movies.size
+      raise "Invalid photosets size: #{photosets.size}, movies size: #{movies.size}"
+    end
+
+    [].tap do |rtn|
+      movies.size.times do |i|
+        m = movies[i]
+        z = photosets[i]
+        z['photoset_url'] = z['url']
+        rtn << Shja::Movie.new(z.update(m))
+      end
     end
   end
 
   def _split_photoset_and_movie(page)
     divs = page.css('div.pattern_span')
     raise 'Invalid page: photosets and movies aren\'t detected' unless divs.size == 2
-    divs
+    [_parse_set_div(divs[0]), _parse_set_div(divs[1])]
   end
 
   def _parse_set_div(div)

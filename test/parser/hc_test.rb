@@ -14,8 +14,13 @@ class ShjaParserHcTest < Minitest::Test
     movies = @parser.parse_actor_page(@lisa_html)
     assert_kind_of(Array, movies)
     assert_equal(5, movies.size)
-    movies.each do |movie|
+    movies.each_with_index do |movie, i|
       assert_kind_of(Shja::Movie, movie)
+      assert_equal('Lisa', movie['actor'])
+      assert_equal(TITLES[i], movie['title'])
+      assert_equal(PHOTOSET_URLS[i], movie['photoset_url'])
+      assert_equal(MOVIE_URLS[i], movie['url'])
+      assert_equal(DATES[i], movie['date'].to_s)
     end
   end
 
