@@ -22,23 +22,32 @@ class Shja::Db
 
   def load
     @data = {
-      'actors' => []
+      'actors' => [],
+      'movies' => []
     }
     if File.file?(self.db_path)
       open(self.db_path) do |io|
         @data = YAML.load(io.read)
+        @data['actors'].map! {|e| Shja::Actor.new(e) }
+        @data['movies'].map! {|e| Shja::Movie.new(e) }
       end
     end
   end
 
-  def save(actors)
-    self.data['actors'] = actors
-    _save
+  def actors
+    return self.data['actors']
   end
 
-  def _save
+  def movies
+    return self.data['movies']
+  end
+
+  def save
     open(self.db_path, 'w') do |io|
-      io.write(self.data.to_yaml)
+      _data = {}
+      _data['actors'] = self.actors.map { |e| e.to_h }
+      _data['movies'] = self.movies.map { |e| e.to_h }
+      io.write(_data.to_yaml)
     end
   end
 

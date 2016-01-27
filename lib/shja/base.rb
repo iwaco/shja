@@ -1,10 +1,9 @@
 
 class Shja::ManagerBase
-  attr_reader :target_dir
+  attr_reader :db
 
-  def initialize(target_dir)
-    @target_dir = target_dir
-    @db         = Shja::Db.get(target_dir)
+  def initialize(db)
+    @db = db
   end
 end
 
@@ -48,6 +47,7 @@ class Shja::ResourceBase
   end
 
   def ==(other)
+    return false unless other.kind_of?(Shja::ResourceBase)
     return false unless self['url']
     self['url'] == other['url']
   end
