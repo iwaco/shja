@@ -32,7 +32,7 @@ class Shja::Client::Hc
   def refresh_actor(actor_or_url)
     actor = agent.fetch_actor(actor_or_url)
     actors.update(actor)
-    _movies = agent.fetch_actor_movies(actor)
+    _movies = actor.fetch_movies(agent)
     _movies.each do |movie|
       movies.update(movie)
     end
@@ -43,8 +43,4 @@ class Shja::Client::Hc
     db.save
   end
 
-  def download(actor_id, format='720p')
-    actor = db.find_actor(actor_id)
-    raise "Actor not found: #{actor_id}" unless actor
-  end
 end

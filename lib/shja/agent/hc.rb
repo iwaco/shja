@@ -67,16 +67,6 @@ class Shja::Agent::Hc
     end
   end
 
-  def fetch_actor_movies(actor)
-    Shja::log.debug("Start fetching actor detail: #{actor.id}")
-    return _fetch_movie_list_from_actor_page(actor).map do |movie|
-      movie['zip']     = _fetch_zip_url(movie)
-      movie['formats'] = _fetch_mp4_url(movie)
-      movie['id']      = _extract_movie_id(movie)
-      movie
-    end
-  end
-
   def fetch_index_page(letter: 'A')
     Shja::log.debug("Start fetching index: #{letter}")
     page = _fetch_index_page(letter: letter)
@@ -107,35 +97,6 @@ class Shja::Agent::Hc
   def _fetch_index_page(letter: 'A', index: 0)
     url = "http://ex.shemalejapanhardcore.com/members/categories/models/#{index+1}/name/#{letter}/"
     _fetch_page(url)
-  end
-
-  def _fetch_movie_list_from_actor_page(actor)
-    actor_page = _fetch_page(actor.url)
-    parser = Shja::Parser::HcActorPage.new(actor_page)
-    return parser.parse_movies.map do |movie|
-      m = Shja::Movie.new(movie)
-      m.actor = actor
-      m
-    end
-  end
-
-  def _fetch_zip_url(movie)
-    photoset_page = _fetch_page(movie.photoset_url)
-    parser = Shja::Parser::HcZipPage.new(photoset_page)
-    return parser.parse_zip_url
-  end
-
-  def _fetch_mp4_url(movie)
-    movie_page = _fetch_page(movie.url)
-    parser = Shja::Parser::HcMoviePage.new(movie_page)
-    return parser.parse
-  end
-
-  def _extract_movie_id(movie)
-    File.basename(movie.photoset_url, '.*').tap do |id|
-      Shja.log.debug("Movie id is: #{id}")
-      # raise "Id is invalid, id: #{id}, url: #{movie.zip}" unless /\d+/ =~ id
-    end
   end
 
 end

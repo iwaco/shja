@@ -1,52 +1,85 @@
 require 'test_helper'
 
-class ActorManageTest < ShjaDBTest
-  attr_reader :actor_manager
+class ActorTest < Minitest::Test
+  attr_reader :lisa
+  attr_reader :mock_agent
+  attr_reader :mock_parser
 
   def setup
-    super
-    @actor_manager = Shja::ActorManager.new(db)
+    @lisa        = mock_actor('lisa')
+    @mock_agent  = mock('agent')
+    @mock_parser = mock('parser')
   end
 
-  def test_db
-    assert_kind_of(Shja::Db, actor_manager.db)
-  end
+  def test_fetch_movies
+    movies = [
+      {'url' => 'a', 'photoset_url' => 'aaa.html'},
+      {'url' => 'b', 'photoset_url' => 'bbb.html'},
+      {'url' => 'c', 'photoset_url' => 'ccc.html'}
+    ].map { |e| Shja::Movie.new(e) }
+    expected_ids = [
+      'aaa', 'bbb', 'ccc'
+    ]
+    expected_zip_url = 'http://ex.shemalejapanhardcore.com/members/content/upload/uta/151224/151224_1440highres.zip'
+    expected_formats = { '720p' => 'http://720p.mp4' }
 
-  def test_save
-    lisa = mock_actor('lisa')
-    actor_manager.update(lisa)
+    lisa.expects(:_fetch_movie_list_from_actor_page)
+        .with(mock_agent)
+        .returns(movies)
+    lisa.stubs(:_fetch_zip_url).returns(expected_zip_url)
+    lisa.stubs(:_fetch_mp4_url).returns(expected_formats)
 
-    assert_equal(lisa, db.actors[0])
-  end
-
-  def test_save_twice_same_actor
-    lisa = mock_actor('lisa')
-    lisa2 = mock_actor('lisa')
-    expected_changed_thumbnail = 'changed_url'
-    lisa2['thumbnail'] = expected_changed_thumbnail
-    actor_manager.update(lisa)
-    actor_manager.update(lisa2)
-
-    assert_equal(1, db.actors.size)
-    assert_equal(expected_changed_thumbnail, db.actors[0]['thumbnail'])
-  end
-
-  def test_find
-    actors = [mock_actor('lisa'), mock_actor('serina'), mock_actor('chuling')]
-    actors.each do |actor|
-      actor_manager.update(actor)
+    actual_movies = lisa.fetch_movies(mock_agent)
+    assert_equal(3, actual_movies.size)
+    actual_movies.each_with_index do |movie, i|
+      assert_kind_of(Shja::Movie, movie)
+      assert_equal(expected_zip_url, movie.zip)
+      assert_equal(expected_formats, movie.formats)
+      assert_equal(expected_ids[i], movie.id)
     end
-
-    assert_equal(mock_actor('serina'), actor_manager.find('serina'))
   end
 
-  def test_find_non_existance
-    actors = [mock_actor('lisa'), mock_actor('serina'), mock_actor('chuling')]
-    actors.each do |actor|
-      actor_manager.update(actor)
-    end
+  def test__fetch_movie_list_from_actor_page
+    expected_page = 'PAGE_CONTENT'
+    movies_hash = [{'url' => 'a'}, {'url' => 'b'}]
+    mock_parser.stubs(:parse_movies).returns(movies_hash)
 
-    assert_raises { actor_manager.find('not_found') }
+    mock_agent.expects(:_fetch_page).with(lisa.url).returns(expected_page)
+    Shja::Parser::HcActorPage.expects(:new).with(expected_page).returns(mock_parser)
+
+    movies = lisa._fetch_movie_list_from_actor_page(mock_agent)
+    assert_equal(2, movies.size)
+    movies.each_with_index do |movie, i|
+      assert_kind_of(Shja::Movie, movie)
+      assert_equal(lisa.id, movie.actor_id)
+      assert_equal(movies_hash[i]['url'], movie.url)
+    end
+  end
+
+  def test__fetch_zip_url
+    expected_page = 'PAGE_CONTENT'
+    expected_url  = 'http://zip_url'
+    movie = mock_movie
+    mock_parser.stubs(:parse_zip_url).returns(expected_url)
+
+    mock_agent.expects(:_fetch_page).with(movie.photoset_url).returns(expected_page)
+    Shja::Parser::HcZipPage.expects(:new).with(expected_page).returns(mock_parser)
+
+    actual_url = lisa._fetch_zip_url(mock_agent, movie)
+    assert_equal(actual_url, expected_url)
+  end
+
+  def test__fetch_mp4_url
+    expected_page     = 'PAGE_CONTENT'
+    expected_formats  = { '720p' => 'http://720p.mp4'}
+    movie = mock_movie
+    mock_parser.stubs(:parse).returns(expected_formats)
+
+    mock_agent.expects(:_fetch_page).with(movie.url).returns(expected_page)
+    Shja::Parser::HcMoviePage.expects(:new).with(expected_page).returns(mock_parser)
+
+    actual_formats = lisa._fetch_mp4_url(mock_agent, movie)
+    assert_equal(actual_formats, expected_formats)
   end
 
 end

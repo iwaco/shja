@@ -23,4 +23,43 @@ class Shja::Actor < Shja::ResourceBase
   # attr_reader :name
   # attr_reader :url
   # attr_reader :thumbnail
+
+  def fetch_movies(agent)
+    Shja::log.debug("Start fetching actor detail: #{self.id}")
+    return _fetch_movie_list_from_actor_page(agent).map do |movie|
+      movie['zip']     = _fetch_zip_url(agent, movie)
+      movie['formats'] = _fetch_mp4_url(agent, movie)
+      movie['id']      = _extract_movie_id(movie)
+      movie
+    end
+  end
+
+  def _fetch_movie_list_from_actor_page(agent)
+    actor_page = agent._fetch_page(self.url)
+    parser = Shja::Parser::HcActorPage.new(actor_page)
+    return parser.parse_movies.map do |movie|
+      m = Shja::Movie.new(movie)
+      m.actor = self
+      m
+    end
+  end
+
+  def _fetch_zip_url(agent, movie)
+    photoset_page = agent._fetch_page(movie.photoset_url)
+    parser = Shja::Parser::HcZipPage.new(photoset_page)
+    return parser.parse_zip_url
+  end
+
+  def _fetch_mp4_url(agent, movie)
+    movie_page = agent._fetch_page(movie.url)
+    parser = Shja::Parser::HcMoviePage.new(movie_page)
+    return parser.parse
+  end
+
+  def _extract_movie_id(movie)
+    File.basename(movie.photoset_url, '.*').tap do |id|
+      Shja.log.debug("Movie id is: #{id}")
+      # raise "Id is invalid, id: #{id}, url: #{movie.zip}" unless /\d+/ =~ id
+    end
+  end
 end
