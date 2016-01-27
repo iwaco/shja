@@ -152,7 +152,6 @@ class ShjaParserHcActorPageTest < Minitest::Test
     assert_equal(5, movies.size)
     movies.each_with_index do |movie, i|
       assert_kind_of(Hash, movie)
-      assert_equal('Lisa', movie['actor'])
       assert_equal(TITLES[i], movie['title'])
       assert_equal(PHOTOSET_URLS[i], movie['photoset_url'])
       assert_equal(MOVIE_URLS[i], movie['url'])
@@ -207,7 +206,6 @@ class ShjaParserHcActorPageTest < Minitest::Test
     assert_equal(5, sets.size)
     sets.each_with_index do |set, i|
       assert_kind_of(Hash, set)
-      assert_equal('Lisa', set['actor'])
       assert_equal(TITLES[i], set['title'])
       assert_equal(PHOTOSET_URLS[i], set['url'])
       assert_equal(DATES[i], set['date'].to_s)
@@ -220,7 +218,6 @@ class ShjaParserHcActorPageTest < Minitest::Test
     assert_equal(5, sets.size)
     sets.each_with_index do |set, i|
       assert_kind_of(Hash, set)
-      assert_equal('Lisa', set['actor'])
       assert_equal(TITLES[i], set['title'])
       assert_equal(MOVIE_URLS[i], set['url'])
       assert_equal(DATES[i], set['date'].to_s)

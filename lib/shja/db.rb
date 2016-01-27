@@ -5,6 +5,12 @@ class Shja::Db
   attr_reader :db_path
   attr_reader :data
 
+  # TODO: test
+  @@dbs = {}
+  def self.get(target_dir)
+    @@dbs[target_dir] ||= self.new(target_dir)
+  end
+
   def initialize(target_dir)
     unless File.directory?(target_dir)
       FileUtils.mkdir_p(target_dir)
@@ -16,38 +22,32 @@ class Shja::Db
 
   def load
     @data = {
-      'actors' => []
+      'actors' => [],
+      'movies' => []
     }
     if File.file?(self.db_path)
       open(self.db_path) do |io|
         @data = YAML.load(io.read)
+        @data['actors'].map! {|e| Shja::Actor.new(e) }
+        @data['movies'].map! {|e| Shja::Movie.new(e) }
       end
     end
   end
 
-  def find_actor_by_name(name)
-    self.data['actors'].find {|a| a['name'] == name }
+  def actors
+    return self.data['actors']
   end
 
-  def find_actor(id)
-    self.data['actors'].find {|a| a['id'] == id }
+  def movies
+    return self.data['movies']
   end
 
-  def save(actors)
-    actors.each do |actor|
-      if org = find_actor(actor['id'])
-        org.update(actor)
-      else
-        self.data['actors'] << actor
-      end
-    end
-    self.data['actors'].sort!{|a, b| a['id'] <=> b['id']}
-    _save
-  end
-
-  def _save
+  def save
     open(self.db_path, 'w') do |io|
-      io.write(self.data.to_yaml)
+      _data = {}
+      _data['actors'] = self.actors.map { |e| e.to_h }
+      _data['movies'] = self.movies.map { |e| e.to_h }
+      io.write(_data.to_yaml)
     end
   end
 
