@@ -41,6 +41,14 @@ class Shja::Agent::Hc
     end
   end
 
+  def fetch_actor_detail(actor)
+    return _fetch_movie_list_from_actor_page(actor).map do |movie|
+      movie['zip']     = _fetch_zip_url(movie)
+      movie['formats'] = _fetch_mp4_url(movie)
+      movie
+    end
+  end
+
   def fetch_index_page(letter: 'A')
     page = _fetch_index_page(letter: letter)
     parser = Shja::Parser::HcIndexPage.new(page)
@@ -65,6 +73,28 @@ class Shja::Agent::Hc
   def _fetch_index_page(letter: 'A', index: 0)
     url = "http://ex.shemalejapanhardcore.com/members/categories/models/#{index+1}/name/#{letter}/"
     _fetch_page(url)
+  end
+
+  def _fetch_movie_list_from_actor_page(actor)
+    actor_page = _fetch_page(actor.url)
+    parser = Shja::Parser::HcActorPage.new(actor_page)
+    return parser.parse.map do |movie|
+      m = Shja::Movie.new(movie)
+      m.actor = actor
+      m
+    end
+  end
+
+  def _fetch_zip_url(movie)
+    photoset_page = _fetch_page(movie.photoset_url)
+    parser = Shja::Parser::HcZipPage.new(photoset_page)
+    return parser.parse
+  end
+
+  def _fetch_mp4_url(movie)
+    movie_page = _fetch_page(movie.url)
+    parser = Shja::Parser::HcMoviePage.new(movie_page)
+    return parser.parse
   end
 
 end

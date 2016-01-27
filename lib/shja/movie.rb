@@ -10,6 +10,10 @@ class Shja::Movie < Shja::ResourceBase
   # attr_reader :photoset_url
   # attr_reader :thumbnail
   # attr_reader :date
-  # attr_reader :zip_url
+  # attr_reader :zip
   # attr_reader :formats
+
+  def actor=(actor)
+    self['actor_id'] = actor.id
+  end
 end

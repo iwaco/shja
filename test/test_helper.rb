@@ -13,6 +13,7 @@ FIXTURES_ROOT = File.join(File.dirname(__FILE__), 'fixtures')
 HC_FIXTURES_ROOT = File.join(FIXTURES_ROOT, 'hc')
 
 require 'fixtures/actors'
+require 'fixtures/movies'
 
 class ShjaDBTest < Minitest::Test
   attr_reader :target_dir
