@@ -89,6 +89,7 @@ class Shja::Parser::HcMoviePage < Shja::Parser
         format = f.content.split()[0].strip
         formats[format] = File.join(HC_BASE_URL, f['href'])
       end
+      raise "Movie isn't detected" if formats.size == 0
     end
   end
 

@@ -23,7 +23,8 @@ class ShjaAgentHcTest < Minitest::Test
     movies = [
       {'url' => 'a'}, {'url' => 'b'}, {'url' => 'c'}
     ].map { |e| Shja::Movie.new(e) }
-    expected_zip_url = 'http://zip.url'
+    expected_id = '151224'
+    expected_zip_url = 'http://ex.shemalejapanhardcore.com/members/content/upload/uta/151224/151224_1440highres.zip'
     expected_formats = { '720p' => 'http://720p.mp4' }
 
     @agent.expects(:_fetch_movie_list_from_actor_page)
@@ -38,6 +39,7 @@ class ShjaAgentHcTest < Minitest::Test
       assert_kind_of(Shja::Movie, movie)
       assert_equal(expected_zip_url, movie.zip)
       assert_equal(expected_formats, movie.formats)
+      assert_equal(expected_id, movie.id)
     end
   end
 

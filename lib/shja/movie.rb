@@ -4,6 +4,7 @@ class Shja::MovieManager < Shja::ManagerBase
 end
 
 class Shja::Movie < Shja::ResourceBase
+  # attr_reader :id
   # attr_reader :actor_id
   # attr_reader :title
   # attr_reader :url

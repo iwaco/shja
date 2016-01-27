@@ -42,14 +42,17 @@ class Shja::Agent::Hc
   end
 
   def fetch_actor_detail(actor)
+    Shja::log.debug("Start fetching actor detail: #{actor.id}")
     return _fetch_movie_list_from_actor_page(actor).map do |movie|
       movie['zip']     = _fetch_zip_url(movie)
       movie['formats'] = _fetch_mp4_url(movie)
+      movie['id']      = _extract_movie_id(movie)
       movie
     end
   end
 
   def fetch_index_page(letter: 'A')
+    Shja::log.debug("Start fetching index: #{letter}")
     page = _fetch_index_page(letter: letter)
     parser = Shja::Parser::HcIndexPage.new(page)
     return [].tap do |actors|
@@ -95,6 +98,12 @@ class Shja::Agent::Hc
     movie_page = _fetch_page(movie.url)
     parser = Shja::Parser::HcMoviePage.new(movie_page)
     return parser.parse
+  end
+
+  def _extract_movie_id(movie)
+    movie.zip.split('/')[-2].tap do |id|
+      raise "Id is invalid: #{movie.zip}" unless /\d+/ =~ id
+    end
   end
 
 end
