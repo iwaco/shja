@@ -122,7 +122,7 @@ class Shja::Agent::Hc
   def _fetch_zip_url(movie)
     photoset_page = _fetch_page(movie.photoset_url)
     parser = Shja::Parser::HcZipPage.new(photoset_page)
-    return parser.parse
+    return parser.parse_zip_url
   end
 
   def _fetch_mp4_url(movie)

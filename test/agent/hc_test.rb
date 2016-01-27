@@ -114,7 +114,7 @@ class ShjaAgentHcTest < Minitest::Test
     expected_url  = 'http://zip_url'
     movie = mock_movie
     mock_parser = mock('mock_parser')
-    mock_parser.stubs(:parse).returns(expected_url)
+    mock_parser.stubs(:parse_zip_url).returns(expected_url)
 
     @agent.expects(:_fetch_page).with(movie.photoset_url).returns(expected_page)
     Shja::Parser::HcZipPage.expects(:new).with(expected_page).returns(mock_parser)

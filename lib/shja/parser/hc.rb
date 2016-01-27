@@ -80,7 +80,7 @@ end
 
 class Shja::Parser::HcZipPage < Shja::Parser
 
-  def parse
+  def parse_zip_url
     page = @page
     url = page.at_css('div.video_photos_zips a.memberdownload')['href']
     "#{HC_BASE_URL}#{url}"

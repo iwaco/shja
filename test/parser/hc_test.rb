@@ -241,7 +241,7 @@ class ShjaParserHcZipPageTest < Minitest::Test
   end
 
   def test_parse
-    zip_url = @parser.parse
+    zip_url = @parser.parse_zip_url
     assert_equal('http://ex.shemalejapanhardcore.com/members/content/upload/uta/151224/151224_1440highres.zip', zip_url)
   end
 
