@@ -13,15 +13,15 @@ class ActorManageTest < ShjaDBTest
   end
 
   def test_save
-    lisa = TEST_ACTORS['lisa']
+    lisa = mock_actor('lisa')
     actor_manager.update(lisa)
 
     assert_equal(lisa, db.actors[0])
   end
 
   def test_save_twice_same_actor
-    lisa = TEST_ACTORS['lisa']
-    lisa2 = Shja::Actor.new(lisa.to_h)
+    lisa = mock_actor('lisa')
+    lisa2 = mock_actor('lisa')
     expected_changed_thumbnail = 'changed_url'
     lisa2['thumbnail'] = expected_changed_thumbnail
     actor_manager.update(lisa)

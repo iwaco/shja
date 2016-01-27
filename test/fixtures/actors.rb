@@ -1,5 +1,5 @@
 
-TEST_ACTORS = {
+TEST_ACTORS_ = {
   'lisa' => {
     'id' => 'lisa',
     'url' => 'http://lisa',
@@ -18,4 +18,8 @@ TEST_ACTORS = {
     'name' => 'Chuling',
     'thumbnail' => 'http://chuling.png'
   },
-}.map {|k, v| [k, Shja::Actor.new(v)]}.to_h
+}
+
+def mock_actor(id='lisa')
+  return Shja::Actor.new(TEST_ACTORS_[id].dup)
+end
