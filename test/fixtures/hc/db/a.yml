@@ -1,82 +1,63 @@
 ---
 actors:
-- name: Ada Black
-  url: http://ex.shemalejapanhardcore.com/members/models/ada-black.html
-  id: ada-black
-  thumbnail: http://ex.shemalejapanhardcore.com/members/content/contentthumbs/2518-set.jpg
-- name: Adriana & Perla & Alex
-  url: http://ex.shemalejapanhardcore.com/members/models/adriana--perla--alex.html
-  id: adriana--perla--alex
-  thumbnail: http://ex.shemalejapanhardcore.com/members/content/contentthumbs/3026-set.jpg
-- name: Adriana Suzuki & Junior
-  url: http://ex.shemalejapanhardcore.com/members/models/adriana-suzuki--junior.html
-  id: adriana-suzuki--junior
-  thumbnail: http://ex.shemalejapanhardcore.com/members/content/contentthumbs/2522-set.jpg
-- name: Airi Mochizuki
-  url: http://ex.shemalejapanhardcore.com/members/models/airi-mochizuki.html
-  id: airi-mochizuki
-  thumbnail: http://ex.shemalejapanhardcore.com/members/content/contentthumbs/2524-set.jpg
-- name: Akane
-  url: http://ex.shemalejapanhardcore.com/members/models/akane.html
-  id: akane
-  thumbnail: http://ex.shemalejapanhardcore.com/members/content/contentthumbs/2526-set.jpg
-- name: Aki
-  url: http://ex.shemalejapanhardcore.com/members/models/aki.html
-  id: aki
-  thumbnail: http://ex.shemalejapanhardcore.com/members/content/contentthumbs/2528-set.jpg
-- name: Alejandra
-  url: http://ex.shemalejapanhardcore.com/members/models/alejandra.html
-  id: alejandra
-  thumbnail: http://ex.shemalejapanhardcore.com/members/content/contentthumbs/2530-set.jpg
-- name: Alexia Freire & Dany...
-  url: http://ex.shemalejapanhardcore.com/members/models/alexia-freire--dany-decastro.html
-  id: alexia-freire--dany-decastro
-  thumbnail: http://ex.shemalejapanhardcore.com/members/content/contentthumbs/2532-set.jpg
-- name: Alisha
-  url: http://ex.shemalejapanhardcore.com/members/models/alisha.html
-  id: alisha
-  thumbnail: http://ex.shemalejapanhardcore.com/members/content/contentthumbs/2534-set.jpg
-- name: Alison
-  url: http://ex.shemalejapanhardcore.com/members/models/alison.html
-  id: alison
-  thumbnail: http://ex.shemalejapanhardcore.com/members/content/contentthumbs/3028-set.jpg
-- name: Amy Daly
-  url: http://ex.shemalejapanhardcore.com/members/models/amy-daly.html
-  id: amy-daly
-  thumbnail: http://ex.shemalejapanhardcore.com/members/content/contentthumbs/3030-set.jpg
-- name: Ana Paula Samadhi &...
-  url: http://ex.shemalejapanhardcore.com/members/models/ana-paula-samadhi--adelaide-novaes.html
-  id: ana-paula-samadhi--adelaide-novaes
-  thumbnail: http://ex.shemalejapanhardcore.com/members/content/contentthumbs/2540-set.jpg
-- name: Angelina Torres
-  url: http://ex.shemalejapanhardcore.com/members/models/angelina-torres.html
-  id: angelina-torres
-  thumbnail: http://ex.shemalejapanhardcore.com/members/content/contentthumbs/2542-set.jpg
-- name: Anna After Dark
-  url: http://ex.shemalejapanhardcore.com/members/models/anna-after-dark.html
-  id: anna-after-dark
-  thumbnail: http://ex.shemalejapanhardcore.com/members/content/contentthumbs/3032-set.jpg
-- name: Anna Sakura
-  url: http://ex.shemalejapanhardcore.com/members/models/anna-sakura.html
-  id: anna-sakura
-  thumbnail: http://ex.shemalejapanhardcore.com/members/content/contentthumbs/2546-set.jpg
-- name: Asia
-  url: http://ex.shemalejapanhardcore.com/members/models/asia.html
-  id: asia
-  thumbnail: http://ex.shemalejapanhardcore.com/members/content/contentthumbs/3034-set.jpg
-- name: Asuka Izana
-  url: http://ex.shemalejapanhardcore.com/members/models/asuka-izana.html
-  id: asuka-izana
-  thumbnail: http://ex.shemalejapanhardcore.com/members/content/contentthumbs/2551-set.jpg
-- name: Athena Addams
-  url: http://ex.shemalejapanhardcore.com/members/models/athena-addams.html
-  id: athena-addams
-  thumbnail: http://ex.shemalejapanhardcore.com/members/content/contentthumbs/2552-set.jpg
-- name: Aubrey Starr
-  url: http://ex.shemalejapanhardcore.com/members/models/aubrey-starr.html
-  id: aubrey-starr
-  thumbnail: http://ex.shemalejapanhardcore.com/members/content/contentthumbs/2554-set.jpg
-- name: Ayina Danai
-  url: http://ex.shemalejapanhardcore.com/members/models/ayina-danai.html
-  id: ayina-danai
-  thumbnail: http://ex.shemalejapanhardcore.com/members/content/contentthumbs/3036-set.jpg
+- name: Uta
+  thumbnail: http://ex.shemalejapanhardcore.com/members/content/contentthumbs/3172-set.jpg
+  url: http://ex.shemalejapanhardcore.com/members/models/uta.html
+  id: uta
+- name: Chuling
+  thumbnail: http://ex.shemalejapanhardcore.com/members/content/contentthumbs/3058-set.jpg
+  url: http://ex.shemalejapanhardcore.com/members/models/chuling.html
+  id: chuling
+- name: Serina
+  thumbnail: http://ex.shemalejapanhardcore.com/members/content/contentthumbs/2927-set.jpg
+  url: http://ex.shemalejapanhardcore.com/members/models/serina.html
+  id: serina
+movies:
+- title: Exclusive Uta
+  url: http://ex.shemalejapanhardcore.com/members/scenes/Exclusive-Uta_vids.html
+  thumbnail: http://ex.shemalejapanhardcore.com/members/content/contentthumbs/5450.jpg
+  date: 2015-12-24
+  photoset_url: http://ex.shemalejapanhardcore.com/members/scenes/Exclusive-Uta_highres.html
+  actor_id: uta
+  zip: http://ex.shemalejapanhardcore.com/members/content/upload/uta/151224/151224_1440highres.zip
+  formats:
+    360p: http://ex.shemalejapanhardcore.com/members/content/upload/uta/151224//360p/utatbhc1_1_hdmp4.mp4
+    480p: http://ex.shemalejapanhardcore.com/members/content/upload/uta/151224//480p/utatbhc1_1_hdmp4.mp4
+    720P: http://ex.shemalejapanhardcore.com/members/content/upload/uta/151224//720p/utaTBHC1_1_hdmp4.mp4
+  id: Exclusive-Uta_highres
+- title: Chuling Takes A Cock Pounding
+  url: http://ex.shemalejapanhardcore.com/members/scenes/chuling-takes-a-cock-pounding_vids.html
+  thumbnail: http://ex.shemalejapanhardcore.com/members/content/contentthumbs/4305.jpg
+  date: 2013-08-15
+  photoset_url: http://ex.shemalejapanhardcore.com/members/scenes/chuling-takes-a-cock-pounding_highres.html
+  actor_id: chuling
+  zip: http://ex.shemalejapanhardcore.com/members/content/upload/chuling/2028-2029/
+  formats:
+    360p: http://ex.shemalejapanhardcore.com/members/content/upload/chuling/2028-2029//360p/chulinghcsmj1_1_1280.mp4
+    480p: http://ex.shemalejapanhardcore.com/members/content/upload/chuling/2028-2029//480p/chulinghcsmj1_1_1280.mp4
+    720P: http://ex.shemalejapanhardcore.com/members/content/upload/chuling/2028-2029//720p/chulinghcsmj1_1_1280.mp4
+  id: chuling-takes-a-cock-pounding_highres
+- title: Serina Gets Fucked by Jasmine
+  url: http://ex.shemalejapanhardcore.com/members/scenes/Serina-Gets-Fucked-by-Jasmine_vids.html
+  thumbnail: http://ex.shemalejapanhardcore.com/members/content/contentthumbs/5187.jpg
+  date: 2013-07-19
+  photoset_url: http://ex.shemalejapanhardcore.com/members/scenes/Serina-Gets-Fucked-by-Jasmine_highres.html
+  actor_id: serina
+  zip: http://ex.shemalejapanhardcore.com/members/content/upload/serina/2019-2021/
+  formats:
+    360p: http://ex.shemalejapanhardcore.com/members/content/upload/serina/2019-2021//360p/serinajasminehcsmj1_1_1280.mp4
+    480p: http://ex.shemalejapanhardcore.com/members/content/upload/serina/2019-2021//480p/serinajasminehcsmj1_1_1280.mp4
+    720P: http://ex.shemalejapanhardcore.com/members/content/upload/serina/2019-2021//720p/serinajasminehcsmj1_1_1280.mp4
+  id: Serina-Gets-Fucked-by-Jasmine_highres
+- title: Serina Sexy Fun
+  url: http://ex.shemalejapanhardcore.com/members/scenes/Serina-Sexy-Fun_vids.html
+  thumbnail: http://ex.shemalejapanhardcore.com/members/content/contentthumbs/595.jpg
+  date: 2013-02-21
+  photoset_url: http://ex.shemalejapanhardcore.com/members/scenes/Serina-Sexy-Fun_highres.html
+  actor_id: serina
+  zip: http://ex.shemalejapanhardcore.com/members/content/upload/serina/1961-1962/
+  formats:
+    360p: http://ex.shemalejapanhardcore.com/members/content/upload/serina/1961-1962//360p/serinasmj1_1_1280.mp4
+    480p: http://ex.shemalejapanhardcore.com/members/content/upload/serina/1961-1962//480p/serinasmj1_1_1280.mp4
+    720P: http://ex.shemalejapanhardcore.com/members/content/upload/serina/1961-1962//720p/serinasmj1_1_1280.mp4
+  id: Serina-Sexy-Fun_highres
