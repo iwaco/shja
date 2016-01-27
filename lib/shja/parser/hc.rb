@@ -32,7 +32,16 @@ end
 
 class Shja::Parser::HcActorPage < Shja::Parser
 
-  def parse
+  def parse_actor
+    page = @page
+    return {}.tap do |actor|
+      actor['name']       = page.at_css('.model_details h3').content.strip
+      photo = page.at_css('div.model_photo img.thumbs')
+      actor['thumbnail'] = File.join(HC_BASE_URL, photo['src'])
+    end
+  end
+
+  def parse_movies
     page = @page
     photosets, movies = _split_photoset_and_movie(page)
     unless photosets.size == movies.size
@@ -77,6 +86,9 @@ class Shja::Parser::HcZipPage < Shja::Parser
     "#{HC_BASE_URL}#{url}"
   end
 
+  def parse_pictures
+
+  end
 end
 
 class Shja::Parser::HcMoviePage < Shja::Parser
@@ -89,7 +101,7 @@ class Shja::Parser::HcMoviePage < Shja::Parser
         format = f.content.split()[0].strip
         formats[format] = File.join(HC_BASE_URL, f['href'])
       end
-      raise "Movie isn't detected" if formats.size == 0
+      Shja.log.info("Movie isn't detected") if formats.size == 0
     end
   end
 

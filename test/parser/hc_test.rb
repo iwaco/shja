@@ -146,8 +146,15 @@ class ShjaParserHcActorPageTest < Minitest::Test
     @page = Nokogiri::HTML.parse(@lisa_html)
   end
 
-  def test_parse
-    movies = @parser.parse
+  def test_parse_actor
+    actor = @parser.parse_actor
+    assert_kind_of(Hash, actor)
+    assert_equal('Lisa', actor['name'])
+    assert_equal('http://ex.shemalejapanhardcore.com/members/content/contentthumbs/2761-set.jpg', actor['thumbnail'])
+  end
+
+  def test_parse_movies
+    movies = @parser.parse_movies
     assert_kind_of(Array, movies)
     assert_equal(5, movies.size)
     movies.each_with_index do |movie, i|

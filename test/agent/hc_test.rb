@@ -18,12 +18,16 @@ class ShjaAgentHcTest < Minitest::Test
     assert_equal(['A', 'B', 'C', 'D', 'E', 'F'], actors)
   end
 
-  def test_fetch_actor_detail
+  def test_fetch_actor_movies
     mock_actor = mock_actor('lisa')
     movies = [
-      {'url' => 'a'}, {'url' => 'b'}, {'url' => 'c'}
+      {'url' => 'a', 'photoset_url' => 'aaa.html'},
+      {'url' => 'b', 'photoset_url' => 'bbb.html'},
+      {'url' => 'c', 'photoset_url' => 'ccc.html'}
     ].map { |e| Shja::Movie.new(e) }
-    expected_id = '151224'
+    expected_ids = [
+      'aaa', 'bbb', 'ccc'
+    ]
     expected_zip_url = 'http://ex.shemalejapanhardcore.com/members/content/upload/uta/151224/151224_1440highres.zip'
     expected_formats = { '720p' => 'http://720p.mp4' }
 
@@ -33,13 +37,13 @@ class ShjaAgentHcTest < Minitest::Test
     @agent.stubs(:_fetch_zip_url).returns(expected_zip_url)
     @agent.stubs(:_fetch_mp4_url).returns(expected_formats)
 
-    actual_movies = @agent.fetch_actor_detail(mock_actor)
+    actual_movies = @agent.fetch_actor_movies(mock_actor)
     assert_equal(3, actual_movies.size)
-    actual_movies.each do |movie|
+    actual_movies.each_with_index do |movie, i|
       assert_kind_of(Shja::Movie, movie)
       assert_equal(expected_zip_url, movie.zip)
       assert_equal(expected_formats, movie.formats)
-      assert_equal(expected_id, movie.id)
+      assert_equal(expected_ids[i], movie.id)
     end
   end
 
@@ -91,7 +95,7 @@ class ShjaAgentHcTest < Minitest::Test
     movies_hash = [{'url' => 'a'}, {'url' => 'b'}]
     mock_parser = mock('mock_parser')
     lisa = mock_actor('lisa')
-    mock_parser.stubs(:parse).returns(movies_hash)
+    mock_parser.stubs(:parse_movies).returns(movies_hash)
 
     @agent.expects(:_fetch_page).with(lisa.url).returns(expected_page)
     Shja::Parser::HcActorPage.expects(:new).with(expected_page).returns(mock_parser)

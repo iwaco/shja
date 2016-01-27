@@ -42,7 +42,7 @@ class ShjaClientHcTest < ShjaDBTest
                 .with(**expected_args)
                 .returns(expected_actors)
 
-    client.refresh_actors(**expected_args)
+    client.refresh_actors!(**expected_args)
     expected_actors.each_with_index do |actor, index|
       assert_equal(actor, client.db.actors[index])
     end

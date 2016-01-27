@@ -51,7 +51,23 @@ class Shja::Agent::Hc
     end
   end
 
-  def fetch_actor_detail(actor)
+  def fetch_actor(actor_or_url)
+    url = actor_or_url
+    if actor_or_url.kind_of?(Shja::Actor)
+      url = actor_or_url.url
+    end
+    unless /^http/ =~ url
+      url = "#{BASE_URL}/members/models/#{url}.html"
+    end
+    actor_page = _fetch_page(url)
+    parser = Shja::Parser::HcActorPage.new(actor_page)
+    return Shja::Actor.new(parser.parse_actor).tap do |actor|
+      actor['url'] = url
+      actor['id']  = File.basename(url, '.html')
+    end
+  end
+
+  def fetch_actor_movies(actor)
     Shja::log.debug("Start fetching actor detail: #{actor.id}")
     return _fetch_movie_list_from_actor_page(actor).map do |movie|
       movie['zip']     = _fetch_zip_url(movie)
@@ -96,7 +112,7 @@ class Shja::Agent::Hc
   def _fetch_movie_list_from_actor_page(actor)
     actor_page = _fetch_page(actor.url)
     parser = Shja::Parser::HcActorPage.new(actor_page)
-    return parser.parse.map do |movie|
+    return parser.parse_movies.map do |movie|
       m = Shja::Movie.new(movie)
       m.actor = actor
       m
@@ -116,8 +132,9 @@ class Shja::Agent::Hc
   end
 
   def _extract_movie_id(movie)
-    movie.zip.split('/')[-2].tap do |id|
-      raise "Id is invalid: #{movie.zip}" unless /\d+/ =~ id
+    File.basename(movie.photoset_url, '.*').tap do |id|
+      Shja.log.debug("Movie id is: #{id}")
+      # raise "Id is invalid, id: #{id}, url: #{movie.zip}" unless /\d+/ =~ id
     end
   end
 
