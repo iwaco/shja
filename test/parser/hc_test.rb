@@ -240,9 +240,25 @@ class ShjaParserHcZipPageTest < Minitest::Test
     @parser = Shja::Parser::HcZipPage.new(@zip_html)
   end
 
-  def test_parse
+  def test_parse_zip_url
     zip_url = @parser.parse_zip_url
     assert_equal('http://ex.shemalejapanhardcore.com/members/content/upload/uta/151224/151224_1440highres.zip', zip_url)
+  end
+
+  def test_parse_pictures
+    pictures = @parser.parse_pictures[:pictures]
+    assert_equal(30, pictures.size)
+    pictures.each_with_index do |pict, i|
+      assert_equal("http://ex.shemalejapanhardcore.com/members/content/upload/uta/151224/photos/UtaHC1.smjhc.tb.aj0#{sprintf('%02d', i+1)}.jpg", pict)
+    end
+  end
+
+  def test_parse_pages
+    pages = @parser.parse_pictures[:pages]
+    assert_equal(5, pages.size)
+    pages.each_with_index do |page, i|
+      assert_equal("http://ex.shemalejapanhardcore.com/members/scenes/Exclusive-Uta_highres_#{i+2}.html", page)
+    end
   end
 
 end

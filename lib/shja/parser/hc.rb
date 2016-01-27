@@ -87,7 +87,27 @@ class Shja::Parser::HcZipPage < Shja::Parser
   end
 
   def parse_pictures
-
+    page = @page
+    pictures = []
+    page.css('div.indphoto .photo_thumb_container a.fancybox').each do |img|
+      href = img['href']
+      unless href.start_with?(HC_BASE_URL)
+        href = "#{HC_BASE_URL}#{href}"
+      end
+      pictures << href
+    end
+    other_pages = []
+    page.css('div.pagination li.num a.pagenav').each do |num|
+      href = num['href']
+      unless href.start_with?(HC_BASE_URL)
+        href = "#{HC_BASE_URL}#{href}"
+      end
+      other_pages << href
+    end
+    return {
+      pictures: pictures,
+      pages: other_pages
+    }
   end
 end
 
