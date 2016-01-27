@@ -31,4 +31,22 @@ class ActorManageTest < ShjaDBTest
     assert_equal(expected_changed_thumbnail, db.actors[0]['thumbnail'])
   end
 
+  def test_find
+    actors = [mock_actor('lisa'), mock_actor('serina'), mock_actor('chuling')]
+    actors.each do |actor|
+      actor_manager.update(actor)
+    end
+
+    assert_equal(mock_actor('serina'), actor_manager.find('serina'))
+  end
+
+  def test_find_non_existance
+    actors = [mock_actor('lisa'), mock_actor('serina'), mock_actor('chuling')]
+    actors.each do |actor|
+      actor_manager.update(actor)
+    end
+
+    assert_raises { actor_manager.find('not_found') }
+  end
+
 end

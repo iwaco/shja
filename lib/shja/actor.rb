@@ -1,6 +1,12 @@
 
 class Shja::ActorManager < Shja::ManagerBase
 
+  def find(id)
+    self.db.actors.find{|e| e['id'] == id }.tap do |actor|
+      raise "Actor not found: #{id}" unless actor
+    end
+  end
+
   def update(actor)
     _actor = self.db.actors.find{|e| e == actor }
     if _actor

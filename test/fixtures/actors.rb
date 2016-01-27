@@ -12,11 +12,23 @@ TEST_ACTORS_ = {
     'name' => 'Serina',
     'thumbnail' => 'http://serina.png'
   },
-  'serina' => {
+  'chuling' => {
     'id' => 'chuling',
     'url' => 'http://chuling',
     'name' => 'Chuling',
     'thumbnail' => 'http://chuling.png'
+  },
+  'saki' => {
+    'id' => 'saki',
+    'url' => 'http://saki',
+    'name' => 'Saki',
+    'thumbnail' => 'http://saki.png'
+  },
+  'haruna' => {
+    'id' => 'haruna',
+    'url' => 'http://haruna',
+    'name' => 'Haruna',
+    'thumbnail' => 'http://haruna.png'
   },
 }
 
