@@ -79,6 +79,10 @@ class Shja::Movie < Shja::ResourceBase
 
   def download_photoset(agent)
     Shja::log.debug("Start download photoset: #{self.id}")
+    if has_pictures?
+      Shja::log.debug("Movie has already photoset")
+      return
+    end
     page = agent._fetch_page(self.photoset_url)
     parser = Shja::Parser::HcZipPage.new(page)
     result = parser.parse_pictures
@@ -95,8 +99,16 @@ class Shja::Movie < Shja::ResourceBase
     self._download(agent, self.thumbnail, self.thumbnail_path)
   end
 
+  def pictures_path
+    Dir.glob(File.join(photoset_dir_path, '*.jpg'))
+  end
+
+  def has_pictures?
+    pictures_path.size > 0
+  end
+
   def pictures_metadata
-    return Dir.glob(File.join(photoset_dir_path, '*.jpg')).sort.map do |image|
+    return pictures_path.sort.map do |image|
       basename = File.basename(image)
       size = ::FastImage.size(image)
       {
