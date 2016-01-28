@@ -118,7 +118,7 @@ class Shja::Parser::HcMoviePage < Shja::Parser
       page = @page
       div = page.at_css('div.video_size_outer div.movie_sizes')
       div.css('a.full_download_link').each do |f|
-        format = f.content.split()[0].strip
+        format = f.content.split()[0].strip.downcase
         formats[format] = File.join(HC_BASE_URL, f['href'])
       end
       Shja.log.info("Movie isn't detected") if formats.size == 0
