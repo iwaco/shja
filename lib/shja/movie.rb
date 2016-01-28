@@ -1,9 +1,16 @@
 
 class Shja::MovieManager < Shja::ManagerBase
+  attr_reader :actors
+
+  def initialize(db, actors)
+    super(db)
+    @actors = actors
+  end
 
   def find(id)
     self.db.movies.find{|e| e['id'] == id }.tap do |movie|
       raise "Movie not found: #{id}" unless movie
+      movie.actor = actors.find(movie.actor_id)
     end
   end
 
@@ -13,10 +20,13 @@ class Shja::MovieManager < Shja::ManagerBase
   end
 
   def update(movie)
+    actor = actors.find(movie.actor_id)
     _movie = self.db.movies.find{|e| e == movie }
     if _movie
+      _movie.actor = actor
       _movie.data_hash.update(movie.to_h)
     else
+      movie.actor = actor
       self.db.movies << movie
     end
   end

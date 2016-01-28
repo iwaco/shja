@@ -15,7 +15,7 @@ class Shja::Client::Hc
     @target_dir = target_dir
     @db         = Shja::Db.get(target_dir)
     @actors     = Shja::ActorManager.new(@db, target_dir)
-    @movies     = Shja::MovieManager.new(@db)
+    @movies     = Shja::MovieManager.new(@db, @actors)
   end
 
   def refresh_actors!(first_letter: 'A', last_letter: 'A')

@@ -2,8 +2,8 @@
 class Shja::ActorManager < Shja::ManagerBase
   attr_reader :target_dir
 
-  def initialize(data_hash, target_dir)
-    super(data_hash)
+  def initialize(db, target_dir)
+    super(db)
     @target_dir = target_dir
   end
 
