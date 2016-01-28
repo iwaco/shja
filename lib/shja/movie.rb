@@ -111,7 +111,7 @@ class Shja::Movie < Shja::ResourceBase
     return pictures_path.sort.map do |image|
       basename = File.basename(image)
       size = ::FastImage.size(image)
-      return if size
+      if size
         {
           "name" => basename,
           "w" => size[0],
