@@ -59,10 +59,12 @@ class Shja::Movie < Shja::ResourceBase
   def download_movie(format)
     unless format
       Shja::log.info("format isn't specified for: #{self.id}")
+      return
     end
-    unless url = self.formats['format']
+    unless url = self.formats[format]
       Shja::log.warn("movie not found in formats: #{format}")
       Shja::log.debug("formats: #{self.formats}")
+      return
     end
     self._download(agent, url, movie_path(format))
   end
