@@ -79,10 +79,10 @@ class Shja::Movie < Shja::ResourceBase
 
   def download_photoset(agent)
     Shja::log.debug("Start download photoset: #{self.id}")
-    if has_pictures?
-      Shja::log.debug("Movie has already photoset")
-      return
-    end
+    # if has_pictures?
+    #   Shja::log.debug("Movie has already photoset")
+    #   return
+    # end
     page = agent._fetch_page(self.photoset_url)
     parser = Shja::Parser::HcZipPage.new(page)
     result = parser.parse_pictures
