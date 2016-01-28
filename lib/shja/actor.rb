@@ -37,12 +37,7 @@ class Shja::Actor < Shja::ResourceBase
 
   def download(agent)
     Shja::log.debug("Start download actor: #{self.id}")
-    FileUtils.mkdir_p(self.dir_path) unless File.directory?(self.dir_path)
-    unless File.file?(self.thumbnail_path)
-      agent.download(self.thumbnail, self.thumbnail_path)
-    else
-      Shja::log.debug("Skip download thumbnail: #{self.thumbnail_path}")
-    end
+    self._download(agent, self.thumbnail, self.thumbnail_path)
   end
 
   def thumbnail_path

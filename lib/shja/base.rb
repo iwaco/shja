@@ -14,6 +14,16 @@ class Shja::ResourceBase
     @data_hash = data_hash
   end
 
+  def _download(agent, url, path)
+    dir = File.dirname(path)
+    FileUtils.mkdir_p(dir) unless File.directory?(dir)
+    unless File.file?(path)
+      agent.download(url, path)
+    else
+      Shja::log.debug("Skip download: #{url}")
+    end
+  end
+
   def method_missing(method_sym, *arguments, &block)
     if @data_hash.include? method_sym.to_s
       @data_hash[method_sym.to_s]
