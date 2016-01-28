@@ -22,6 +22,9 @@ class Shja::ResourceBase
     else
       Shja::log.debug("Skip download: #{url}")
     end
+  rescue => ex
+    FileUtils.rm_r(path)
+    raise ex
   end
 
   def method_missing(method_sym, *arguments, &block)

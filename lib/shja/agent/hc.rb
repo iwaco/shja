@@ -99,7 +99,7 @@ class Shja::Agent::Hc
     Shja.log.debug("_download: #{url}")
 
     open(path, 'wb') do |io|
-      self.agent.download(url, io)
+      self.agent.download(url, io, [], LOGIN_URL)
     end
   end
 
