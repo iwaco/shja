@@ -47,7 +47,7 @@ end
 if subcommand == 'download'
   actors.each do |url_or_id|
     client.download_by_actor(url_or_id, format)
-    subcommand = 'html' if html
+    client.generate_html if html
   end
 end
 
