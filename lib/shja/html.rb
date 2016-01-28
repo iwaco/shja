@@ -15,6 +15,7 @@ class Shja::Html
   end
 
   def generate_detail_js(movie)
+    return unless movie.has_pictures?
     metadata = movie.pictures_metadata
     open(File.join(movie.photoset_dir_path, 'index.js'), 'w') do |io|
       io.write("calbackImageFilename(" + JSON.pretty_generate(metadata) + ");")
