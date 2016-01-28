@@ -6,11 +6,11 @@ Shja.log.level = Logger::FATAL
 require 'minitest/autorun'
 require 'mocha/mini_test'
 require 'securerandom'
-require 'fileutils'
 
 TMP_ROOT = File.join(File.dirname(__FILE__), '..', 'tmp')
 FIXTURES_ROOT = File.join(File.dirname(__FILE__), 'fixtures')
 HC_FIXTURES_ROOT = File.join(FIXTURES_ROOT, 'hc')
+HC_TARGET_DIR = File.join(HC_FIXTURES_ROOT, 'target')
 
 require 'fixtures/actors'
 require 'fixtures/movies'

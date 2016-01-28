@@ -1,5 +1,6 @@
 require "shja/version"
 require 'logger'
+require 'fileutils'
 
 module Shja
   # Your code goes here...

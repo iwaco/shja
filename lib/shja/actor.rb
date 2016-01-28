@@ -23,6 +23,7 @@ class Shja::Actor < Shja::ResourceBase
   # attr_reader :name
   # attr_reader :url
   # attr_reader :thumbnail
+  attr_accessor :target_dir
 
   def fetch_movies(agent)
     Shja::log.debug("Start fetching actor detail: #{self.id}")
@@ -32,6 +33,25 @@ class Shja::Actor < Shja::ResourceBase
       movie['id']      = _extract_movie_id(movie)
       movie
     end
+  end
+
+  def download(agent)
+    Shja::log.debug("Start download actor: #{self.id}")
+    FileUtils.mkdir_p(self.dir_path) unless File.directory?(self.dir_path)
+    unless File.file?(self.thumbnail_path)
+      agent.download(self.thumbnail, self.thumbnail_path)
+    else
+      Shja::log.debug("Skip download thumbnail: #{self.thumbnail_path}")
+    end
+  end
+
+  def thumbnail_path
+    File.join(self.dir_path, 'thumbnail.jpg')
+  end
+
+  def dir_path
+    raise "target_dir is unset" unless self.target_dir
+    return File.join(target_dir, self.id)
   end
 
   def _fetch_movie_list_from_actor_page(agent)

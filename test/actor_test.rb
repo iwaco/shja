@@ -1,14 +1,39 @@
 require 'test_helper'
 
 class ActorTest < Minitest::Test
-  attr_reader :lisa
+  attr_reader :lisa, :uta
   attr_reader :mock_agent
   attr_reader :mock_parser
 
   def setup
     @lisa        = mock_actor('lisa')
+    @uta         = mock_actor('uta')
     @mock_agent  = mock('agent')
     @mock_parser = mock('parser')
+  end
+
+  def teardown
+    if uta.target_dir
+      FileUtils.rm_r(uta.dir_path) if File.exist?(uta.dir_path)
+    end
+  end
+
+  def test_download
+    uta.target_dir = HC_TARGET_DIR
+    mock_agent.expects(:download).with(uta.thumbnail, uta.thumbnail_path)
+    uta.download(mock_agent)
+  end
+
+  def test_download_with_exist
+    lisa.target_dir = HC_TARGET_DIR
+    mock_agent.expects(:download).never
+    lisa.download(mock_agent)
+  end
+
+  def test_download_not_set_target_dir
+    assert_raises do
+      lisa.download(mock_agent)
+    end
   end
 
   def test_fetch_movies

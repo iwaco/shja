@@ -1,4 +1,3 @@
-require 'fileutils'
 require 'yaml'
 
 class Shja::Db

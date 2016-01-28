@@ -24,11 +24,11 @@ TEST_ACTORS_ = {
     'name' => 'Saki',
     'thumbnail' => 'http://saki.png'
   },
-  'haruna' => {
-    'id' => 'haruna',
-    'url' => 'http://haruna',
-    'name' => 'Haruna',
-    'thumbnail' => 'http://haruna.png'
+  'uta' => {
+    'id' => 'uta',
+    'url' => 'http://uta',
+    'name' => 'Uta',
+    'thumbnail' => 'http://uta.png'
   },
 }
 
