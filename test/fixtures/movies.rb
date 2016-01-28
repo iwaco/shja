@@ -42,6 +42,20 @@ TEST_MOVIES_ = {
     },
     'thumbnail' => 'http://serina.png'
   },
+  'uta_movie' => {
+    'id' => 'Exclusive-Uta_highres',
+    'actor_id' => 'uta',
+    'title' => 'Serina movie',
+    'url' => 'http://uta.url',
+    'photoset_url' => 'http://uta.photoset_url.url',
+    'date' => Date.parse('2016-02-27'),
+    'zip_url' => 'http://uta.zip_url.url',
+    'formats' => {
+      '720p' => 'http://uta.720p.mp4',
+      '480p' => 'http://uta.480p.mp4',
+    },
+    'thumbnail' => 'http://uta.png'
+  },
 }
 
 def mock_movie(title='lisa_movie')

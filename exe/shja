@@ -24,6 +24,7 @@ subparsers['refresh'].on('-u URL_OR_ACTOR_ID') {|v| actors << v }
 subparsers['download'] = OptionParser.new
 subparsers['download'].on('-u URL_OR_ACTOR_ID') {|v| actors << v }
 subparsers['download'].on('-f FORMAT') {|v| format = v }
+subparsers['html'] = OptionParser.new
 
 parser.order!(ARGV)
 subcommand = ARGV.shift
@@ -43,4 +44,6 @@ elsif subcommand == 'download'
   actors.each do |url_or_id|
     client.download_by_actor(url_or_id, format)
   end
+elsif subcommand == 'html'
+  client.generate_html
 end

@@ -6,6 +6,9 @@ class MovieTest < Minitest::Test
   attr_reader :mock_agent
   attr_reader :mock_parser
 
+  attr_reader :uta_movie
+  attr_reader :uta
+
   def setup
     @lisa = mock_actor('lisa')
     @lisa.target_dir = HC_TARGET_DIR
@@ -13,6 +16,11 @@ class MovieTest < Minitest::Test
     @movie.actor = @lisa
     @mock_agent  = mock('agent')
     @mock_parser = mock('parser')
+
+    @uta = mock_actor('uta')
+    @uta.target_dir = File.join(HC_FIXTURES_ROOT, 'exists')
+    @uta_movie = mock_movie('uta_movie')
+    @uta_movie.actor = @uta
   end
 
   def teardown
@@ -83,5 +91,11 @@ class MovieTest < Minitest::Test
     movie.expects(:_download).with(mock_agent, picture_url, picture_path)
 
     movie._download_pictures(mock_agent, [picture_url])
+  end
+
+  def test_pictures_metadata
+    actual_metadata = uta_movie.pictures_metadata
+    assert_equal(1, actual_metadata.size)
+    assert_equal({"name" => 'img.jpg', 'w' => 256, 'h' => 144}, actual_metadata[0])
   end
 end

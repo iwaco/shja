@@ -1,3 +1,4 @@
+require 'fastimage'
 
 class Shja::MovieManager < Shja::ManagerBase
   attr_reader :actors
@@ -5,6 +6,13 @@ class Shja::MovieManager < Shja::ManagerBase
   def initialize(db, actors)
     super(db)
     @actors = actors
+  end
+
+  def all
+    self.db.movies.each do |movie|
+      movie.actor = actors.find(movie.actor_id)
+      yield movie
+    end
   end
 
   def find(id)
@@ -87,8 +95,24 @@ class Shja::Movie < Shja::ResourceBase
     self._download(agent, self.thumbnail, self.thumbnail_path)
   end
 
+  def pictures_metadata
+    return Dir.glob(File.join(photoset_dir_path, '*.jpg')).sort.map do |image|
+      basename = File.basename(image)
+      size = ::FastImage.size(image)
+      {
+        "name" => basename,
+        "w" => size[0],
+        "h" => size[1]
+      }
+    end
+  end
+
   def photoset_dir_path
-    File.join(self.dir_path, "photoset")
+    File.join(self.actor.target_dir, self.photoset_dir_url)
+  end
+
+  def photoset_dir_url
+    File.join(self.dir_url, "photoset")
   end
 
   def picture_path(url)
@@ -96,16 +120,32 @@ class Shja::Movie < Shja::ResourceBase
     File.join(self.photoset_dir_path, basename)
   end
 
+  def movie_exist?(format)
+    File.file?(movie_path(format))
+  end
+
   def movie_path(format)
-    File.join(self.dir_path, "#{format}.mp4")
+    File.join(self.actor.target_dir, self.movie_url(format))
+  end
+
+  def movie_url(format)
+    File.join(self.dir_url, "#{format}.mp4")
   end
 
   def thumbnail_path
-    File.join(self.dir_path, 'thumbnail.jpg')
+    File.join(self.actor.target_dir, self.thumbnail_url)
+  end
+
+  def thumbnail_url
+    File.join(self.dir_url, 'thumbnail.jpg')
   end
 
   def dir_path
-    File.join(self.actor.dir_path, self.id)
+    File.join(self.actor.target_dir, self.dir_url)
+  end
+
+  def dir_url
+    File.join(self.actor.dir_url, self.id)
   end
 
   def _download_pictures(agent, pictures)

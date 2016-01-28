@@ -5,12 +5,16 @@ class Shja::ActorManager < Shja::ManagerBase
   def initialize(db, target_dir)
     super(db)
     @target_dir = target_dir
+    @actor_cache = {}
   end
 
   def find(id)
-    self.db.actors.find{|e| e['id'] == id }.tap do |actor|
+    actor = @actor_cache[id]
+    return actor if actor
+    return self.db.actors.find{|e| e['id'] == id }.tap do |actor|
       raise "Actor not found: #{id}" unless actor
       actor.target_dir = target_dir
+      @actor_cache[id] = actor
     end
   end
 
@@ -55,7 +59,11 @@ class Shja::Actor < Shja::ResourceBase
 
   def dir_path
     raise "target_dir is unset" unless self.target_dir
-    return File.join(target_dir, self.id)
+    return File.join(target_dir, dir_url)
+  end
+
+  def dir_url
+    return self.id
   end
 
   def _fetch_movie_list_from_actor_page(agent)

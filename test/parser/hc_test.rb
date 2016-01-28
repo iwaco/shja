@@ -268,7 +268,7 @@ class ShjaParserHcMoviePageTest < Minitest::Test
   FORMATS = {
     "360p" => "http://ex.shemalejapanhardcore.com/members/content/upload/uta/151224//360p/utatbhc1_1_hdmp4.mp4",
     "480p" => "http://ex.shemalejapanhardcore.com/members/content/upload/uta/151224//480p/utatbhc1_1_hdmp4.mp4",
-    "720P" => "http://ex.shemalejapanhardcore.com/members/content/upload/uta/151224//720p/utaTBHC1_1_hdmp4.mp4",
+    "720p" => "http://ex.shemalejapanhardcore.com/members/content/upload/uta/151224//720p/utaTBHC1_1_hdmp4.mp4",
   }
 
   def setup
