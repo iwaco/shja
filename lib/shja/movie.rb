@@ -120,8 +120,8 @@ class Shja::Movie < Shja::ResourceBase
       else
         Shja::log.warn("Image can't detect size: #{image}")
         nil
-      end.compact
-    end
+      end
+    end.compact
   end
 
   def photoset_dir_path
