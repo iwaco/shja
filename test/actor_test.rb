@@ -20,13 +20,13 @@ class ActorTest < Minitest::Test
 
   def test_download
     uta.target_dir = HC_TARGET_DIR
-    mock_agent.expects(:download).with(uta.thumbnail, uta.thumbnail_path)
+    mock_agent.expects(:_download).with(uta.thumbnail, uta.thumbnail_path)
     uta.download(mock_agent)
   end
 
   def test_download_with_exist
     lisa.target_dir = HC_TARGET_DIR
-    mock_agent.expects(:download).never
+    mock_agent.expects(:_download).never
     lisa.download(mock_agent)
   end
 

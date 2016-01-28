@@ -14,7 +14,7 @@ class Shja::Client::Hc
     @agent      = Shja::Agent::Hc.new(username: username, password: password)
     @target_dir = target_dir
     @db         = Shja::Db.get(target_dir)
-    @actors     = Shja::ActorManager.new(@db)
+    @actors     = Shja::ActorManager.new(@db, target_dir)
     @movies     = Shja::MovieManager.new(@db)
   end
 
@@ -51,7 +51,6 @@ class Shja::Client::Hc
     rescue
       actor = refresh_actor!(actor_or_url)
     end
-    actor.target_dir = self.target_dir
     _movies = movies.find_by_actor(actor)
 
     actor.download(agent)

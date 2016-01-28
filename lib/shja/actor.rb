@@ -1,17 +1,26 @@
 
 class Shja::ActorManager < Shja::ManagerBase
+  attr_reader :target_dir
+
+  def initialize(data_hash, target_dir)
+    super(data_hash)
+    @target_dir = target_dir
+  end
 
   def find(id)
     self.db.actors.find{|e| e['id'] == id }.tap do |actor|
       raise "Actor not found: #{id}" unless actor
+      actor.target_dir = target_dir
     end
   end
 
   def update(actor)
     _actor = self.db.actors.find{|e| e == actor }
     if _actor
+      _actor.target_dir = target_dir
       _actor.data_hash.update(actor.to_h)
     else
+      actor.target_dir = target_dir
       self.db.actors << actor
     end
   end
