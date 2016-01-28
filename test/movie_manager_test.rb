@@ -7,16 +7,17 @@ class MovieManageTest < ShjaDBTest
     super
     @movie_manager = Shja::MovieManager.new(db)
   end
-end
 
-class MovieTest < Minitest::Test
+  def test_find_by_actor
+    lisa_movies = [mock_movie('lisa_movie'), mock_movie('lisa_movie')]
+    lisa_movies[1]['url'] = 'lisamovies2'
+    serina_movies = [mock_movie('serina_movie')]
+    (lisa_movies + serina_movies).each do |movie|
+      movie_manager.update(movie)
+    end
+    lisa = mock_actor('lisa')
 
-  def test_set_actor
-    actor = mock_actor('serina')
-    movie = mock_movie('lisa_movie')
-
-    movie.actor = actor
-    assert_equal(actor.id, movie.actor_id)
+    actual_movies = movie_manager.find_by_actor(lisa)
+    assert_equal(lisa_movies, actual_movies)
   end
-
 end

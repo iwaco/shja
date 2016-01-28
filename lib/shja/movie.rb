@@ -7,6 +7,11 @@ class Shja::MovieManager < Shja::ManagerBase
     end
   end
 
+  def find_by_actor(actor)
+    self.db.movies.select { |e| e.actor_id == actor.id }
+                  .map { |e| e.actor = actor; e }
+  end
+
   def update(movie)
     _movie = self.db.movies.find{|e| e == movie }
     if _movie

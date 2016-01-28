@@ -36,11 +36,28 @@ class Shja::Client::Hc
     _movies.each do |movie|
       movies.update(movie)
     end
+    return actor
   end
 
   def refresh_actor!(actor_or_url)
-    refresh_actor(actor_or_url)
-    db.save
+    return refresh_actor(actor_or_url).tap do |actor|
+      db.save
+    end
+  end
+
+  def download_by_actor(actor_or_url)
+    begin
+      actor = actors.find(actor_or_url)
+    rescue
+      actor = refresh_actor!(actor_or_url)
+    end
+    actor.target_dir = self.target_dir
+    _movies = movies.find_by_actor(actor)
+
+    actor.download(agent)
+    _movies.each do |movie|
+      movie.download_photoset(agent)
+    end
   end
 
 end

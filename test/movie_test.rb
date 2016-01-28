@@ -19,6 +19,15 @@ class MovieTest < Minitest::Test
     FileUtils.rm_r(movie.dir_path) if File.exist?(movie.dir_path)
   end
 
+  def test_set_actor
+    actor = mock_actor('serina')
+    movie = mock_movie('lisa_movie')
+
+    movie.actor = actor
+    assert_equal(actor.id, movie.actor_id)
+    assert_equal(actor, movie.actor)
+  end
+
   def test_download_thumbnail
     mock_agent.expects(:download).with(movie.thumbnail, movie.thumbnail_path)
     movie.download_thumbnail(mock_agent)

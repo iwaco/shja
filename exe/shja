@@ -5,7 +5,7 @@ require 'shja'
 require 'optparse'
 require 'logger'
 
-actor_urls = []
+actors = []
 
 config = {}
 config[:username]    = ENV['SHJA_USERNAME']
@@ -19,7 +19,9 @@ subparsers = Hash.new {|h,k|
   exit 1
 }
 subparsers['refresh'] = OptionParser.new
-subparsers['refresh'].on('-u URL') {|v| actor_urls << v }
+subparsers['refresh'].on('-u URL_OR_ACTOR_ID') {|v| actors << v }
+subparsers['download'] = OptionParser.new
+subparsers['download'].on('-u URL_OR_ACTOR_ID') {|v| actors << v }
 
 parser.order!(ARGV)
 subcommand = ARGV.shift
@@ -29,10 +31,14 @@ unless config[:username] && config[:password] && config[:target_dir]
   raise "Required parameter is not specified: #{config}"
 end
 
+Shja.log.level = Logger::DEBUG
+client = Shja::Client::Hc.new(**config)
 if subcommand == 'refresh'
-  Shja.log.level = Logger::DEBUG
-  client = Shja::Client::Hc.new(**config)
-  actor_urls.each do |url|
-    client.refresh_actor!(url)
+  actors.each do |url_or_id|
+    client.refresh_actor!(url_or_id)
+  end
+elsif subcommand == 'download'
+  actors.each do |url_or_id|
+    client.download_by_actor(url_or_id)
   end
 end

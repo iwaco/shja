@@ -18,7 +18,7 @@ class Shja::ResourceBase
     dir = File.dirname(path)
     FileUtils.mkdir_p(dir) unless File.directory?(dir)
     unless File.file?(path)
-      agent.download(url, path)
+      agent._download(url, path)
     else
       Shja::log.debug("Skip download: #{url}")
     end
