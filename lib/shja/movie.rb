@@ -40,6 +40,23 @@ class Shja::Movie < Shja::ResourceBase
     @actor = actor
   end
 
+  def download(agent, format=nil)
+    download_thumbnail(agent)
+    download_photoset(agent)
+    download_movie(format)
+  end
+
+  def download_movie(format)
+    unless format
+      Shja::log.info("format isn't specified for: #{self.id}")
+    end
+    unless url = self.formats['format']
+      Shja::log.warn("movie not found in formats: #{format}")
+      Shja::log.debug("formats: #{self.formats}")
+    end
+    self._download(agent, url, movie_path(format))
+  end
+
   def download_photoset(agent)
     Shja::log.debug("Start download photoset: #{self.id}")
     page = agent._fetch_page(self.photoset_url)

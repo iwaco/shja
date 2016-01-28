@@ -6,6 +6,7 @@ require 'optparse'
 require 'logger'
 
 actors = []
+format = nil
 
 config = {}
 config[:username]    = ENV['SHJA_USERNAME']
@@ -22,6 +23,7 @@ subparsers['refresh'] = OptionParser.new
 subparsers['refresh'].on('-u URL_OR_ACTOR_ID') {|v| actors << v }
 subparsers['download'] = OptionParser.new
 subparsers['download'].on('-u URL_OR_ACTOR_ID') {|v| actors << v }
+subparsers['download'].on('-f FORMAT') {|v| format << v }
 
 parser.order!(ARGV)
 subcommand = ARGV.shift
@@ -39,6 +41,6 @@ if subcommand == 'refresh'
   end
 elsif subcommand == 'download'
   actors.each do |url_or_id|
-    client.download_by_actor(url_or_id)
+    client.download_by_actor(url_or_id, format)
   end
 end

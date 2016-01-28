@@ -45,7 +45,7 @@ class Shja::Client::Hc
     end
   end
 
-  def download_by_actor(actor_or_url)
+  def download_by_actor(actor_or_url, format=nil)
     begin
       actor = actors.find(actor_or_url)
     rescue
@@ -56,7 +56,7 @@ class Shja::Client::Hc
 
     actor.download(agent)
     _movies.each do |movie|
-      movie.download_photoset(agent)
+      movie.download(agent, format)
     end
   end
 
