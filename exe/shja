@@ -23,7 +23,7 @@ subparsers['refresh'] = OptionParser.new
 subparsers['refresh'].on('-u URL_OR_ACTOR_ID') {|v| actors << v }
 subparsers['download'] = OptionParser.new
 subparsers['download'].on('-u URL_OR_ACTOR_ID') {|v| actors << v }
-subparsers['download'].on('-f FORMAT') {|v| format << v }
+subparsers['download'].on('-f FORMAT') {|v| format = v }
 
 parser.order!(ARGV)
 subcommand = ARGV.shift
