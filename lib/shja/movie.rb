@@ -53,10 +53,10 @@ class Shja::Movie < Shja::ResourceBase
   def download(agent, format=nil)
     download_thumbnail(agent)
     download_photoset(agent)
-    download_movie(format)
+    download_movie(agent, format)
   end
 
-  def download_movie(format)
+  def download_movie(agent, format)
     unless format
       Shja::log.info("format isn't specified for: #{self.id}")
       return
