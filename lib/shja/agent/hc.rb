@@ -94,6 +94,15 @@ class Shja::Agent::Hc
   end
   memoize :_fetch_page
 
+  def _download(url, path)
+    login unless self.is_login
+    Shja.log.debug("_download: #{url}")
+
+    open(path, 'wb') do |io|
+      self.agent.download(url, io)
+    end
+  end
+
   def _fetch_index_page(letter: 'A', index: 0)
     url = "http://ex.shemalejapanhardcore.com/members/categories/models/#{index+1}/name/#{letter}/"
     _fetch_page(url)
