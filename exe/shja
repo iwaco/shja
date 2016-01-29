@@ -7,7 +7,7 @@ require 'logger'
 
 actors = []
 format = nil
-html   = false
+html_disable   = false
 
 config = {}
 config[:username]    = ENV['SHJA_USERNAME']
@@ -25,7 +25,7 @@ subparsers['refresh'].on('-u URL_OR_ACTOR_ID') {|v| actors << v }
 subparsers['download'] = OptionParser.new
 subparsers['download'].on('-u URL_OR_ACTOR_ID') {|v| actors << v }
 subparsers['download'].on('-f FORMAT') {|v| format = v }
-subparsers['download'].on('--html-disable HTML_DISABLE') {|v| html = (v == 'true')}
+subparsers['download'].on('--html-disable HTML_DISABLE') {|v| html_disable = (v == 'true')}
 subparsers['html'] = OptionParser.new
 
 parser.order!(ARGV)
@@ -47,7 +47,7 @@ end
 if subcommand == 'download'
   actors.each do |url_or_id|
     client.download_by_actor(url_or_id, format)
-    client.generate_html if html
+    client.generate_html unless html_disable
   end
 end
 
