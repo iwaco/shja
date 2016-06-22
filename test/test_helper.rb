@@ -21,7 +21,7 @@ class ShjaDBTest < Minitest::Test
 
   def setup
     @target_dir = File.join(TMP_ROOT, SecureRandom.hex(8))
-    @db         = Shja::Db.get(@target_dir)
+    @db         = Shja::Db::Hc.get(@target_dir)
   end
 
   def teardown

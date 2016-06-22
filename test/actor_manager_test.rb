@@ -9,7 +9,7 @@ class ActorManageTest < ShjaDBTest
   end
 
   def test_db
-    assert_kind_of(Shja::Db, actor_manager.db)
+    assert_kind_of(Shja::Db::Hc, actor_manager.db)
   end
 
   def test_save
