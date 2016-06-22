@@ -35,7 +35,7 @@ class ShjaAgentHcTest < Minitest::Test
     parser.expects(:parse_actors).returns(expects_actors).in_sequence(urls)
 
     actors = @agent.fetch_index_page
-    expects_actors = (expects_actors + expects_actors).map { |a| Shja::Actor.new(a)  }
+    expects_actors = (expects_actors + expects_actors).map { |a| Shja::Actor::Hc.new(a)  }
     assert_equal(expects_actors, actors)
   end
 

@@ -19,12 +19,12 @@ class ShjaClientHcTest < ShjaDBTest
   end
 
   def test_has_actors
-    assert_kind_of(Shja::ActorManager, client.actors)
+    assert_kind_of(Shja::ActorManager::Hc, client.actors)
     assert_equal(db, client.actors.db)
   end
 
   def test_has_movies
-    assert_kind_of(Shja::MovieManager, client.movies)
+    assert_kind_of(Shja::MovieManager::Hc, client.movies)
     assert_equal(db, client.movies.db)
   end
 

@@ -26,8 +26,8 @@ class Shja::Db::Hc
     if File.file?(self.db_path)
       open(self.db_path) do |io|
         @data = YAML.load(io.read)
-        @data['actors'].map! {|e| Shja::Actor.new(e) }
-        @data['movies'].map! {|e| Shja::Movie.new(e) }
+        @data['actors'].map! {|e| Shja::Actor::Hc.new(e) }
+        @data['movies'].map! {|e| Shja::Movie::Hc.new(e) }
       end
     end
   end

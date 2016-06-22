@@ -41,7 +41,7 @@ class ActorTest < Minitest::Test
       {'url' => 'a', 'photoset_url' => 'aaa.html'},
       {'url' => 'b', 'photoset_url' => 'bbb.html'},
       {'url' => 'c', 'photoset_url' => 'ccc.html'}
-    ].map { |e| Shja::Movie.new(e) }
+    ].map { |e| Shja::Movie::Hc.new(e) }
     expected_ids = [
       'aaa', 'bbb', 'ccc'
     ]
@@ -57,7 +57,7 @@ class ActorTest < Minitest::Test
     actual_movies = lisa.fetch_movies(mock_agent)
     assert_equal(3, actual_movies.size)
     actual_movies.each_with_index do |movie, i|
-      assert_kind_of(Shja::Movie, movie)
+      assert_kind_of(Shja::Movie::Hc, movie)
       assert_equal(expected_zip_url, movie.zip)
       assert_equal(expected_formats, movie.formats)
       assert_equal(expected_ids[i], movie.id)
@@ -75,7 +75,7 @@ class ActorTest < Minitest::Test
     movies = lisa._fetch_movie_list_from_actor_page(mock_agent)
     assert_equal(2, movies.size)
     movies.each_with_index do |movie, i|
-      assert_kind_of(Shja::Movie, movie)
+      assert_kind_of(Shja::Movie::Hc, movie)
       assert_equal(lisa.id, movie.actor_id)
       assert_equal(movies_hash[i]['url'], movie.url)
     end

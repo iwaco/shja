@@ -19,7 +19,6 @@ module Shja
 end
 
 require 'shja/base'
-require 'shja/actor'
 require 'shja/movie'
 require 'shja/db'
 require 'shja/parser'

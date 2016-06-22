@@ -33,5 +33,5 @@ TEST_ACTORS_ = {
 }
 
 def mock_actor(id='lisa')
-  return Shja::Actor.new(TEST_ACTORS_[id].dup)
+  return Shja::Actor::Hc.new(TEST_ACTORS_[id].dup)
 end

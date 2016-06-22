@@ -5,7 +5,7 @@ class ActorManageTest < ShjaDBTest
 
   def setup
     super
-    @actor_manager = Shja::ActorManager.new(db, 'target_dir')
+    @actor_manager = Shja::ActorManager::Hc.new(db, 'target_dir')
   end
 
   def test_db

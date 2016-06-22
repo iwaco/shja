@@ -6,8 +6,8 @@ class MovieManageTest < ShjaDBTest
 
   def setup
     super
-    @actor_manager = Shja::ActorManager.new(db, target_dir)
-    @movie_manager = Shja::MovieManager.new(db, actor_manager)
+    @actor_manager = Shja::ActorManager::Hc.new(db, target_dir)
+    @movie_manager = Shja::MovieManager::Hc.new(db, actor_manager)
   end
 
   def test_find_by_actor

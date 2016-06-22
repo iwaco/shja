@@ -59,5 +59,5 @@ TEST_MOVIES_ = {
 }
 
 def mock_movie(title='lisa_movie')
-  return Shja::Movie.new(TEST_MOVIES_[title].dup)
+  return Shja::Movie::Hc.new(TEST_MOVIES_[title].dup)
 end

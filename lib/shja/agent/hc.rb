@@ -53,7 +53,7 @@ class Shja::Agent::Hc
 
   def fetch_actor(actor_or_url)
     url = actor_or_url
-    if actor_or_url.kind_of?(Shja::Actor)
+    if actor_or_url.kind_of?(Shja::Actor::Hc)
       url = actor_or_url.url
     end
     unless /^http/ =~ url
@@ -61,7 +61,7 @@ class Shja::Agent::Hc
     end
     actor_page = _fetch_page(url)
     parser = Shja::Parser::HcActorPage.new(actor_page)
-    return Shja::Actor.new(parser.parse_actor).tap do |actor|
+    return Shja::Actor::Hc.new(parser.parse_actor).tap do |actor|
       actor['url'] = url
       actor['id']  = File.basename(url, '.html')
     end
@@ -77,10 +77,10 @@ class Shja::Agent::Hc
         pagination.each do |url|
           page = _fetch_page(url)
           parser = Shja::Parser::HcIndexPage.new(page)
-          actors.push( *parser.parse_actors.map { |e| Shja::Actor.new(e) } )
+          actors.push( *parser.parse_actors.map { |e| Shja::Actor::Hc.new(e) } )
         end
       else
-        actors.push( *parser.parse_actors.map { |e| Shja::Actor.new(e) } )
+        actors.push( *parser.parse_actors.map { |e| Shja::Actor::Hc.new(e) } )
       end
     end
   end
