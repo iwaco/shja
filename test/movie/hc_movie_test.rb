@@ -37,7 +37,7 @@ class MovieTest < Minitest::Test
   end
 
   def test_download_thumbnail
-    mock_agent.expects(:_download).with(movie.thumbnail, movie.thumbnail_path)
+    mock_agent.expects(:download).with(movie.thumbnail, movie.thumbnail_path)
     movie.download_thumbnail(mock_agent)
   end
 

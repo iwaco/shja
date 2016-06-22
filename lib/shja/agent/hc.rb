@@ -1,25 +1,9 @@
-require 'memoist'
 
-class Shja::Agent::Hc
-  extend Memoist
+class Shja::Agent::Hc < Shja::Agent
 
   BASE_URL = "http://ex.shemalejapanhardcore.com"
   LOGIN_URL = "#{BASE_URL}/members/"
   CAPTCHA_URL = "http://ex.shemalejapanhardcore.com/cptcha.jpg"
-  attr_reader :agent
-  attr_reader :username
-  attr_reader :password
-  attr_accessor :is_login
-
-  def initialize(username: username, password: password)
-    @username = username
-    @password = password
-
-    @agent = Mechanize.new
-    @agent.user_agent = 'Mac Safari'
-
-    self.is_login = false
-  end
 
   def login
     return if self.is_login
@@ -86,21 +70,7 @@ class Shja::Agent::Hc
   end
 
   def _fetch_page(url)
-    login unless self.is_login
-    Shja.log.debug("_fetch_page: #{url}")
-
-    page = agent.get(url)
-    page.content
-  end
-  memoize :_fetch_page
-
-  def _download(url, path)
-    login unless self.is_login
-    Shja.log.debug("_download: #{url}")
-
-    open(path, 'wb') do |io|
-      self.agent.download(url, io, [], LOGIN_URL)
-    end
+    return fetch_page(url)
   end
 
   def _fetch_index_page(letter: 'A', index: 0)
