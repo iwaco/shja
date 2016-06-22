@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class ActorManageTest < ShjaDBTest
+class ActorManageTest < ShjaHcDBTest
   attr_reader :actor_manager
 
   def setup

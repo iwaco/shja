@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class MovieManageTest < ShjaDBTest
+class MovieManageTest < ShjaHcDBTest
   attr_reader :movie_manager
   attr_reader :actor_manager
 

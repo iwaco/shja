@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class ShjaClientHcTest < ShjaDBTest
+class ShjaClientHcTest < ShjaHcDBTest
   attr_reader :client
   attr_reader :credential
 
