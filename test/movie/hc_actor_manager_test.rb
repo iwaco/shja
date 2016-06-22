@@ -5,7 +5,8 @@ class ActorManageTest < ShjaDBTest
 
   def setup
     super
-    @actor_manager = Shja::ActorManager::Hc.new(db, 'target_dir')
+    @context       = Hashie::Mash.new(db: db, target_dir: 'target_dir')
+    @actor_manager = Shja::ActorManager::Hc.new(@context)
   end
 
   def test_db

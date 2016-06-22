@@ -6,17 +6,42 @@ class MovieManageTest < ShjaDBTest
 
   def setup
     super
-    @actor_manager = Shja::ActorManager::Hc.new(db, target_dir)
-    @movie_manager = Shja::MovieManager::Hc.new(db, actor_manager)
+    @context        = Hashie::Mash.new(db: db, target_dir: target_dir)
+    @actor_manager  = Shja::ActorManager::Hc.new(@context)
+    @context.actors = @actor_manager
+    @movie_manager  = Shja::MovieManager::Hc.new(@context)
+  end
+
+  def _setup_lisa_movies
+    lisa = mock_actor('lisa')
+    actor_manager.update(lisa)
+    lisa_movies = [mock_movie('lisa_movie'), mock_movie('lisa_movie2')]
+    (lisa_movies).each do |movie|
+      movie_manager.update(movie)
+    end
+    return [lisa, lisa_movies]
+  end
+
+  def test_all
+    _setup_lisa_movies
+
+    movie_manager.all do |movie|
+      assert_equal('Lisa', movie.actor.name)
+    end
+  end
+
+  def test_find
+    lisa, lisa_movies = _setup_lisa_movies
+
+    movie = movie_manager.find('lisa_movie')
+    assert_equal(lisa_movies[0], movie)
+    assert_equal(lisa.id, movie.actor.id)
   end
 
   def test_find_by_actor
-    lisa = mock_actor('lisa')
+    lisa, lisa_movies = _setup_lisa_movies
     serina = mock_actor('serina')
-    actor_manager.update(lisa)
     actor_manager.update(serina)
-    lisa_movies = [mock_movie('lisa_movie'), mock_movie('lisa_movie')]
-    lisa_movies[1]['url'] = 'lisamovies2'
     serina_movies = [mock_movie('serina_movie')]
     (lisa_movies + serina_movies).each do |movie|
       movie_manager.update(movie)

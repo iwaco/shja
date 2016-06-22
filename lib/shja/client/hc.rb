@@ -14,8 +14,13 @@ class Shja::Client::Hc
     @agent      = Shja::Agent::Hc.new(username: username, password: password)
     @target_dir = target_dir
     @db         = Shja::Db::Hc.get(target_dir)
-    @actors     = Shja::ActorManager::Hc.new(@db, target_dir)
-    @movies     = Shja::MovieManager::Hc.new(@db, @actors)
+    @context    = Hashie::Mash.new(
+      db: db,
+      target_dir: target_dir,
+    )
+    @actors     = Shja::ActorManager::Hc.new(@context)
+    @context.actors = @actors
+    @movies     = Shja::MovieManager::Hc.new(@context)
   end
 
   def refresh_actors!(first_letter: 'A', last_letter: 'A')

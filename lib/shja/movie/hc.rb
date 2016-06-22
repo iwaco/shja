@@ -1,22 +1,16 @@
 
 class Shja::MovieManager::Hc < Shja::ManagerBase
-  attr_reader :actors
-
-  def initialize(db, actors)
-    super(db)
-    @actors = actors
-  end
+  def_delegators :@context, :actors
 
   def all
-    self.db.movies.each do |movie|
+    super do |movie|
       movie.actor = actors.find(movie.actor_id)
       yield movie
     end
   end
 
   def find(id)
-    self.db.movies.find{|e| e['id'] == id }.tap do |movie|
-      raise "Movie not found: #{id}" unless movie
+    super(id).tap do |movie|
       movie.actor = actors.find(movie.actor_id)
     end
   end
@@ -28,14 +22,8 @@ class Shja::MovieManager::Hc < Shja::ManagerBase
 
   def update(movie)
     actor = actors.find(movie.actor_id)
-    _movie = self.db.movies.find{|e| e == movie }
-    if _movie
-      _movie.actor = actor
-      _movie.data_hash.update(movie.to_h)
-    else
-      movie.actor = actor
-      self.db.movies << movie
-    end
+    movie.actor = actor
+    super(movie)
   end
 
 end
@@ -174,11 +162,9 @@ end
 module Shja::ActorManager; end
 
 class Shja::ActorManager::Hc < Shja::ManagerBase
-  attr_reader :target_dir
 
-  def initialize(db, target_dir)
-    super(db)
-    @target_dir = target_dir
+  def initialize(context)
+    super(context)
     @actor_cache = {}
   end
 

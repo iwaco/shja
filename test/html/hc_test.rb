@@ -6,10 +6,12 @@ class HtmlTest < Minitest::Test
   attr_reader :html
 
   def setup
-    @target_dir    = File.join(HC_FIXTURES_ROOT, 'exists')
-    @db            = Shja::Db::Hc.get(@target_dir)
-    @actor_manager = Shja::ActorManager::Hc.new(@db, @target_dir)
-    @movie_manager = Shja::MovieManager::Hc.new(@db, @actor_manager)
+    @target_dir     = File.join(HC_FIXTURES_ROOT, 'exists')
+    @db             = Shja::Db::Hc.get(@target_dir)
+    @context        = Hashie::Mash.new(db: @db, target_dir: @target_dir)
+    @actor_manager  = Shja::ActorManager::Hc.new(@context)
+    @context.actors = @actor_manager
+    @movie_manager  = Shja::MovieManager::Hc.new(@context)
 
     @html = Shja::Html::Hc.new(movies: movie_manager)
   end

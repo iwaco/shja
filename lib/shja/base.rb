@@ -1,9 +1,36 @@
 
 class Shja::ManagerBase
-  attr_reader :db
+  attr_reader :context
+  extend Forwardable
+  def_delegators :@context, :agent, :db, :target_dir
 
-  def initialize(db)
-    @db = db
+  def initialize(context)
+    @context = context
+  end
+
+  def all
+    self.db.movies.each do |movie|
+      yield movie
+    end
+  end
+
+  def movie_id_key
+    return 'id'
+  end
+
+  def find(id)
+    self.db.movies.find{|e| e[movie_id_key] == id }.tap do |movie|
+      raise "Movie not found: #{id}" unless movie
+    end
+  end
+
+  def update(movie)
+    _movie = self.db.movies.find{|e| e == movie }
+    if _movie
+      _movie.data_hash.update(movie.to_h)
+    else
+      self.db.movies << movie
+    end
   end
 end
 
