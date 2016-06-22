@@ -12,9 +12,9 @@ class MovieManageTest < ShjaDBTest
   end
 
   def _setup_lisa_movies
-    lisa = mock_actor('lisa')
+    lisa = mock_hc_actor('lisa')
     actor_manager.update(lisa)
-    lisa_movies = [mock_movie('lisa_movie'), mock_movie('lisa_movie2')]
+    lisa_movies = [mock_hc_movie('lisa_movie'), mock_hc_movie('lisa_movie2')]
     (lisa_movies).each do |movie|
       movie_manager.update(movie)
     end
@@ -39,9 +39,9 @@ class MovieManageTest < ShjaDBTest
 
   def test_find_by_actor
     lisa, lisa_movies = _setup_lisa_movies
-    serina = mock_actor('serina')
+    serina = mock_hc_actor('serina')
     actor_manager.update(serina)
-    serina_movies = [mock_movie('serina_movie')]
+    serina_movies = [mock_hc_movie('serina_movie')]
     (lisa_movies + serina_movies).each do |movie|
       movie_manager.update(movie)
     end

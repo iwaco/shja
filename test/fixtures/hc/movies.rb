@@ -1,5 +1,5 @@
 
-TEST_MOVIES_ = {
+TEST_HC_MOVIES_ = {
   'lisa_movie' => {
     'id' => 'lisa_movie',
     'actor_id' => 'lisa',
@@ -58,6 +58,6 @@ TEST_MOVIES_ = {
   },
 }
 
-def mock_movie(title='lisa_movie')
-  return Shja::Movie::Hc.new(TEST_MOVIES_[title].dup)
+def mock_hc_movie(title='lisa_movie')
+  return Shja::Movie::Hc.new(TEST_HC_MOVIES_[title].dup)
 end

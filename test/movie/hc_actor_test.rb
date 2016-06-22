@@ -6,8 +6,8 @@ class ActorTest < Minitest::Test
   attr_reader :mock_parser
 
   def setup
-    @lisa        = mock_actor('lisa')
-    @uta         = mock_actor('uta')
+    @lisa        = mock_hc_actor('lisa')
+    @uta         = mock_hc_actor('uta')
     @mock_agent  = mock('agent')
     @mock_parser = mock('parser')
   end
@@ -84,7 +84,7 @@ class ActorTest < Minitest::Test
   def test__fetch_zip_url
     expected_page = 'PAGE_CONTENT'
     expected_url  = 'http://zip_url'
-    movie = mock_movie
+    movie = mock_hc_movie
     mock_parser.stubs(:parse_zip_url).returns(expected_url)
 
     mock_agent.expects(:_fetch_page).with(movie.photoset_url).returns(expected_page)
@@ -97,7 +97,7 @@ class ActorTest < Minitest::Test
   def test__fetch_mp4_url
     expected_page     = 'PAGE_CONTENT'
     expected_formats  = { '720p' => 'http://720p.mp4'}
-    movie = mock_movie
+    movie = mock_hc_movie
     mock_parser.stubs(:parse).returns(expected_formats)
 
     mock_agent.expects(:_fetch_page).with(movie.url).returns(expected_page)

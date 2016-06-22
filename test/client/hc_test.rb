@@ -36,7 +36,7 @@ class ShjaClientHcTest < ShjaDBTest
 
   def test_refresh_actors
     expected_args = { first_letter: 'A', last_letter: 'B' }
-    expected_actors = [mock_actor('lisa'), mock_actor('serina')]
+    expected_actors = [mock_hc_actor('lisa'), mock_hc_actor('serina')]
 
     client.agent.expects(:fetch_actors)
                 .with(**expected_args)
@@ -50,12 +50,12 @@ class ShjaClientHcTest < ShjaDBTest
 
   def test_refresh_actor
     expected_arg = 'lisa_url'
-    lisa = mock_actor('lisa')
-    mock_movies = [mock_movie('lisa_movie')]
+    lisa = mock_hc_actor('lisa')
+    mock_hc_movies = [mock_hc_movie('lisa_movie')]
     client.agent.expects(:fetch_actor).with(expected_arg).returns(lisa)
     client.actors.expects(:update).with(lisa)
-    lisa.expects(:fetch_movies).with(client.agent).returns(mock_movies)
-    client.movies.expects(:update).with(mock_movies[0])
+    lisa.expects(:fetch_movies).with(client.agent).returns(mock_hc_movies)
+    client.movies.expects(:update).with(mock_hc_movies[0])
 
     client.refresh_actor(expected_arg)
   end

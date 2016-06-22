@@ -12,8 +12,8 @@ FIXTURES_ROOT = File.join(File.dirname(__FILE__), 'fixtures')
 HC_FIXTURES_ROOT = File.join(FIXTURES_ROOT, 'hc')
 HC_TARGET_DIR = File.join(HC_FIXTURES_ROOT, 'target')
 
-require 'fixtures/actors'
-require 'fixtures/movies'
+require 'fixtures/hc/actors'
+require 'fixtures/hc/movies'
 
 class ShjaDBTest < Minitest::Test
   attr_reader :target_dir

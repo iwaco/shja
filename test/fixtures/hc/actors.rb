@@ -1,5 +1,5 @@
 
-TEST_ACTORS_ = {
+TEST_HC_ACTORS_ = {
   'lisa' => {
     'id' => 'lisa',
     'url' => 'http://lisa',
@@ -32,6 +32,6 @@ TEST_ACTORS_ = {
   },
 }
 
-def mock_actor(id='lisa')
-  return Shja::Actor::Hc.new(TEST_ACTORS_[id].dup)
+def mock_hc_actor(id='lisa')
+  return Shja::Actor::Hc.new(TEST_HC_ACTORS_[id].dup)
 end

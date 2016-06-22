@@ -14,15 +14,15 @@ class ActorManageTest < ShjaDBTest
   end
 
   def test_save
-    lisa = mock_actor('lisa')
+    lisa = mock_hc_actor('lisa')
     actor_manager.update(lisa)
 
     assert_equal(lisa, db.actors[0])
   end
 
   def test_save_twice_same_actor
-    lisa = mock_actor('lisa')
-    lisa2 = mock_actor('lisa')
+    lisa = mock_hc_actor('lisa')
+    lisa2 = mock_hc_actor('lisa')
     expected_changed_thumbnail = 'changed_url'
     lisa2['thumbnail'] = expected_changed_thumbnail
     actor_manager.update(lisa)
@@ -33,16 +33,16 @@ class ActorManageTest < ShjaDBTest
   end
 
   def test_find
-    actors = [mock_actor('lisa'), mock_actor('serina'), mock_actor('chuling')]
+    actors = [mock_hc_actor('lisa'), mock_hc_actor('serina'), mock_hc_actor('chuling')]
     actors.each do |actor|
       actor_manager.update(actor)
     end
 
-    assert_equal(mock_actor('serina'), actor_manager.find('serina'))
+    assert_equal(mock_hc_actor('serina'), actor_manager.find('serina'))
   end
 
   def test_find_non_existance
-    actors = [mock_actor('lisa'), mock_actor('serina'), mock_actor('chuling')]
+    actors = [mock_hc_actor('lisa'), mock_hc_actor('serina'), mock_hc_actor('chuling')]
     actors.each do |actor|
       actor_manager.update(actor)
     end

@@ -10,16 +10,16 @@ class MovieTest < Minitest::Test
   attr_reader :uta
 
   def setup
-    @lisa = mock_actor('lisa')
+    @lisa = mock_hc_actor('lisa')
     @lisa.target_dir = HC_TARGET_DIR
-    @movie = mock_movie('lisa_movie')
+    @movie = mock_hc_movie('lisa_movie')
     @movie.actor = @lisa
     @mock_agent  = mock('agent')
     @mock_parser = mock('parser')
 
-    @uta = mock_actor('uta')
+    @uta = mock_hc_actor('uta')
     @uta.target_dir = File.join(HC_FIXTURES_ROOT, 'exists')
-    @uta_movie = mock_movie('uta_movie')
+    @uta_movie = mock_hc_movie('uta_movie')
     @uta_movie.actor = @uta
   end
 
@@ -28,8 +28,8 @@ class MovieTest < Minitest::Test
   end
 
   def test_set_actor
-    actor = mock_actor('serina')
-    movie = mock_movie('lisa_movie')
+    actor = mock_hc_actor('serina')
+    movie = mock_hc_movie('lisa_movie')
 
     movie.actor = actor
     assert_equal(actor.id, movie.actor_id)
