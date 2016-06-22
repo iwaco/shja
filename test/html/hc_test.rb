@@ -11,12 +11,12 @@ class HtmlTest < Minitest::Test
     @actor_manager = Shja::ActorManager::Hc.new(@db, @target_dir)
     @movie_manager = Shja::MovieManager::Hc.new(@db, @actor_manager)
 
-    @html = Shja::Html.new(movies: movie_manager)
+    @html = Shja::Html::Hc.new(movies: movie_manager)
   end
 
-  def test__movies_js_list
+  def test_movies_js_list
     html.expects(:generate_detail_js).times(4)
-    actual_list = html._movies_js_list
+    actual_list = html.movies_js_list
     assert_equal(4, actual_list.size)
     actual_list.each do |js|
       assert_equal(true, js.has_key?('id'))

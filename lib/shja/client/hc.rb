@@ -60,7 +60,7 @@ class Shja::Client::Hc
   end
 
   def generate_html
-    html = Shja::Html.new(movies: movies, target_dir: target_dir)
+    html = Shja::Html::Hc.new(movies: movies, target_dir: target_dir)
     html.generate_movies_js
   end
 
