@@ -19,7 +19,6 @@ class Shja::Client::Hc
       target_dir: target_dir,
     )
     @actors     = Shja::ActorManager::Hc.new(@context)
-    @context.actors = @actors
     @movies     = Shja::MovieManager::Hc.new(@context)
   end
 

@@ -10,7 +10,6 @@ class HtmlTest < Minitest::Test
     @db             = Shja::Db::Hc.get(@target_dir)
     @context        = Hashie::Mash.new(db: @db, target_dir: @target_dir)
     @actor_manager  = Shja::ActorManager::Hc.new(@context)
-    @context.actors = @actor_manager
     @movie_manager  = Shja::MovieManager::Hc.new(@context)
 
     @html = Shja::Html::Hc.new(movies: movie_manager)

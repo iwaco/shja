@@ -2,15 +2,25 @@
 class Shja::MovieManager::Hc < Shja::ManagerBase
   def_delegators :@context, :actors
 
+  def initialize(context)
+    super
+    context.movies = self
+  end
+
   def all
-    super do |movie|
+    self.db.movies.each do |movie|
       movie.actor = actors.find(movie.actor_id)
       yield movie
     end
   end
 
+  def movie_id_key
+    return 'id'
+  end
+
   def find(id)
-    super(id).tap do |movie|
+    self.db.movies.find{|e| e[movie_id_key] == id }.tap do |movie|
+      raise "Movie not found: #{id}" unless movie
       movie.actor = actors.find(movie.actor_id)
     end
   end
@@ -22,8 +32,13 @@ class Shja::MovieManager::Hc < Shja::ManagerBase
 
   def update(movie)
     actor = actors.find(movie.actor_id)
+    _movie = self.db.movies.find{|e| e == movie }
     movie.actor = actor
-    super(movie)
+    if _movie
+      _movie.data_hash.update(movie.to_h)
+    else
+      self.db.movies << movie
+    end
   end
 
 end
@@ -39,6 +54,10 @@ class Shja::Movie::Hc < Shja::ResourceBase
   # attr_reader :zip
   # attr_reader :formats
   attr_reader :actor
+
+  def initialize(data_hash)
+    super(nil, data_hash)
+  end
 
   def actor=(actor)
     self['actor_id'] = actor.id
@@ -165,6 +184,7 @@ class Shja::ActorManager::Hc < Shja::ManagerBase
 
   def initialize(context)
     super(context)
+    context.actors = self
     @actor_cache = {}
   end
 
@@ -199,6 +219,10 @@ class Shja::Actor::Hc < Shja::ResourceBase
   # attr_reader :url
   # attr_reader :thumbnail
   attr_accessor :target_dir
+
+  def initialize(data_hash)
+    super(nil, data_hash)
+  end
 
   def fetch_movies(agent)
     Shja::log.debug("Start fetching actor detail: #{self.id}")

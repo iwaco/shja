@@ -1,5 +1,5 @@
 
-class Shja::ManagerBase
+class Shja::Resource
   attr_reader :context
   extend Forwardable
   def_delegators :@context, :agent, :db, :target_dir
@@ -7,9 +7,13 @@ class Shja::ManagerBase
   def initialize(context)
     @context = context
   end
+end
+
+class Shja::ManagerBase < Shja::Resource
 
   def all
     self.db.movies.each do |movie|
+      # TODO: return instance
       yield movie
     end
   end
@@ -19,28 +23,32 @@ class Shja::ManagerBase
   end
 
   def find(id)
+    # TODO: return instance
     self.db.movies.find{|e| e[movie_id_key] == id }.tap do |movie|
       raise "Movie not found: #{id}" unless movie
     end
   end
 
   def update(movie)
-    _movie = self.db.movies.find{|e| e == movie }
+    _movie = self.db.movies.find{|e| e[movie_id_key] == movie[movie_id_key] }
+    movie = movie.to_h
     if _movie
-      _movie.data_hash.update(movie.to_h)
+      _movie.update(movie)
     else
       self.db.movies << movie
     end
   end
 end
 
-class Shja::ResourceBase
+class Shja::ResourceBase < Shja::Resource
   attr_reader :data_hash
 
-  def initialize(data_hash)
+  def initialize(context, data_hash)
+    super(context)
     @data_hash = data_hash
   end
 
+  # TODO: deprecated
   def _download(agent, url, path)
     dir = File.dirname(path)
     FileUtils.mkdir_p(dir) unless File.directory?(dir)
@@ -52,6 +60,10 @@ class Shja::ResourceBase
   rescue => ex
     FileUtils.rm_r(path)
     raise ex
+  end
+
+  def download(url, path)
+    _download(agent, url, path)
   end
 
   def method_missing(method_sym, *arguments, &block)
