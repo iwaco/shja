@@ -23,6 +23,10 @@ class Shja::Agent
     raise "Unimplemented"
   end
 
+  def referrer_url
+    raise "Unimplemented"
+  end
+
   def fetch_page(url)
     login unless self.is_login
     Shja.log.debug("fetch_page: #{url}")
@@ -37,7 +41,7 @@ class Shja::Agent
     Shja.log.debug("_download: #{url}")
 
     open(path, 'wb') do |io|
-      self.agent.download(url, io, [], LOGIN_URL)
+      self.agent.download(url, io, [], referrer_url)
     end
   end
 end

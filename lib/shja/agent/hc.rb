@@ -27,6 +27,10 @@ class Shja::Agent::Hc < Shja::Agent
     self.is_login = true
   end
 
+  def referrer_url
+    LOGIN_URL
+  end
+
   def fetch_actors(first_letter: 'A', last_letter: 'A')
     return [].tap do |actors|
       (first_letter..last_letter).each do |letter|

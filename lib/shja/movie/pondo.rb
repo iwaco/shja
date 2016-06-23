@@ -19,6 +19,7 @@ class Shja::MovieManager::Pondo < Shja::ManagerBase
           movie_ids << movie[movie_id_key]
         end
       end
+      db.save
     end
   end
 
@@ -41,7 +42,7 @@ end
 class Shja::Movie::Pondo < Shja::ResourceBase
 
   def download_metadata
-    mk_dir
+    mkdir
     self._download(metadata_remote_url, metadata_url)
     self._download(photoset_metadata_remote_url, photoset_metadata_url)
     self._download(movie_thumb, thumbnail_url)
@@ -67,6 +68,9 @@ class Shja::Movie::Pondo < Shja::ResourceBase
     unless File.file?(to)
       agent.download(from, to)
     end
+  rescue => ex
+    Shja.log.error("Download failed: #{from}")
+    FileUtils.rm(to)
   end
 
   def metadata_remote_url

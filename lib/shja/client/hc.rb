@@ -15,6 +15,7 @@ class Shja::Client::Hc
     @target_dir = target_dir
     @db         = Shja::Db::Hc.get(target_dir)
     @context    = Hashie::Mash.new(
+      agent: agent,
       db: db,
       target_dir: target_dir,
     )
