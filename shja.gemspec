@@ -33,6 +33,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "fastimage", "1.8.1"
   spec.add_dependency "memoist"
   spec.add_dependency "hashie"
+  spec.add_dependency "speedpetal", "0.0.2"
 
   spec.add_development_dependency "bundler", "~> 1.10"
   spec.add_development_dependency "rake", "~> 10.0"

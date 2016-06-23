@@ -1,4 +1,5 @@
 require 'json'
+require 'speedpetal'
 
 class Shja::MovieManager::Pondo < Shja::ManagerBase
 
@@ -45,18 +46,29 @@ class Shja::Movie::Pondo < Shja::ResourceBase
     mkdir
     self._download(metadata_remote_url, metadata_url)
     self._download(photoset_metadata_remote_url, photoset_metadata_url)
-    self._download(movie_thumb, thumbnail_url)
+    # self._download(movie_thumb, thumbnail_url)
 
     self._download(thumb_high, thumbnail_url('high'))
     self._download(thumb_low, thumbnail_url('low'))
     self._download(thumb_med, thumbnail_url('med'))
     self._download(thumb_ultra, thumbnail_url('ultra'))
+
+    create_thumbnail
   end
 
   def mkdir
     dir_path = to_path(:dir_url)
     unless File.directory?(dir_path)
       FileUtils.mkdir_p(dir_path)
+    end
+  end
+
+  def create_thumbnail
+    real_from_path = to_path(thumbnail_url('med'))
+    real_tb_path = to_path(thumbnail_url)
+    unless File.file?(real_tb_path)
+      Shja.log.debug("Creating thumbnail: #{real_tb_path}")
+      Speedpetal::resize(255, real_from_path, real_tb_path)
     end
   end
 
