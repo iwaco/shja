@@ -39,4 +39,36 @@ end
 
 class Shja::Movie::Pondo < Shja::ResourceBase
 
+  def method_missing(method_sym, *arguments, &block)
+    if @data_hash.include? camelize(method_sym.to_s)
+      @data_hash[camelize(method_sym.to_s)]
+    else
+      super
+    end
+  end
+
+  def respond_to?(method_sym, include_private = false)
+    if @data_hash.include? camelize(method_sym.to_s)
+      true
+    else
+      super
+    end
+  end
+
+  def acronyms
+    {
+      'id' => 'ID',
+      'uc' => 'UC',
+      'name' => 'NAME',
+    }
+  end
+
+  def camelize(term)
+    string = term.to_s
+    string = string.sub(/^[a-z\d]*/) { acronyms[$&] || $&.capitalize }
+    string.gsub!(/(?:_|(\/))([a-z\d]*)/i) { "#{$1}#{acronyms[$2] || $2.capitalize}" }
+    string.gsub!(/\//, '::')
+    string
+  end
+
 end
