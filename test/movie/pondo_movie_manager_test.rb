@@ -6,6 +6,7 @@ class PondoMovieManageTest < ShjaPondoTest
   def setup
     super
     @movie_manager = Shja::MovieManager::Pondo.new(context)
+    Shja::Movie::Pondo.any_instance.stubs(:download_metadata)
   end
 
   def test_download_index
