@@ -10,6 +10,10 @@ start_page = 0
 last_page = 0
 html_disable   = false
 
+random_count = 10
+movie_id = []
+actor_id = []
+
 config = {}
 config[:username]    = ENV['PONDO_USERNAME']
 config[:password]    = ENV['PONDO_PASSWORD']
@@ -28,6 +32,10 @@ subparsers['refresh'].on('-s', '--start-page START_PAGE') {|v| start_page = v.to
 subparsers['download'] = OptionParser.new
 subparsers['download'].on('-f FORMAT') {|v| format = v }
 subparsers['download'].on('--html-disable HTML_DISABLE') {|v| html_disable = (v == 'true')}
+subparsers['download'].on('-r RANDOM_COUNT') {|v| random_count = v.to_i }
+subparsers['download'].on('-m MOVIE_ID') {|v| movie_id << v }
+subparsers['download'].on('-a ACTOR_ID') {|v| actor_id << v }
+
 subparsers['html'] = OptionParser.new
 
 parser.order!(ARGV)
@@ -43,4 +51,18 @@ client = Shja::Client::Pondo.new(**config)
 
 if subcommand == 'refresh'
   client.refresh!
+end
+
+if subcommand == 'download'
+  if movie_id.size > 0
+    movie_id.each do |id|
+      client.download_by_id(id, format)
+    end
+  elsif actor_id.size > 0
+    actor_id.each do |id|
+      client.download_by_actor_id(id, format)
+    end
+  else
+    client.random_download(random_count, format)
+  end
 end

@@ -42,6 +42,12 @@ end
 
 class Shja::Movie::Pondo < Shja::ResourceBase
 
+  def download(format)
+    download_metadata
+    download_photoset
+    download_movie(format)
+  end
+
   def download_metadata
     mkdir
     self._download(metadata_remote_url, metadata_url)
@@ -54,6 +60,22 @@ class Shja::Movie::Pondo < Shja::ResourceBase
     self._download(thumb_ultra, thumbnail_url('ultra'))
 
     create_thumbnail
+  end
+
+  def exists?(format=nil)
+    format = detail.default_format
+    movie_path = to_path(movie_url(format))
+
+    File.file?(movie_path)
+  end
+
+  def download_movie(format=nil)
+    format = detail.default_format
+    detail.download(to_path(movie_url(format)), format)
+  end
+
+  def download_photoset
+    photosets.download(to_path(photoset_dir_url))
   end
 
   def mkdir
@@ -70,6 +92,16 @@ class Shja::Movie::Pondo < Shja::ResourceBase
       Shja.log.debug("Creating thumbnail: #{real_tb_path}")
       Speedpetal::resize(255, real_from_path, real_tb_path)
     end
+  end
+
+  def detail
+    @detail ||= Shja::Movie::Pondo::Detail.new(context, to_path(metadata_url))
+    @detail
+  end
+
+  def photosets
+    @photosets ||= Shja::Movie::Pondo::Photosets.new(context, to_path(photoset_metadata_url))
+    @photosets
   end
 
   def _download(from, to)
@@ -95,6 +127,14 @@ class Shja::Movie::Pondo < Shja::ResourceBase
 
   def metadata_url
     return "#{dir_url}/metadata.json"
+  end
+
+  def movie_url(format)
+    return "#{dir_url}-#{format}.mp4"
+  end
+
+  def photoset_dir_url
+    return "#{dir_url}/photosets"
   end
 
   def photoset_metadata_url
@@ -156,4 +196,76 @@ class Shja::Movie::Pondo < Shja::ResourceBase
     string
   end
 
+end
+
+class Shja::Movie::Pondo::DetailBase < Shja::ResourceBase
+  def initialize(context, path)
+    data_hash = open(path) do |io|
+      data_hash = JSON.load(io.read)
+    end
+    super(context, data_hash)
+  end
+end
+
+class Shja::Movie::Pondo::Detail < Shja::Movie::Pondo::DetailBase
+  def remote_url(format)
+    movie = data_hash["MemberFiles"].find do |file|
+      file["FileName"] == "#{format}.mp4"
+    end
+    movie = {} unless movie
+    return [movie["URL"], movie["FileSize"]]
+  end
+
+  def download(path, format=default_format)
+    unless File.file?(path)
+      url, size = remote_url(format)
+      Shja.log.debug("Download Movie: #{url}")
+      agent.download(url, path)
+      if File.size(path) < size
+        raise "File size is invalid, actual: #{File.size(path)}, expected: #{size}"
+      end
+    end
+  rescue => ex
+    Shja.log.error(ex.message)
+    Shja.log.error("Download failed: #{url}")
+    FileUtils.rm(path)
+  end
+
+  def default_format
+    f = data_hash["MemberFiles"].map do |file|
+      file = File.basename(file["FileName"], '.*').to_i
+    end.sort[-1]
+    return "#{f}p"
+  end
+end
+
+class Shja::Movie::Pondo::Photosets < Shja::Movie::Pondo::DetailBase
+  def initialize(context, path)
+    data_hash = nil
+    begin
+      data_hash = open(path) do |io|
+        data_hash = JSON.load(io.read)
+      end
+    rescue Errno::ENOENT => ex
+      Shja.log.error("Photosets couldn't be loaded #{path}")
+    end
+    super(context, data_hash)
+  end
+
+  def download(dir)
+    return unless data_hash
+    FileUtils.mkdir_p(dir)
+
+    data_hash["Rows"].each_with_index do |img, index|
+      begin
+        url = img["URL"]
+        index = sprintf("%03d", index)
+        agent.download(url, File.join(dir, "#{index}.jpg"))
+      rescue => ex
+        Shja.log.error(ex.message)
+        Shja.log.error("Download failed: #{url}")
+        FileUtils.rm(path)
+      end
+    end
+  end
 end

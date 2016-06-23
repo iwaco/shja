@@ -51,4 +51,38 @@ class PondoMovieTest < ShjaPondoTest
     assert_equal("http://www.1pondo.tv/dyn/ren/movie_details/3440.json", movie.metadata_remote_url)
   end
 
+  def test_detail
+    movie.stubs(:to_path).returns(File.join(PONDO_FAKE_RESPONSE_DIR, "details_00.json"))
+    assert_kind_of(Shja::Movie::Pondo::Detail, movie.detail)
+  end
+
+end
+
+class PondoMovieDetailsTest < ShjaPondoTest
+
+  def get_detail
+    Shja::Movie::Pondo::Detail.new(
+      context,
+      File.join(PONDO_FAKE_RESPONSE_DIR, "details_00.json")
+    )
+  end
+
+  def test_remote_url
+    detail = get_detail
+
+    assert_equal(
+      ["http://dl11.1pondo.tv/member/movies/060216_309/240p.mp4", 178915007],
+      detail.remote_url("240p")
+    )
+    assert_equal(
+      ["http://dl11.1pondo.tv/member/movies/060216_309/1080p.mp4", 1939044192],
+      detail.remote_url("1080p")
+    )
+  end
+
+  def test_default_format
+    detail = get_detail
+
+    assert_equal("1080p", detail.default_format)
+  end
 end
