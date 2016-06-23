@@ -43,3 +43,4 @@ class Shja::Agent
 end
 
 require 'shja/agent/hc'
+require 'shja/agent/pondo'
