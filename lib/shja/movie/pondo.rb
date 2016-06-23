@@ -78,6 +78,10 @@ class Shja::Movie::Pondo < Shja::ResourceBase
     photosets.download(to_path(photoset_dir_url))
   end
 
+  def pictures_path
+    Dir.glob(File.join(to_path(photoset_dir_url), '*.jpg'))
+  end
+
   def mkdir
     dir_path = to_path(:dir_url)
     unless File.directory?(dir_path)
@@ -134,7 +138,7 @@ class Shja::Movie::Pondo < Shja::ResourceBase
   end
 
   def photoset_dir_url
-    return "#{dir_url}/photosets"
+    return "#{dir_url}/photoset"
   end
 
   def photoset_metadata_url
@@ -231,9 +235,15 @@ class Shja::Movie::Pondo::Detail < Shja::Movie::Pondo::DetailBase
     FileUtils.rm(path)
   end
 
+  def formats
+    data_hash["MemberFiles"].map do |file|
+      File.basename(file["FileName"], '.*')
+    end
+  end
+
   def default_format
-    f = data_hash["MemberFiles"].map do |file|
-      file = File.basename(file["FileName"], '.*').to_i
+    f = formats.map do |file|
+      file.to_i
     end.sort[-1]
     return "#{f}p"
   end

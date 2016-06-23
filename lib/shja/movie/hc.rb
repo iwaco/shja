@@ -113,23 +113,6 @@ class Shja::Movie::Hc < Shja::ResourceBase
     pictures_path.size > 0
   end
 
-  def pictures_metadata
-    return pictures_path.sort.map do |image|
-      basename = File.basename(image)
-      size = ::FastImage.size(image)
-      if size
-        {
-          "name" => basename,
-          "w" => size[0],
-          "h" => size[1]
-        }
-      else
-        Shja::log.warn("Image can't detect size: #{image}")
-        nil
-      end
-    end.compact
-  end
-
   def photoset_dir_path
     File.join(self.actor.target_dir, self.photoset_dir_url)
   end

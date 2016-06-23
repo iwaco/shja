@@ -35,7 +35,6 @@ subparsers['download'].on('--html-disable HTML_DISABLE') {|v| html_disable = (v 
 subparsers['download'].on('-r RANDOM_COUNT') {|v| random_count = v.to_i }
 subparsers['download'].on('-m MOVIE_ID') {|v| movie_id << v }
 subparsers['download'].on('-a ACTOR_ID') {|v| actor_id << v }
-
 subparsers['html'] = OptionParser.new
 
 parser.order!(ARGV)
@@ -65,4 +64,8 @@ if subcommand == 'download'
   else
     client.random_download(random_count, format)
   end
+end
+
+if subcommand == 'html'
+  client.generate_html
 end

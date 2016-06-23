@@ -29,3 +29,4 @@ class Shja::Html
 end
 
 require 'shja/html/hc'
+require 'shja/html/pondo'

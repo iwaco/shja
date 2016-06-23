@@ -80,6 +80,12 @@ class PondoMovieDetailsTest < ShjaPondoTest
     )
   end
 
+  def test_formats
+    detail = get_detail
+
+    assert_equal(["240p", "360p", "480p", "720p", "1080p"], detail.formats)
+  end
+
   def test_default_format
     detail = get_detail
 

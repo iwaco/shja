@@ -49,4 +49,9 @@ class Shja::Client::Pondo < Shja::Client
     end
   end
 
+  def generate_html
+    html = Shja::Html::Pondo.new(movies: movies, target_dir: target_dir)
+    html.generate_movies_js
+  end
+
 end

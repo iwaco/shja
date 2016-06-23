@@ -64,6 +64,27 @@ class Shja::ResourceBase < Shja::Resource
     _download(agent, url, path)
   end
 
+  def pictures_path
+    raise "Unimplemented"
+  end
+
+  def pictures_metadata
+    return pictures_path.sort.map do |image|
+      basename = File.basename(image)
+      size = ::FastImage.size(image)
+      if size
+        {
+          "name" => basename,
+          "w" => size[0],
+          "h" => size[1]
+        }
+      else
+        Shja::log.warn("Image can't detect size: #{image}")
+        nil
+      end
+    end.compact
+  end
+
   def method_missing(method_sym, *arguments, &block)
     if @data_hash.include? method_sym.to_s
       @data_hash[method_sym.to_s]
