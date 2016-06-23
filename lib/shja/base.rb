@@ -11,9 +11,8 @@ end
 
 class Shja::ManagerBase < Shja::Resource
 
-  def all
+  def _all
     self.db.movies.each do |movie|
-      # TODO: return instance
       yield movie
     end
   end
@@ -22,8 +21,7 @@ class Shja::ManagerBase < Shja::Resource
     return 'id'
   end
 
-  def find(id)
-    # TODO: return instance
+  def _find(id)
     self.db.movies.find{|e| e[movie_id_key] == id }.tap do |movie|
       raise "Movie not found: #{id}" unless movie
     end

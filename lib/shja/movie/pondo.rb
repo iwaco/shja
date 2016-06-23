@@ -22,7 +22,17 @@ class Shja::MovieManager::Pondo < Shja::ManagerBase
   end
 
   def movie_id_key
-    return 'MovieId'
+    return 'MovieID'
+  end
+
+  def find(id)
+    Shja::Movie::Pondo.new(context, _find(id))
+  end
+
+  def all
+    _all do |movie|
+      yield Shja::Movie::Pondo.new(context, movie)
+    end
   end
 
 end
