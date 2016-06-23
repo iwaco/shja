@@ -2,6 +2,11 @@ require 'json'
 
 class Shja::MovieManager::Pondo < Shja::ManagerBase
 
+  def initialize(context)
+    super
+    context.movies = self
+  end
+
   def download_index(start_page: 0, last_page: 0)
     return [].tap do |movie_ids|
       (start_page..last_page).each do |index|
