@@ -68,6 +68,10 @@ class Shja::ResourceBase < Shja::Resource
     raise "Unimplemented"
   end
 
+  def has_pictures?
+    pictures_path.size > 0
+  end
+
   def pictures_metadata
     return pictures_path.sort.map do |image|
       basename = File.basename(image)

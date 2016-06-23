@@ -94,7 +94,7 @@ class Shja::Movie::Pondo < Shja::ResourceBase
     real_tb_path = to_path(thumbnail_url)
     unless File.file?(real_tb_path)
       Shja.log.debug("Creating thumbnail: #{real_tb_path}")
-      Speedpetal::resize(255, real_from_path, real_tb_path)
+      Speedpetal::resize(480, real_from_path, real_tb_path)
     end
   end
 

@@ -40,7 +40,7 @@ class Shja::Client::Pondo < Shja::Client
   def download_by_actor_id(id, format=nil)
     _movies = []
     movies.all do |movie|
-      if movie.actor_id == id
+      if movie.actor_id.include?(id)
         _movies << movie
       end
     end

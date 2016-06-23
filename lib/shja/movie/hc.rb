@@ -109,10 +109,6 @@ class Shja::Movie::Hc < Shja::ResourceBase
     Dir.glob(File.join(photoset_dir_path, '*.jpg'))
   end
 
-  def has_pictures?
-    pictures_path.size > 0
-  end
-
   def photoset_dir_path
     File.join(self.actor.target_dir, self.photoset_dir_url)
   end
