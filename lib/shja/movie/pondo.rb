@@ -86,6 +86,10 @@ class Shja::Movie::Pondo < Shja::Movie
     end
   end
 
+  def actor?(name)
+    return actor.include?(name)
+  end
+
   def detail
     @detail ||= Shja::Movie::Pondo::Detail.new(context, to_path(metadata_url))
     @detail

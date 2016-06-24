@@ -67,10 +67,10 @@ class Shja::D2PassClient < Shja::Client
     movie.download(format)
   end
 
-  def download_by_actor_id(id, format=nil)
+  def download_by_actor(name, format=nil)
     _movies = []
     movies.all do |movie|
-      if movie.actor_id.include?(id)
+      if movie.actor?(name)
         _movies << movie
       end
     end

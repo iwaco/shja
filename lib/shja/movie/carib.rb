@@ -40,19 +40,62 @@ end
 
 class Shja::Movie::Carib < Shja::Movie
 
+  def download(format)
+    download_movie(format)
+    download_metadata
+  end
+
   def download_metadata
     mkdir
     self._download("http://www.caribbeancom.com#{thumbnail}", thumbnail_url)
     self._download(remote_zip_url, zip_url)
 
     extract_zip
-    create_symlink(:zip_url)
-    create_symlink(:thumbnail_url)
+    create_symlinks
   end
 
-  def create_symlink url_sym
-    to = to_path(self.send(url_sym))
-    from = to_path(self.send(url_sym, false))
+  def download_movie(format)
+    format = default_format unless format
+
+    self._download(self.formats[format], movie_url(format))
+  end
+
+  def actor?(name)
+    self.actors.each do |actor|
+      if actor.include?(name)
+        return true
+      end
+    end
+    return false
+  end
+
+  def supported_formats
+    ['1080p', '720p', '480p', '360p', '240p']
+  end
+
+  def default_format
+    supported_formats.each do |f|
+      return f if self.formats.include?(f)
+    end
+    raise "No format found!!"
+  end
+
+  def create_symlinks
+    create_symlink(:zip_url)
+    create_symlink(:thumbnail_url)
+    supported_formats.each do |format|
+      create_symlink(:movie_url, format)
+    end
+  end
+
+  def create_symlink url_sym, format=nil
+    unless format
+      to = to_path(self.send(url_sym))
+      from = to_path(self.send(url_sym, false))
+    else
+      to = to_path(self.send(url_sym, format))
+      from = to_path(self.send(url_sym, format, false))
+    end
     path_to = Pathname(to)
     path_from = Pathname(File.dirname(from))
 
@@ -71,6 +114,7 @@ class Shja::Movie::Carib < Shja::Movie
   def extract_zip
     zip_path = to_path(zip_url)
     return if File.file?(zip_path)
+    return if has_pictures?
 
     photoset_dir_path = to_path(photoset_dir_url)
     FileUtils.mkdir_p(photoset_dir_path)
@@ -92,6 +136,10 @@ class Shja::Movie::Carib < Shja::Movie
 
   def remote_zip_url
     "http://www.caribbeancom.com/moviepages/#{self.id}/images/gallery.zip"
+  end
+
+  def pictures_path
+    Dir.glob(File.join(to_path(photoset_dir_url), '*.jpg'))
   end
 
   def photoset_dir_url real=true

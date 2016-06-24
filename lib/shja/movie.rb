@@ -67,6 +67,10 @@ class Shja::Movie < Shja::ResourceBase
     return File.join(target_dir, url_sym_or_str)
   end
 
+  def actor?
+    raise "Unimplemented"
+  end
+
   def pictures_path
     raise "Unimplemented"
   end
