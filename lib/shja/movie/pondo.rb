@@ -5,15 +5,24 @@ class Shja::MovieManager::Pondo < Shja::MovieManager
     return [].tap do |movie_ids|
       (start_page..last_page).each do |index|
         url = "http://www.1pondo.tv/dyn/ren/movie_lists/list_newest_#{index * 50}.json"
-        movies = JSON.load(agent.fetch_page(url))
-        movies['Rows'].each do |movie|
-          movie = Shja::Movie::Pondo.new(context, movie)
-          self.update(movie)
-          movie.download_metadata
-          movie_ids << movie[movie_id_key]
-        end
+        parse_index_page(url)
       end
       db.save
+    end
+  end
+
+  def download_actor_index(actor_id)
+    url = "http://www.1pondo.tv/dyn/ren/movie_lists/actresses/list_#{actor_id}_0.json"
+    parse_index_page(url)
+    db.save
+  end
+
+  def parse_index_page(url)
+    movies = JSON.load(agent.fetch_page(url))
+    movies['Rows'].each do |movie|
+      movie = Shja::Movie::Pondo.new(context, movie)
+      self.update(movie)
+      movie.download_metadata
     end
   end
 

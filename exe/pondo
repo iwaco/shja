@@ -8,6 +8,7 @@ require 'logger'
 format = nil
 start_page = 0
 last_page = 0
+actor_id = nil
 html_disable   = false
 
 random_count = 10
@@ -29,6 +30,7 @@ subparsers = Hash.new {|h,k|
 subparsers['refresh'] = OptionParser.new
 subparsers['refresh'].on('-l', '--last-page LAST_PAGE') {|v| last_page = v.to_i }
 subparsers['refresh'].on('-s', '--start-page START_PAGE') {|v| start_page = v.to_i }
+subparsers['refresh'].on('-a', '--actor-if ACTOR_ID') {|v| actor_id = v.to_i }
 subparsers['download'] = OptionParser.new
 subparsers['download'].on('-f FORMAT') {|v| format = v }
 subparsers['download'].on('--html-disable HTML_DISABLE') {|v| html_disable = (v == 'true')}
@@ -49,7 +51,11 @@ Shja.log.level = Logger::DEBUG
 client = Shja::Client::Pondo.new(**config)
 
 if subcommand == 'refresh'
-  client.refresh!
+  if actor_id
+    client.refresh_by_actor_id!(actor_id)
+  else
+    client.refresh!
+  end
 end
 
 if subcommand == 'download'
