@@ -57,7 +57,14 @@ end
 Capybara.run_server     = false
 Capybara.current_driver = :poltergeist
 Capybara.register_driver :poltergeist do |app|
-  Capybara::Poltergeist::Driver.new(app, {:js_errors => false, :timeout => 1000 })
+  Capybara::Poltergeist::Driver.new(app, {
+    js: true,
+    js_errors: false,
+    timeout: 5000,
+    debug: true,
+    window_size: [1980, 1080],
+    phantomjs_options: ['--ignore-ssl-errors=true']
+  })
 end
 
 class Shja::CapybaraAgent

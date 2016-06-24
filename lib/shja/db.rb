@@ -46,3 +46,4 @@ end
 
 require 'shja/db/hc'
 require 'shja/db/pondo'
+require 'shja/db/carib'
