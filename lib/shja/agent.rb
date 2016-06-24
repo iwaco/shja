@@ -117,7 +117,7 @@ class Shja::CapybaraAgent
     login unless self.is_login
     Shja.log.debug("fetch_page: #{url}")
 
-    return Nokogiri::HTML.parse(_get_url(url))
+    return _get_url(url)
   end
   memoize :fetch_page
 
