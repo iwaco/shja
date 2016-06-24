@@ -19,6 +19,17 @@ class Shja::Agent::Pondo < Shja::CapybaraAgent
 
     visit(LOGIN_URL)
     screenshot('01.jpg')
+    find('.age-verification .enter button').trigger('click')
+    sleep 2
+    screenshot('02.jpg')
+    find('modal-login .login-btn button').trigger('click')
+    sleep 1
+    screenshot('03.jpg')
+    fill_in('login', with: username)
+    fill_in('password', with: password)
+    find('.login-box form button.login-button').trigger('click')
+    sleep 2
+    screenshot('04.jpg')
 
     self.is_login = true
   end
