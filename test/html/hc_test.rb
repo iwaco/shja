@@ -7,8 +7,8 @@ class HtmlTest < Minitest::Test
 
   def setup
     @target_dir     = File.join(HC_FIXTURES_ROOT, 'exists')
-    @db             = Shja::Db::Hc.get(@target_dir)
-    @context        = Hashie::Mash.new(db: @db, target_dir: @target_dir)
+    @context        = Hashie::Mash.new(target_dir: @target_dir)
+    @db             = Shja::Db::Hc.get(@context)
     @actor_manager  = Shja::ActorManager::Hc.new(@context)
     @movie_manager  = Shja::MovieManager::Hc.new(@context)
 

@@ -7,11 +7,13 @@ require 'fixtures/hc/movies'
 
 class ShjaHcDBTest < Minitest::Test
   attr_reader :target_dir
+  attr_reader :context
   attr_reader :db
 
   def setup
     @target_dir = File.join(TMP_ROOT, SecureRandom.hex(8))
-    @db         = Shja::Db::Hc.get(@target_dir)
+    @context    = Hashie::Mash.new(target_dir: @target_dir)
+    @db         = Shja::Db::Hc.get(@context)
   end
 
   def teardown

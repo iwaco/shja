@@ -3,7 +3,7 @@ require 'test_helper'
 class ShjaAgentHcTest < Minitest::Test
 
   def setup
-    @agent = Shja::Agent::Hc.new
+    @agent = Shja::Agent::Hc.new(context: Hashie::Mash.new)
   end
 
   def test_fetch_actors

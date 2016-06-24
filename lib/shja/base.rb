@@ -56,7 +56,7 @@ class Shja::ResourceBase < Shja::Resource
       Shja::log.debug("Skip download: #{url}")
     end
   rescue => ex
-    FileUtils.rm_r(path)
+    FileUtils.rm_r(path) if File.exists?(path)
     raise ex
   end
 

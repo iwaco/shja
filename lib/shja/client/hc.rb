@@ -11,14 +11,16 @@ class Shja::Client::Hc
     password: password,
     target_dir: target_dir
   )
-    @agent      = Shja::Agent::Hc.new(username: username, password: password)
     @target_dir = target_dir
-    @db         = Shja::Db::Hc.get(target_dir)
     @context    = Hashie::Mash.new(
-      agent: agent,
-      db: db,
       target_dir: target_dir,
     )
+    @agent      = Shja::Agent::Hc.new(
+      username: username,
+      password: password,
+      context: @context
+    )
+    @db         = Shja::Db::Hc.get(@context)
     @actors     = Shja::ActorManager::Hc.new(@context)
     @movies     = Shja::MovieManager::Hc.new(@context)
   end

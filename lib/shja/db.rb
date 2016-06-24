@@ -6,8 +6,10 @@ class Shja::Db
 
   # TODO: test
   @@dbs = {}
-  def self.get(target_dir)
-    @@dbs[target_dir] ||= self.new(target_dir)
+  def self.get(context)
+    @@dbs[context.target_dir] ||= self.new(context.target_dir)
+    context.db = @@dbs[context.target_dir]
+    return @@dbs[context.target_dir]
   end
 
   def initialize(target_dir)

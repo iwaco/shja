@@ -6,14 +6,17 @@ class Shja::Client::Pondo < Shja::Client
     answer: answer,
     target_dir: target_dir
   )
-    @agent      = Shja::Agent::Pondo.new(username: username, password: password, answer: answer)
     @target_dir = target_dir
-    @db         = Shja::Db::Pondo.get(target_dir)
     @context    = Hashie::Mash.new(
-      agent: agent,
-      db: db,
       target_dir: target_dir,
     )
+    @agent      = Shja::Agent::Pondo.new(
+      username: username,
+      password: password,
+      answer: answer,
+      context: @context
+    )
+    @db         = Shja::Db::Pondo.get(@context)
     @movies     = Shja::MovieManager::Pondo.new(@context)
   end
 

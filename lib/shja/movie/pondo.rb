@@ -91,9 +91,11 @@ class Shja::Movie::Pondo < Shja::ResourceBase
 
   def create_thumbnail
     real_from_path = to_path(thumbnail_url('med'))
+    return unless File.file?(real_from_path)
     real_tb_path = to_path(thumbnail_url)
     unless File.file?(real_tb_path)
-      Shja.log.debug("Creating thumbnail: #{real_tb_path}")
+      Shja.log.debug("Creating thumbnail from: #{real_from_path}")
+      Shja.log.debug("Creating thumbnail to: #{real_tb_path}")
       Speedpetal::resize(480, real_from_path, real_tb_path)
     end
   end
@@ -118,7 +120,7 @@ class Shja::Movie::Pondo < Shja::ResourceBase
     end
   rescue => ex
     Shja.log.error("Download failed: #{from}")
-    FileUtils.rm(to)
+    FileUtils.rm(to) if File.file?(to)
   end
 
   def metadata_remote_url
@@ -232,7 +234,7 @@ class Shja::Movie::Pondo::Detail < Shja::Movie::Pondo::DetailBase
   rescue => ex
     Shja.log.error(ex.message)
     Shja.log.error("Download failed: #{url}")
-    FileUtils.rm(path)
+    FileUtils.rm(path) if File.file?(path)
   end
 
   def formats
@@ -274,7 +276,7 @@ class Shja::Movie::Pondo::Photosets < Shja::Movie::Pondo::DetailBase
       rescue => ex
         Shja.log.error(ex.message)
         Shja.log.error("Download failed: #{url}")
-        FileUtils.rm(path)
+        FileUtils.rm(path) if File.file?(path)
       end
     end
   end

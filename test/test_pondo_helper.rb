@@ -13,14 +13,13 @@ class ShjaPondoTest < Minitest::Test
 
   def setup
     @target_dir ||= File.join(TMP_ROOT, SecureRandom.hex(8))
-    @db         = Shja::Db::Pondo.new(@target_dir)
     @agent      = mock('agent')
-    # @db         = Shja::Db::Pondo.get(@target_dir)
     @context    = Hashie::Mash.new(
-      db: @db,
       target_dir: @target_dir,
       agent: @agent,
     )
+    @db         = Shja::Db::Pondo.get(@context)
+    # @db         = Shja::Db::Pondo.get(@target_dir)
   end
 
   def teardown
