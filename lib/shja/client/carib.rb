@@ -14,7 +14,7 @@ class Shja::Client::Carib < Shja::D2PassClient
   end
 
   def html_class
-    raise Shja::Html::Carib
+    Shja::Html::Carib
   end
 
 end

@@ -14,7 +14,7 @@ class Shja::Client::Pondo < Shja::D2PassClient
   end
 
   def html_class
-    raise Shja::Html::Pondo
+    Shja::Html::Pondo
   end
 
   def refresh_by_actor_id!(actor_id)

@@ -19,7 +19,7 @@ class Shja::Agent::Pondo < Shja::CapybaraAgent
 
     visit(LOGIN_URL)
     screenshot('01.jpg')
-    find('.age-verification .enter button').trigger('click')
+    find('.age-verification .enter button.color-main').trigger('click')
     sleep 2
     screenshot('02.jpg')
     find('modal-login .login-btn button').trigger('click')

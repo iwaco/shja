@@ -30,3 +30,4 @@ end
 
 require 'shja/html/hc'
 require 'shja/html/pondo'
+require 'shja/html/carib'

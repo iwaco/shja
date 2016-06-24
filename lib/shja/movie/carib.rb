@@ -81,6 +81,7 @@ class Shja::Movie::Carib < Shja::Movie
   end
 
   def create_symlinks
+    create_symlink(:dir_url)
     create_symlink(:zip_url)
     create_symlink(:thumbnail_url)
     supported_formats.each do |format|
@@ -113,7 +114,7 @@ class Shja::Movie::Carib < Shja::Movie
 
   def extract_zip
     zip_path = to_path(zip_url)
-    return if File.file?(zip_path)
+    return unless File.file?(zip_path)
     return if has_pictures?
 
     photoset_dir_path = to_path(photoset_dir_url)
@@ -132,6 +133,7 @@ class Shja::Movie::Carib < Shja::Movie
     end
   rescue => ex
     Shja.log.warn("Failed extract zip: #{zip_url}")
+    FileUtils.rm(zip_path) if File.file?(zip_path)
   end
 
   def remote_zip_url
