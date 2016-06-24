@@ -39,6 +39,33 @@ end
 
 class Shja::Movie < Shja::ResourceBase
 
+  def mkdir
+    dir_path = to_path(:dir_url)
+    unless File.directory?(dir_path)
+      FileUtils.mkdir_p(dir_path)
+    end
+  end
+
+  def _download(from, to)
+    if from.kind_of?(Symbol)
+      from = self.send(from)
+    end
+    to = to_path(to)
+    unless File.file?(to)
+      agent.download(from, to)
+    end
+  rescue => ex
+    Shja.log.error("Download failed: #{from}")
+    FileUtils.rm(to) if File.file?(to)
+  end
+
+  def to_path(url_sym_or_str)
+    if url_sym_or_str.kind_of?(Symbol)
+      url_sym_or_str = self.send(url_sym_or_str)
+    end
+    return File.join(target_dir, url_sym_or_str)
+  end
+
   def pictures_path
     raise "Unimplemented"
   end

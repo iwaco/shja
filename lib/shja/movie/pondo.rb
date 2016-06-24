@@ -75,13 +75,6 @@ class Shja::Movie::Pondo < Shja::Movie
     Dir.glob(File.join(to_path(photoset_dir_url), '*.jpg'))
   end
 
-  def mkdir
-    dir_path = to_path(:dir_url)
-    unless File.directory?(dir_path)
-      FileUtils.mkdir_p(dir_path)
-    end
-  end
-
   def create_thumbnail
     real_from_path = to_path(thumbnail_url('med'))
     return unless File.file?(real_from_path)
@@ -101,19 +94,6 @@ class Shja::Movie::Pondo < Shja::Movie
   def photosets
     @photosets ||= Shja::Movie::Pondo::Photosets.new(context, to_path(photoset_metadata_url))
     @photosets
-  end
-
-  def _download(from, to)
-    if from.kind_of?(Symbol)
-      from = self.send(from)
-    end
-    to = to_path(to)
-    unless File.file?(to)
-      agent.download(from, to)
-    end
-  rescue => ex
-    Shja.log.error("Download failed: #{from}")
-    FileUtils.rm(to) if File.file?(to)
   end
 
   def metadata_remote_url
@@ -154,13 +134,6 @@ class Shja::Movie::Pondo < Shja::Movie
 
   def top_dir_url
     return self.release.split('-')[0, 2].join('-')
-  end
-
-  def to_path(url_sym_or_str)
-    if url_sym_or_str.kind_of?(Symbol)
-      url_sym_or_str = self.send(url_sym_or_str)
-    end
-    return File.join(target_dir, url_sym_or_str)
   end
 
   def method_missing(method_sym, *arguments, &block)
