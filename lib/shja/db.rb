@@ -36,7 +36,15 @@ class Shja::Db
     return self.data['movies']
   end
 
+  def compare_movie_hash(movie)
+    raise 'Unimplemented'
+  end
+
   def save
+    self.movies.sort_by! do |movie|
+      compare_movie_hash(movie)
+    end
+    self.movies.reverse!
     open(self.db_path, 'w') do |io|
       io.write(@data.to_yaml)
     end
