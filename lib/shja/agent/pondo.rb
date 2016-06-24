@@ -14,10 +14,6 @@ class Shja::Agent::Pondo < Shja::CapybaraAgent
     @answer = answer
   end
 
-  def logdir
-    File.join(context.target_dir, 'logs')
-  end
-
   def login
     agent.visit(LOGIN_URL)
     screenshot('before-login.jpg')

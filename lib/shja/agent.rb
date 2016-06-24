@@ -106,6 +106,10 @@ class Shja::CapybaraAgent
     return curl.body_str
   end
 
+  def logdir
+    File.join(context.target_dir, 'logs')
+  end
+
   def screenshot(filename)
     if Shja.log.debug?
       FileUtils.mkdir_p(logdir) unless File.directory?(logdir)
