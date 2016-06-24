@@ -3,8 +3,11 @@ require 'mechanize'
 require 'nokogiri'
 require 'capybara'
 require 'capybara/dsl'
-require 'capybara/poltergeist'
+require 'capybara-webkit'
+require 'headless'
 require 'curb'
+require 'webrick/cookie'
+require 'uri'
 
 class Shja::Agent
   extend Memoist
@@ -55,16 +58,15 @@ class Shja::Agent
 end
 
 Capybara.run_server     = false
-Capybara.current_driver = :poltergeist
-Capybara.register_driver :poltergeist do |app|
-  Capybara::Poltergeist::Driver.new(app, {
-    js: true,
-    js_errors: false,
-    timeout: 5000,
-    debug: true,
-    window_size: [1980, 1080],
-    phantomjs_options: ['--ignore-ssl-errors=true']
-  })
+Capybara.default_driver = :webkit
+Capybara::Webkit.configure do |config|
+  config.allow_url("d2pass.com")
+  config.allow_url("caribbeancom.com")
+  config.allow_url("1pondo.tv")
+  config.allow_url("google-analytics.com")
+  config.allow_url("amazonaws.com")
+  config.allow_url("doubleclick.net")
+  config.allow_url("crazyegg.com")
 end
 
 class Shja::CapybaraAgent
@@ -88,9 +90,12 @@ class Shja::CapybaraAgent
   end
 
   def init_agent
+    h = Headless.new()
+    h.start
     @agent = page
-    # @agent = Capybara::Session.new(:poltergeist)
-    @agent.driver.headers = { 'User-Agent' => "Mozilla/5.0 (Macintosh; Intel Mac OS X)" }
+    ObjectSpace.define_finalizer(@agent) do
+      h.destroy
+    end
   end
 
   def login
@@ -101,15 +106,37 @@ class Shja::CapybaraAgent
     raise "Unimplemented"
   end
 
+  def _cookies
+    agent.driver.browser.get_cookies.map { |c| WEBrick::Cookie.parse_set_cookie(c) }
+  end
+
+  def _get_cookies(url)
+    uri = URI.parse(url)
+    return _cookies.select {|c| valid_domain?(c, uri.host)}.map {|c| "#{c.name}=#{c.value}" }.join('; ')
+  end
+
+  def valid_domain?(cookie, domain)
+    ends_with?(("." + domain).downcase,
+               normalize_domain(cookie.domain).downcase)
+  end
+
+  def normalize_domain(domain)
+    domain = "." + domain unless domain[0,1] == "."
+    domain
+  end
+
+  def ends_with?(str, suffix)
+    str[-suffix.size..-1] == suffix
+  end
+
   def create_curl_agent(url)
     login unless self.is_login
     curl_agent = Curl::Easy.new(url)
     curl_agent.follow_location = true
     curl_agent.max_redirects = 5
-    curl_agent.headers = curl_agent.headers.merge(agent.driver.headers)
-    curl_agent.headers["Cookie"] = agent.driver.cookies.each_with_object([]) { |(key, value), array|
-      array.push("#{key}=#{value.value}")
-    }.join('; ')
+    cookies = _get_cookies(url)
+    Shja.log.debug("Cookies: #{cookies}")
+    curl_agent.headers["Cookie"] = _get_cookies(url)
     return curl_agent
   end
 
