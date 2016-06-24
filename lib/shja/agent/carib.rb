@@ -18,16 +18,16 @@ class Shja::Agent::Carib < Shja::CapybaraAgent
     return if self.is_login
 
     visit(LOGIN_URL)
-    screenshot('login-01-before.jpg')
+    screenshot('01.jpg')
     fill_in('FORM_USER', with: username)
     fill_in('FORM_PASSWD', with: password)
     find('input[name="login_btn"].loginButton').trigger('click')
-    screenshot('login-02-after.jpg')
+    screenshot('02.jpg')
     # puts agent.html
     find('#sqaform input[name="a"]').send_keys(*answer.split(''))
-    screenshot('login-03-after.jpg')
+    screenshot('03.jpg')
     find('#sqaform').trigger('submit')
-    screenshot('login-04-after.jpg')
+    screenshot('04.jpg')
 
     self.is_login = true
   end

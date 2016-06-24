@@ -18,7 +18,7 @@ class Shja::Agent::Pondo < Shja::CapybaraAgent
     return if self.is_login
 
     visit(LOGIN_URL)
-    screenshot('before-login.jpg')
+    screenshot('01.jpg')
 
     self.is_login = true
   end
