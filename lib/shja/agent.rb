@@ -2,6 +2,7 @@ require 'memoist'
 require 'mechanize'
 require 'nokogiri'
 require 'capybara'
+require 'capybara/dsl'
 require 'capybara/poltergeist'
 require 'curb'
 
@@ -53,7 +54,14 @@ class Shja::Agent
   end
 end
 
+Capybara.run_server     = false
+Capybara.current_driver = :poltergeist
+Capybara.register_driver :poltergeist do |app|
+  Capybara::Poltergeist::Driver.new(app, {:js_errors => false, :timeout => 1000 })
+end
+
 class Shja::CapybaraAgent
+  include Capybara::DSL
   extend Memoist
 
   attr_reader :agent
@@ -73,10 +81,8 @@ class Shja::CapybaraAgent
   end
 
   def init_agent
-    Capybara.register_driver :poltergeist do |app|
-      Capybara::Poltergeist::Driver.new(app, {:js_errors => false, :timeout => 1000 })
-    end
-    @agent = Capybara::Session.new(:poltergeist)
+    @agent = page
+    # @agent = Capybara::Session.new(:poltergeist)
     @agent.driver.headers = { 'User-Agent' => "Mozilla/5.0 (Macintosh; Intel Mac OS X)" }
   end
 
@@ -142,3 +148,4 @@ end
 
 require 'shja/agent/hc'
 require 'shja/agent/pondo'
+require 'shja/agent/carib'

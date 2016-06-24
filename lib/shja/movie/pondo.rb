@@ -1,12 +1,5 @@
-require 'json'
-require 'speedpetal'
 
-class Shja::MovieManager::Pondo < Shja::ManagerBase
-
-  def initialize(context)
-    super
-    context.movies = self
-  end
+class Shja::MovieManager::Pondo < Shja::MovieManager
 
   def download_index(start_page: 0, last_page: 0)
     return [].tap do |movie_ids|
@@ -40,7 +33,7 @@ class Shja::MovieManager::Pondo < Shja::ManagerBase
 
 end
 
-class Shja::Movie::Pondo < Shja::ResourceBase
+class Shja::Movie::Pondo < Shja::Movie
 
   def download(format)
     download_metadata

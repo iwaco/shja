@@ -1,11 +1,6 @@
 
-class Shja::MovieManager::Hc < Shja::ManagerBase
+class Shja::MovieManager::Hc < Shja::MovieManager
   def_delegators :@context, :actors
-
-  def initialize(context)
-    super
-    context.movies = self
-  end
 
   def all
     self.db.movies.each do |movie|
@@ -43,7 +38,7 @@ class Shja::MovieManager::Hc < Shja::ManagerBase
 
 end
 
-class Shja::Movie::Hc < Shja::ResourceBase
+class Shja::Movie::Hc < Shja::Movie
   # attr_reader :id
   # attr_reader :actor_id
   # attr_reader :title
