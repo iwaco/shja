@@ -43,6 +43,10 @@ class Shja::Movie::Carib < Shja::Movie
   def download_metadata
     mkdir
     self._download("http://www.caribbeancom.com#{thumbnail}", thumbnail_url)
+    self._download(remote_zip_url, zip_url)
+
+    extract_zip
+    create_symlink(:zip_url)
     create_symlink(:thumbnail_url)
   end
 
@@ -64,12 +68,42 @@ class Shja::Movie::Carib < Shja::Movie
     end
   end
 
+  def extract_zip
+    zip_path = to_path(zip_url)
+    return if File.file?(zip_path)
+
+    photoset_dir_path = to_path(photoset_dir_url)
+    FileUtils.mkdir_p(photoset_dir_path)
+
+    Zip::File.open(zip_path) do |zip|
+      zip.each do |entry|
+        basename = File.basename(entry.name)
+        if File.extname(basename) == '.jpg'
+          entry_path = File.join(photoset_dir_path, basename)
+          unless File.file?(entry_path)
+            zip.extract(entry, entry_path) { true }
+          end
+        end
+      end
+    end
+  rescue => ex
+    Shja.log.warn("Failed extract zip: #{zip_url}")
+  end
+
+  def remote_zip_url
+    "http://www.caribbeancom.com/moviepages/#{self.id}/images/gallery.zip"
+  end
+
   def photoset_dir_url real=true
     return "#{dir_url(real)}"
   end
 
   def movie_url format, real=true
     return "#{dir_url(real)}-#{format}.mp4"
+  end
+
+  def zip_url real=true
+    return "#{dir_url(real)}.zip"
   end
 
   def thumbnail_url real=true

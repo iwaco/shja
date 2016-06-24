@@ -1,5 +1,6 @@
 require 'json'
 require 'speedpetal'
+require 'zip'
 require 'fastimage'
 
 class Shja::MovieManager < Shja::ManagerBase
