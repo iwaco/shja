@@ -83,6 +83,7 @@ class Shja::D2PassClient < Shja::Client
         Shja.log.error(ex.backtrace.join("\n"))
         try_count -= 1
         if try_count == 0
+          Shja.log.info("Max try_count exeeded")
           return
         end
       end

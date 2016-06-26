@@ -64,6 +64,7 @@ Capybara::Webkit.configure do |config|
   config.allow_url("caribbeancom.com")
   config.allow_url("1pondo.tv")
   config.allow_url("google-analytics.com")
+  config.allow_url("googleapis.com")
   config.allow_url("amazonaws.com")
   config.allow_url("doubleclick.net")
   config.allow_url("crazyegg.com")
