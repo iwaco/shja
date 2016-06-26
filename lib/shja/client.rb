@@ -82,6 +82,7 @@ class Shja::D2PassClient < Shja::Client
   def generate_html
     html = html_class.new(movies: movies, target_dir: target_dir)
     html.generate_movies_js
+    html.generate_recent_js
   end
 end
 

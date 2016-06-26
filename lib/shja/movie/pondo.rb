@@ -44,6 +44,10 @@ end
 
 class Shja::Movie::Pondo < Shja::Movie
 
+  def id
+    return self.movie_id
+  end
+
   def download(format)
     Shja.log.info("Download start: #{title}, #{dir_url}")
     download_metadata
@@ -63,6 +67,10 @@ class Shja::Movie::Pondo < Shja::Movie
     self._download(thumb_ultra, thumbnail_url('ultra'))
 
     create_thumbnail
+  end
+
+  def default_format
+    return detail.default_format
   end
 
   def exists?(format=nil)

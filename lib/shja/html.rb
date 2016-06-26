@@ -22,8 +22,34 @@ class Shja::Html
     end
   end
 
+  def generate_recent_js
+    open(File.join(target_dir, "recent_movies.js"), 'w') do |io|
+      io.write('var recent_movies = ' + JSON.generate(recent_movies_js_list) + ';')
+    end
+  end
+
   def movies_js_list
     raise 'Unimplemented'
+  end
+
+  def recent_movies_js_list
+    recent_movies = []
+    movies.all do |movie|
+      if movie.updated_date
+        if recent_movies.size > 50
+          last_movie = recent_movies.pop
+          if movie > last_movie
+            recent_movies << movie
+            recent_movies.sort! { |a, b| !(a.updated_at <=> b.updated_at) }
+          else
+            recent_movies << last_movie
+          end
+        else
+          recent_movies << movie
+        end
+      end
+    end
+    return recent_movies.map { |movie| movie.id }
   end
 
 end

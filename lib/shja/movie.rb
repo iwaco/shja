@@ -40,6 +40,15 @@ end
 
 class Shja::Movie < Shja::ResourceBase
 
+  def updated_date
+    movie_path = to_path(movie_url(default_format))
+    if File.file?(movie_path)
+      return File.mtime(movie_path).strftime("%Y-%m-%d")
+    else
+      return nil
+    end
+  end
+
   def mkdir
     dir_path = to_path(:dir_url)
     unless File.directory?(dir_path)
@@ -66,6 +75,10 @@ class Shja::Movie < Shja::ResourceBase
       url_sym_or_str = self.send(url_sym_or_str)
     end
     return File.join(target_dir, url_sym_or_str)
+  end
+
+  def photoset_dir_path
+    to_path(photoset_dir_url)
   end
 
   def actor?
