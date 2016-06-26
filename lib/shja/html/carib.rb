@@ -14,7 +14,7 @@ class Shja::Html::Carib < Shja::Html
     movies.all do |movie|
       generate_detail_js(movie)
       js = {}
-      js['id'] = movie.movie_id
+      js['id'] = movie.id
       js['dir'] = movie.top_dir_url(false)
       js['jpg'] = relative_path(movie, movie.thumbnail_url(false))
       js['detail'] = relative_path(movie, movie.photoset_dir_url(false))
