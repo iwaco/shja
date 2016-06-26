@@ -9,6 +9,7 @@ class Shja::Html
   end
 
   def generate_movies_js
+    Shja.log.debug('generate_movies_js')
     open(File.join(target_dir, "movies.js"), 'w') do |io|
       io.write('var movies = ' + JSON.generate(movies_js_list) + ';')
     end
@@ -23,6 +24,7 @@ class Shja::Html
   end
 
   def generate_recent_js
+    Shja.log.debug('generate_recent_js')
     open(File.join(target_dir, "recent_movies.js"), 'w') do |io|
       io.write('var recent_movies = ' + JSON.generate(recent_movies_js_list) + ';')
     end
@@ -38,7 +40,7 @@ class Shja::Html
       if movie.updated_date
         if recent_movies.size > 50
           last_movie = recent_movies.pop
-          if movie > last_movie
+          if movie.updated_at > last_movie.updated_at
             recent_movies << movie
             recent_movies.sort! { |a, b| !(a.updated_at <=> b.updated_at) }
           else
