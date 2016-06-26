@@ -45,6 +45,7 @@ end
 class Shja::Movie::Pondo < Shja::Movie
 
   def download(format)
+    Shja.log.info("Download start: #{title}, #{dir_url}")
     download_metadata
     download_photoset
     download_movie(format)

@@ -41,6 +41,7 @@ end
 class Shja::Movie::Carib < Shja::Movie
 
   def download(format)
+    Shja.log.info("Download start: #{dir_url}")
     download_movie(format)
     download_metadata
   end
