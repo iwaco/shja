@@ -40,9 +40,9 @@ class Shja::Html
       if movie.updated_date
         if recent_movies.size > 50
           last_movie = recent_movies.pop
-          if movie.updated_at > last_movie.updated_at
+          if movie.updated_date > last_movie.updated_date
             recent_movies << movie
-            recent_movies.sort! { |a, b| !(a.updated_at <=> b.updated_at) }
+            recent_movies.sort! { |a, b| !(a.updated_date <=> b.updated_date) }
           else
             recent_movies << last_movie
           end
