@@ -47,7 +47,7 @@ class Shja::Movie::Carib < Shja::Movie
 
   def download_metadata
     mkdir
-    self._download("http://www.caribbeancom.com#{thumbnail}", thumbnail_url)
+    self._download(remote_thumbnail_url, thumbnail_url)
     self._download(remote_zip_url, zip_url)
 
     extract_zip
@@ -134,6 +134,14 @@ class Shja::Movie::Carib < Shja::Movie
   rescue => ex
     Shja.log.warn("Failed extract zip: #{zip_url}")
     FileUtils.rm(zip_path) if File.file?(zip_path)
+  end
+
+  def remote_thumbnail_url
+    if self.thumbnail.start_with?('http')
+      return self.thumbnail
+    else
+      return "http://www.caribbeancom.com#{thumbnail}"
+    end
   end
 
   def remote_zip_url
