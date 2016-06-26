@@ -12,7 +12,7 @@ html_disable   = false
 
 random_count = 10
 movie_id = []
-actor_id = []
+actor_name = nil
 
 config = {}
 config[:username]    = ENV['CARIB_USERNAME']
@@ -34,7 +34,7 @@ subparsers['download'].on('-f FORMAT') {|v| format = v }
 subparsers['download'].on('--html-disable HTML_DISABLE') {|v| html_disable = (v == 'true')}
 subparsers['download'].on('-r RANDOM_COUNT') {|v| random_count = v.to_i }
 subparsers['download'].on('-m MOVIE_ID') {|v| movie_id << v.to_i }
-subparsers['download'].on('-a ACTOR_ID') {|v| actor_id << v.to_i }
+subparsers['download'].on('-a ACTOR_NAME') {|v| actor_name << v }
 subparsers['html'] = OptionParser.new
 
 parser.order!(ARGV)
@@ -57,10 +57,8 @@ if subcommand == 'download'
     movie_id.each do |id|
       client.download_by_id(id, format)
     end
-  elsif actor_id.size > 0
-    actor_id.each do |id|
-      client.download_by_actor_id(id, format)
-    end
+  elsif actor_name
+    client.download_by_actor(actor_name, format)
   else
     client.random_download(random_count, format)
   end
