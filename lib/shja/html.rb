@@ -42,7 +42,7 @@ class Shja::Html
           last_movie = recent_movies.pop
           if movie.updated_date > last_movie.updated_date
             recent_movies << movie
-            recent_movies.sort! { |a, b| !(a.updated_date <=> b.updated_date) }
+            recent_movies.sort! { |a, b| b.updated_date <=> a.updated_date }
           else
             recent_movies << last_movie
           end
