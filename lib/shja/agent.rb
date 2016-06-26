@@ -143,6 +143,9 @@ class Shja::CapybaraAgent
   def _get_url(url, unexpected_types=[])
     curl = create_curl_agent(url)
     curl.get
+    if curl.response_code >= 300
+      raise "Unexpected response code: #{curl.response_code}, #{url}"
+    end
     unexpected_types.each do |type|
       if curl.content_type.include?(type)
         raise "Unexpected content_type: #{curl.content_type}, #{url}"
