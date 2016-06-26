@@ -3,7 +3,7 @@ require 'pathname'
 class Shja::Html::Carib < Shja::Html
 
   def relative_path(movie, to)
-    path_from = Pathname(movie.top_dir_url)
+    path_from = Pathname(movie.top_dir_url(false))
     path_to = Pathname(to)
     path = path_to.relative_path_from(path_from).to_s
     return path
