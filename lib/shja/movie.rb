@@ -56,7 +56,7 @@ class Shja::Movie < Shja::ResourceBase
     end
   end
 
-  def _download(from, to, unexpected_types=['html'])
+  def _download(from, to, ignore_error: false, unexpected_types: ['html'])
     if from.kind_of?(Symbol)
       from = self.send(from)
     end
@@ -65,6 +65,14 @@ class Shja::Movie < Shja::ResourceBase
       return agent.download(from, to, unexpected_types)
     end
     return false
+  rescue => ex
+    if ignore_error
+      Shja.log.error(ex.message)
+      Shja.log.error(ex.backtrace.join("\n"))
+      return false
+    else
+      raise ex
+    end
   end
 
   def to_path(url_sym_or_str)

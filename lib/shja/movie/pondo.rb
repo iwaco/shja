@@ -57,14 +57,14 @@ class Shja::Movie::Pondo < Shja::Movie
 
   def download_metadata
     mkdir
-    self._download(metadata_remote_url, metadata_url)
-    self._download(photoset_metadata_remote_url, photoset_metadata_url)
+    self._download(metadata_remote_url, metadata_url, ignore_error: true)
+    self._download(photoset_metadata_remote_url, photoset_metadata_url, ignore_error: true)
     # self._download(movie_thumb, thumbnail_url)
 
-    self._download(thumb_high, thumbnail_url('high'))
-    self._download(thumb_low, thumbnail_url('low'))
-    self._download(thumb_med, thumbnail_url('med'))
-    self._download(thumb_ultra, thumbnail_url('ultra'))
+    self._download(thumb_high, thumbnail_url('high'), ignore_error: true)
+    self._download(thumb_low, thumbnail_url('low'), ignore_error: true)
+    self._download(thumb_med, thumbnail_url('med'), ignore_error: true)
+    self._download(thumb_ultra, thumbnail_url('ultra'), ignore_error: true)
 
     create_thumbnail
   end

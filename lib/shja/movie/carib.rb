@@ -48,8 +48,8 @@ class Shja::Movie::Carib < Shja::Movie
 
   def download_metadata
     mkdir
-    self._download(remote_thumbnail_url, thumbnail_url)
-    self._download(remote_zip_url, zip_url)
+    self._download(remote_thumbnail_url, thumbnail_url, ignore_error: true)
+    self._download(remote_zip_url, zip_url, ignore_error: true)
 
     extract_zip
     create_symlinks
