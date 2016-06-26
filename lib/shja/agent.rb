@@ -186,9 +186,7 @@ class Shja::CapybaraAgent
   rescue => ex
     Shja.log.error("Download failed: #{url}")
     FileUtils.rm(path) if File.file?(path)
-    Shja.log.error(ex.message)
-    Shja.log.error(ex.backtrace.join("\n"))
-    return false
+    raise ex
   end
 end
 

@@ -58,18 +58,33 @@ class Shja::D2PassClient < Shja::Client
     end
     _movies = _movies.sample(count)
     _movies.each do |movie|
-      movie.download(format)
+      begin
+        movie.download(format)
+      rescue => ex
+        Shja.log.error(ex.message)
+        Shja.log.error(ex.backtrace.join("\n"))
+      end
     end
   end
 
-  def download_by_latest(count=10, format=nil)
+  def download_by_latest(count=10, format=nil, try_ratio=2)
+    try_count = count * try_ratio
     movies.all do |movie|
-      if movie.download(format)
-        Shja.log.debug("Downloaded...")
-        count -= 1
-      end
-      if count == 0
-        return
+      begin
+        if movie.download(format)
+          Shja.log.debug("Downloaded...")
+          count -= 1
+        end
+        if count == 0
+          return
+        end
+      rescue => ex
+        Shja.log.error(ex.message)
+        Shja.log.error(ex.backtrace.join("\n"))
+        try_count -= 1
+        if try_count == 0
+          return
+        end
       end
     end
   end
