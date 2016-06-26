@@ -51,7 +51,7 @@ Shja.log.level = Logger::DEBUG
 client = Shja::Client::Pondo.new(**config)
 
 if subcommand == 'refresh'
-  if actor_id
+  if actor_id.size > 0
     client.refresh_by_actor_id!(actor_id)
   else
     client.refresh!

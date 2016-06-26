@@ -254,8 +254,6 @@ class Shja::Movie::Pondo::Photosets < Shja::Movie::Pondo::DetailBase
         agent.download(url, File.join(dir, "#{index}.jpg"))
       rescue => ex
         Shja.log.error(ex.message)
-        Shja.log.error("Download failed: #{url}")
-        FileUtils.rm(path) if File.file?(path)
       end
     end
   end

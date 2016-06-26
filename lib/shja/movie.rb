@@ -47,17 +47,18 @@ class Shja::Movie < Shja::ResourceBase
     end
   end
 
-  def _download(from, to)
+  def _download(from, to, unexpected_types=['html'])
     if from.kind_of?(Symbol)
       from = self.send(from)
     end
     to = to_path(to)
     unless File.file?(to)
-      agent.download(from, to)
+      agent.download(from, to, unexpected_types)
     end
   rescue => ex
-    Shja.log.error("Download failed: #{from}")
-    FileUtils.rm(to) if File.file?(to)
+    Shja.log.error("_download failed: #{from}")
+    Shja.log.error(ex.message)
+    Shja.log.error(ex.backtrace.join("\n"))
   end
 
   def to_path(url_sym_or_str)

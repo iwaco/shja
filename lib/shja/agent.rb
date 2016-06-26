@@ -140,9 +140,14 @@ class Shja::CapybaraAgent
     return curl_agent
   end
 
-  def _get_url(url)
+  def _get_url(url, unexpected_types=[])
     curl = create_curl_agent(url)
     curl.get
+    unexpected_types.each do |type|
+      if curl.content_type.include?(type)
+        raise "Unexpected content_type: #{curl.content_type}, #{url}"
+      end
+    end
     return curl.body_str
   end
 
@@ -165,16 +170,18 @@ class Shja::CapybaraAgent
   end
   memoize :fetch_page
 
-  def download(url, path)
+  def download(url, path, unexpected_types=[])
     login unless self.is_login
     Shja.log.debug("_download: #{url}")
 
     open(path, 'wb') do |io|
-      body = _get_url(url)
+      body = _get_url(url, unexpected_types)
       # puts body
       io.write(body)
     end
   rescue => ex
+    Shja.log.error("Download failed: #{url}")
+    FileUtils.rm(path) if File.file?(path)
     Shja.log.error(ex.message)
     Shja.log.error(ex.backtrace.join("\n"))
   end
