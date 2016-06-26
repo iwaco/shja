@@ -185,8 +185,14 @@ end
 
 class Shja::Movie::Pondo::DetailBase < Shja::ResourceBase
   def initialize(context, path)
-    data_hash = open(path) do |io|
-      data_hash = JSON.load(io.read)
+    data_hash = nil
+    begin
+      data_hash = open(path) do |io|
+        data_hash = JSON.load(io.read)
+      end
+    rescue Errno::ENOENT => ex
+      Shja.log.warn("Data couldn't be loaded: #{path}")
+      data_hash = {}
     end
     super(context, data_hash)
   end
@@ -231,20 +237,11 @@ class Shja::Movie::Pondo::Detail < Shja::Movie::Pondo::DetailBase
 end
 
 class Shja::Movie::Pondo::Photosets < Shja::Movie::Pondo::DetailBase
-  def initialize(context, path)
-    data_hash = nil
-    begin
-      data_hash = open(path) do |io|
-        data_hash = JSON.load(io.read)
-      end
-    rescue Errno::ENOENT => ex
-      Shja.log.error("Photosets couldn't be loaded #{path}")
-    end
-    super(context, data_hash)
-  end
 
   def download(dir)
-    return unless data_hash
+    unless data_hash["Rows"]
+      Shja::log.info("No data")
+    end
     FileUtils.mkdir_p(dir)
 
     data_hash["Rows"].each_with_index do |img, index|
