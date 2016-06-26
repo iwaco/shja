@@ -10,7 +10,8 @@ start_page = 0
 last_page = 0
 html_disable   = false
 
-random_count = 10
+random = false
+count = 1
 movie_id = []
 actor_name = nil
 
@@ -32,7 +33,8 @@ subparsers['refresh'].on('-s', '--start-page START_PAGE') {|v| start_page = v.to
 subparsers['download'] = OptionParser.new
 subparsers['download'].on('-f FORMAT') {|v| format = v }
 subparsers['download'].on('--html-disable HTML_DISABLE') {|v| html_disable = (v == 'true')}
-subparsers['download'].on('-r RANDOM_COUNT') {|v| random_count = v.to_i }
+subparsers['download'].on('-r RANDOM') {|v| random = (v == 'true') }
+subparsers['download'].on('-c COUNT') {|v| count = v.to_i }
 subparsers['download'].on('-m MOVIE_ID') {|v| movie_id << v.to_i }
 subparsers['download'].on('-a ACTOR_NAME') {|v| actor_name << v }
 subparsers['html'] = OptionParser.new
@@ -59,8 +61,10 @@ if subcommand == 'download'
     end
   elsif actor_name
     client.download_by_actor(actor_name, format)
+  elsif random
+    client.random_download(count, format)
   else
-    client.random_download(random_count, format)
+    client.download_by_latest(count, format)
   end
 end
 

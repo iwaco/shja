@@ -42,8 +42,8 @@ class Shja::Movie::Carib < Shja::Movie
 
   def download(format)
     Shja.log.info("Download start: #{dir_url}")
-    download_movie(format)
     download_metadata
+    return download_movie(format)
   end
 
   def download_metadata
@@ -58,7 +58,7 @@ class Shja::Movie::Carib < Shja::Movie
   def download_movie(format)
     format = default_format unless format
 
-    self._download(self.formats[format], movie_url(format))
+    return self._download(self.formats[format], movie_url(format))
   end
 
   def exists?(format=nil)

@@ -182,11 +182,13 @@ class Shja::CapybaraAgent
       # puts body
       io.write(body)
     end
+    return true
   rescue => ex
     Shja.log.error("Download failed: #{url}")
     FileUtils.rm(path) if File.file?(path)
     Shja.log.error(ex.message)
     Shja.log.error(ex.backtrace.join("\n"))
+    return false
   end
 end
 

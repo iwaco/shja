@@ -62,6 +62,18 @@ class Shja::D2PassClient < Shja::Client
     end
   end
 
+  def download_by_latest(count=10, format=nil)
+    movies.all do |movie|
+      if movie.download(format)
+        Shja.log.debug("Downloaded...")
+        count -= 1
+      end
+      if count == 0
+        return
+      end
+    end
+  end
+
   def download_by_id(id, format=nil)
     movie = movies.find(id)
     movie.download(format)

@@ -52,7 +52,7 @@ class Shja::Movie::Pondo < Shja::Movie
     Shja.log.info("Download start: #{title}, #{dir_url}")
     download_metadata
     download_photoset
-    download_movie(format)
+    return download_movie(format)
   end
 
   def download_metadata
@@ -217,18 +217,22 @@ class Shja::Movie::Pondo::Detail < Shja::Movie::Pondo::DetailBase
   end
 
   def download(path, format=default_format)
-    unless File.file?(path)
-      url, size = remote_url(format)
-      Shja.log.debug("Download Movie: #{url}")
-      agent.download(url, path)
-      if File.size(path) < size
-        raise "File size is invalid, actual: #{File.size(path)}, expected: #{size}"
+    begin
+      unless File.file?(path)
+        url, size = remote_url(format)
+        Shja.log.debug("Download Movie: #{url}")
+        agent.download(url, path)
+        if File.size(path) < size
+          raise "File size is invalid, actual: #{File.size(path)}, expected: #{size}"
+        end
       end
+      return true
+    rescue => ex
+      Shja.log.error(ex.message)
+      Shja.log.error("Download failed: #{url}")
+      FileUtils.rm(path) if File.file?(path)
     end
-  rescue => ex
-    Shja.log.error(ex.message)
-    Shja.log.error("Download failed: #{url}")
-    FileUtils.rm(path) if File.file?(path)
+    return false
   end
 
   def formats
