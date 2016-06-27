@@ -253,6 +253,8 @@ class Shja::Movie::Pondo::Photosets < Shja::Movie::Pondo::DetailBase
   end
 
   def download
+    # FIXME: implements later
+    return
     dir = movie.to_path(movie.photoset_dir_url)
     unless data_hash["Rows"]
       Shja::log.info("No data: #{movie.title}")
