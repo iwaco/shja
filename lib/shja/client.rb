@@ -10,6 +10,7 @@ class Shja::Client
 end
 
 class Shja::D2PassClient < Shja::Client
+  attr_reader :result
 
   def agent_class
     raise "Unimplemented"
@@ -45,10 +46,20 @@ class Shja::D2PassClient < Shja::Client
     )
     @db         = db_class.get(@context)
     @movies     = movies_class.new(@context)
+
+    @result     = []
   end
 
   def refresh!(start_page: 0, last_page: 0)
     movies.download_index(start_page: start_page, last_page: last_page)
+  end
+
+  def _download_movie(movie, format)
+    if movie.download(format)
+      self.result << movie
+      return true
+    end
+    return false
   end
 
   def random_download(count=10, format=nil)
@@ -59,7 +70,7 @@ class Shja::D2PassClient < Shja::Client
     _movies = _movies.sample(count)
     _movies.each do |movie|
       begin
-        movie.download(format)
+        _download_movie(movie, format)
       rescue => ex
         Shja.log.error(ex.message)
         Shja.log.error(ex.backtrace.join("\n"))
@@ -71,7 +82,7 @@ class Shja::D2PassClient < Shja::Client
     try_count = count * try_ratio
     movies.all do |movie|
       begin
-        if movie.download(format)
+        if _download_movie(movie, format)
           Shja.log.debug("Downloaded...")
           count -= 1
         end
@@ -92,7 +103,7 @@ class Shja::D2PassClient < Shja::Client
 
   def download_by_id(id, format=nil)
     movie = movies.find(id)
-    movie.download(format)
+    _download_movie(movie, format)
   end
 
   def download_by_actor(name, format=nil)
@@ -103,7 +114,14 @@ class Shja::D2PassClient < Shja::Client
       end
     end
     _movies.each do |movie|
-      movie.download(format)
+      _download_movie(movie, format)
+    end
+  end
+
+  def print_result
+    puts "Downloaded: Total #{result.size}"
+    result.each do |movie|
+      puts "    ----> #{movie.title}, #{movie.dir_url}"
     end
   end
 
