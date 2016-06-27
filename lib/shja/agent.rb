@@ -148,8 +148,19 @@ class Capybara::Webkit::CookieJar
 
   def cookies_for(url)
     uri = URI.parse(url)
-    return cookies.select {|c| valid_domain?(c, uri.host)}.map {|c| "#{c.name}=#{c.value}" }.join('; ')
+    return cookies_for_host(uri.host)
   end
+
+  def cookies_for_host(host)
+    @cache_cookie ||= {}
+    unless @cache_cookie[host]
+      @cache_cookie[host] = cookies.select {|c| valid_domain?(c, host)}
+                                   .map {|c| "#{c.name}=#{c.value}" }
+                                   .join('; ')
+    end
+    return @cache_cookie[host]
+  end
+
 end
 
 Capybara.run_server     = false
