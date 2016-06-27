@@ -223,7 +223,7 @@ class Shja::Movie::Pondo::Detail < Shja::Movie::Pondo::DetailBase
   def download(path, format=default_format)
     unless File.file?(path)
       url, size = remote_url(format)
-      Shja.log.info("Download Movie: #{url}")
+      Shja.log.info("Download Movie: #{self.movie.title}, #{url}")
       agent.download(url, path)
       if File.size(path) < size
         raise "File size is invalid, actual: #{File.size(path)}, expected: #{size}"

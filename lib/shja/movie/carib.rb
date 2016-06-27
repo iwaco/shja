@@ -58,7 +58,7 @@ class Shja::Movie::Carib < Shja::Movie
     format = default_format unless format
     remote_movie_url = self.formats[format]
     local_movie_url = movie_url(format)
-    Shja.log.info("Movie download: #{remote_movie_url}")
+    Shja.log.info("Movie download: #{title}, #{remote_movie_url}")
 
     return self._download(remote_movie_url, local_movie_url)
   end
