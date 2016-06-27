@@ -104,17 +104,17 @@ class Shja::Movie::Carib < Shja::Movie
       to = to_path(self.send(url_sym, format))
       from = to_path(self.send(url_sym, format, false))
     end
+    return unless File.exist?(to)
+    Shja.log.debug("Create symlink #{from} to #{to}")
+
     path_to = Pathname(to)
     path_from = Pathname(File.dirname(from))
 
     relative_path = path_to.relative_path_from(path_from).to_s
     begin
       FileUtils.rm(from, { force: true })
-      if File.exist?(to)
-        Shja.log.debug("Create symlink #{from} to #{to}")
-        FileUtils.mkdir_p(File.dirname(from.to_s))
-        File.symlink(relative_path, from)
-      end
+      FileUtils.mkdir_p(File.dirname(from.to_s))
+      File.symlink(relative_path, from)
     rescue Errno::EEXIST
     end
   end
