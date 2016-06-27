@@ -52,7 +52,6 @@ class Shja::Movie::Carib < Shja::Movie
     self._download(remote_zip_url, zip_url, ignore_error: true)
 
     extract_zip
-    create_symlinks
   end
 
   def download_movie(format)
@@ -108,11 +107,11 @@ class Shja::Movie::Carib < Shja::Movie
     path_to = Pathname(to)
     path_from = Pathname(File.dirname(from))
 
-    Shja.log.debug("Create symlink #{from} to #{to}")
     relative_path = path_to.relative_path_from(path_from).to_s
     begin
       FileUtils.rm(from, { force: true })
       if File.exist?(to)
+        Shja.log.debug("Create symlink #{from} to #{to}")
         FileUtils.mkdir_p(File.dirname(from.to_s))
         File.symlink(relative_path, from)
       end

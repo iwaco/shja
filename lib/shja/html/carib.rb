@@ -13,6 +13,7 @@ class Shja::Html::Carib < Shja::Html
     json = []
     movies.all do |movie|
       generate_detail_js(movie)
+      movie.create_symlinks
       js = {}
       js['id'] = movie.id
       js['dir'] = movie.top_dir_url(false)
