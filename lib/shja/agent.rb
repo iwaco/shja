@@ -57,6 +57,16 @@ class Shja::Agent
   end
 end
 
+# Monkey patch for capybara-webkit
+require 'capybara/webkit/cookie_jar'
+class Capybara::Webkit::CookieJar
+
+  def cookies_for(url)
+    uri = URI.parse(url)
+    return cookies.select {|c| valid_domain?(c, uri.host)}.map {|c| "#{c.name}=#{c.value}" }.join('; ')
+  end
+end
+
 Capybara.run_server     = false
 Capybara.default_driver = :webkit
 Capybara::Webkit.configure do |config|
@@ -107,37 +117,14 @@ class Shja::CapybaraAgent
     raise "Unimplemented"
   end
 
-  def _cookies
-    agent.driver.browser.get_cookies.map { |c| WEBrick::Cookie.parse_set_cookie(c) }
-  end
-
-  def _get_cookies(url)
-    uri = URI.parse(url)
-    return _cookies.select {|c| valid_domain?(c, uri.host)}.map {|c| "#{c.name}=#{c.value}" }.join('; ')
-  end
-
-  def valid_domain?(cookie, domain)
-    ends_with?(("." + domain).downcase,
-               normalize_domain(cookie.domain).downcase)
-  end
-
-  def normalize_domain(domain)
-    domain = "." + domain unless domain[0,1] == "."
-    domain
-  end
-
-  def ends_with?(str, suffix)
-    str[-suffix.size..-1] == suffix
-  end
-
   def create_curl_agent(url)
     login unless self.is_login
     curl_agent = Curl::Easy.new(url)
     curl_agent.follow_location = true
     curl_agent.max_redirects = 5
-    cookies = _get_cookies(url)
+    cookies = self.agent.driver.cookies.cookies_for(url)
     Shja.log.debug("Cookies: #{cookies}")
-    curl_agent.headers["Cookie"] = _get_cookies(url)
+    curl_agent.headers["Cookie"] = cookies
     return curl_agent
   end
 
