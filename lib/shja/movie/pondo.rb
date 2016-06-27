@@ -226,7 +226,7 @@ class Shja::Movie::Pondo::Detail < Shja::Movie::Pondo::DetailBase
       Shja.log.info("Download Movie: #{self.movie.title}, #{url}")
       agent.download(url, path)
       if File.size(path) < size
-        raise "File size is invalid, actual: #{File.size(path)}, expected: #{size}"
+        Shja.log.warn("File size is invalid, actual: #{File.size(path)}, expected: #{size}")
       end
       return true
     end
