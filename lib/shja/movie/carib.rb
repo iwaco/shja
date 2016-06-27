@@ -6,15 +6,15 @@ class Shja::MovieManager::Carib < Shja::MovieManager
     (start_page..last_page).each do |index|
       index += 1
       url = "http://www.caribbeancom.com/listpages/all#{index}.htm"
-      Shja.log.debug("Fetch Index: #{url}")
+      Shja.log.info("Fetch Index: #{url}")
       html = agent.fetch_page(url)
 
       Shja::Parser::CaribIndexPage.new(html).parse do |movie|
-        Shja.log.debug("Processing: #{movie['title']}")
+        Shja.log.info("Processing: #{movie['title']}")
         begin
           _find(movie['id'])
         rescue
-          Shja.log.debug("Detail not found: #{movie['url']}")
+          Shja.log.info("Loading Detail for: #{movie['url']}")
           html = agent.fetch_page(movie['url'])
           Shja::Parser::CaribDetailPage.new(html).parse(movie)
         end
@@ -41,7 +41,7 @@ end
 class Shja::Movie::Carib < Shja::Movie
 
   def download(format)
-    Shja.log.info("Download start: #{dir_url}")
+    Shja.log.debug("Download start: #{dir_url}")
     download_metadata
     return download_movie(format)
   end
@@ -56,8 +56,11 @@ class Shja::Movie::Carib < Shja::Movie
 
   def download_movie(format)
     format = default_format unless format
+    remote_movie_url = self.formats[format]
+    local_movie_url = movie_url(format)
+    Shja.log.info("Movie download: #{remote_movie_url}")
 
-    return self._download(self.formats[format], movie_url(format))
+    return self._download(remote_movie_url, local_movie_url)
   end
 
   def exists?(format=nil)

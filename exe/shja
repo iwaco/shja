@@ -7,6 +7,7 @@ require 'logger'
 
 actors = []
 format = nil
+log_level = 'debug'
 html_disable   = false
 
 config = {}
@@ -15,6 +16,7 @@ config[:password]    = ENV['SHJA_PASSWORD']
 config[:target_dir]  = ENV['SHJA_TARGET_DIR']
 
 parser = OptionParser.new
+parser.on('--log-level LOG_LEVEL') {|v| log_level = v }
 
 subparsers = Hash.new {|h,k|
   $stderr.puts "no such subcommand: #{k}"
@@ -36,7 +38,7 @@ unless config[:username] && config[:password] && config[:target_dir]
   raise "Required parameter is not specified: #{config}"
 end
 
-Shja.log.level = Logger::DEBUG
+Shja.log.level = eval("::Logger::#{log_level.upcase}")
 client = Shja::Client::Hc.new(**config)
 if subcommand == 'refresh'
   actors.each do |url_or_id|

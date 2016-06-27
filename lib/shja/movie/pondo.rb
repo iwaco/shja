@@ -18,6 +18,7 @@ class Shja::MovieManager::Pondo < Shja::MovieManager
   end
 
   def parse_index_page(url)
+    Shja.log.info("Fetch Actor Index: #{url}")
     movies = JSON.load(agent.fetch_page(url))
     movies['Rows'].each do |movie|
       movie = Shja::Movie::Pondo.new(context, movie)
@@ -222,7 +223,7 @@ class Shja::Movie::Pondo::Detail < Shja::Movie::Pondo::DetailBase
   def download(path, format=default_format)
     unless File.file?(path)
       url, size = remote_url(format)
-      Shja.log.debug("Download Movie: #{url}")
+      Shja.log.info("Download Movie: #{url}")
       agent.download(url, path)
       if File.size(path) < size
         raise "File size is invalid, actual: #{File.size(path)}, expected: #{size}"
@@ -250,8 +251,9 @@ class Shja::Movie::Pondo::Photosets < Shja::Movie::Pondo::DetailBase
 
   def download(dir)
     unless data_hash["Rows"]
-      Shja::log.info("No data")
+      Shja::log.info("No data: #{dir}")
     end
+    Shja.log.info("Download Photoset: #{dir}")
     FileUtils.mkdir_p(dir)
 
     data_hash["Rows"].each_with_index do |img, index|

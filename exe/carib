@@ -5,6 +5,8 @@ require 'shja'
 require 'optparse'
 require 'logger'
 
+log_level = 'debug'
+
 format = nil
 start_page = 0
 last_page = 0
@@ -22,6 +24,7 @@ config[:answer]      = ENV['CARIB_ANSWER']
 config[:target_dir]  = ENV['CARIB_TARGET_DIR']
 
 parser = OptionParser.new
+parser.on('--log-level LOG_LEVEL') {|v| log_level = v }
 
 subparsers = Hash.new {|h,k|
   $stderr.puts "no such subcommand: #{k}"
@@ -48,7 +51,7 @@ unless config[:username] && config[:password] && config[:answer] && config[:targ
   raise "Required parameter is not specified: #{config}"
 end
 
-Shja.log.level = Logger::DEBUG
+Shja.log.level = eval("::Logger::#{log_level.upcase}")
 client = Shja::Client::Carib.new(**config)
 
 if subcommand == 'refresh'

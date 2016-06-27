@@ -119,7 +119,7 @@ class Shja::CookieBasedAgent < Shja::Agent
 
   def fetch_page(url)
     login unless self.is_login
-    Shja.log.debug("fetch_page: #{url}")
+    Shja.log.debug("Fetch page: #{url}")
 
     return _get_url(url)
   end
@@ -127,7 +127,7 @@ class Shja::CookieBasedAgent < Shja::Agent
 
   def download(url, path, unexpected_types=[])
     login unless self.is_login
-    Shja.log.debug("_download: #{url}")
+    Shja.log.debug("Download: #{url}")
 
     open(path, 'wb') do |io|
       body = _get_url(url, unexpected_types)
