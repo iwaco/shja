@@ -6,7 +6,7 @@ class Shja::Db::Carib < Shja::Db
   end
 
   def load
-    @data = {  }
+    @data = []
     if File.file?(self.db_path)
       open(self.db_path) do |io|
         @data = YAML.load(io.read)
