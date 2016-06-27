@@ -122,30 +122,6 @@ class Shja::Movie::Carib < Shja::Movie
     end
   end
 
-  def extract_zip
-    zip_path = to_path(zip_url)
-    return unless File.file?(zip_path)
-    return if has_pictures?
-
-    photoset_dir_path = to_path(photoset_dir_url)
-    FileUtils.mkdir_p(photoset_dir_path)
-
-    Zip::File.open(zip_path) do |zip|
-      zip.each do |entry|
-        basename = File.basename(entry.name)
-        if File.extname(basename) == '.jpg'
-          entry_path = File.join(photoset_dir_path, basename)
-          unless File.file?(entry_path)
-            zip.extract(entry, entry_path) { true }
-          end
-        end
-      end
-    end
-  rescue => ex
-    Shja.log.warn("Failed extract zip: #{zip_url}")
-    FileUtils.rm(zip_path) if File.file?(zip_path)
-  end
-
   def remote_thumbnail_url
     if self.thumbnail.start_with?('http')
       return self.thumbnail

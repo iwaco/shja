@@ -52,7 +52,6 @@ class Shja::Movie::Pondo < Shja::Movie
   def download(format)
     Shja.log.info("Download start: #{title}, #{dir_url}")
     download_metadata
-    download_photoset
     return download_movie(format)
   end
 
@@ -67,6 +66,7 @@ class Shja::Movie::Pondo < Shja::Movie
     self._download(thumb_med, thumbnail_url('med'), ignore_error: true)
     self._download(thumb_ultra, thumbnail_url('ultra'), ignore_error: true)
 
+    download_photoset
     create_thumbnail
   end
 
@@ -83,11 +83,11 @@ class Shja::Movie::Pondo < Shja::Movie
 
   def download_movie(format=nil)
     format = detail.default_format
-    detail.download(to_path(movie_url(format)), format)
+    detail.download(format)
   end
 
   def download_photoset
-    photosets.download(to_path(photoset_dir_url))
+    photosets.download
   end
 
   def pictures_path
@@ -133,6 +133,10 @@ class Shja::Movie::Pondo < Shja::Movie
 
   def movie_url(format)
     return "#{dir_url}-#{format}.mp4"
+  end
+
+  def zip_url
+    return "#{dir_url}.zip"
   end
 
   def photoset_dir_url
@@ -220,17 +224,18 @@ class Shja::Movie::Pondo::Detail < Shja::Movie::Pondo::DetailBase
     return [movie["URL"], movie["FileSize"]]
   end
 
-  def download(path, format=default_format)
-    unless File.file?(path)
-      url, size = remote_url(format)
-      Shja.log.info("Download Movie: #{self.movie.title}, #{url}")
-      agent.download(url, path)
+  def download(format=default_format)
+    movie_url = movie.movie_url(format)
+    url, size = remote_url(format)
+    Shja.log.info("Download Movie: #{self.movie.title}, #{url}")
+    if movie._download(url, movie_url, ignore_error: true)
       if File.size(path) < size
         Shja.log.warn("File size is invalid, actual: #{File.size(path)}, expected: #{size}")
       end
       return true
+    else
+      return false
     end
-    return false
   end
 
   def formats
@@ -249,11 +254,16 @@ end
 
 class Shja::Movie::Pondo::Photosets < Shja::Movie::Pondo::DetailBase
 
-  def download(dir)
+  def zip_remote_url
+    return "http://www.1pondo.tv/assets/members/#{movie.id}/gallery.zip"
+  end
+
+  def download
+    dir = movie.to_path(movie.photoset_dir_url)
     unless data_hash["Rows"]
-      Shja::log.info("No data: #{dir}")
+      Shja::log.info("No data: #{movie.title}")
     end
-    Shja.log.info("Download Photoset: #{dir}")
+    Shja.log.info("Download Photoset: #{movie.title}, #{dir}")
     FileUtils.mkdir_p(dir)
 
     data_hash["Rows"].each_with_index do |img, index|
@@ -265,5 +275,14 @@ class Shja::Movie::Pondo::Photosets < Shja::Movie::Pondo::DetailBase
         Shja.log.error(ex.message)
       end
     end
+  end
+
+  def download_from_zip
+    unless movie.has_gallery
+      Shja::log.info("No zip: #{movie.title}")
+    end
+    Shja.log.info("Download zip: #{zip_remote_url}, #{movie.zip_url}")
+    movie._download(zip_remote_url, movie.zip_url, ignore_error: true)
+    movie.extract_zip
   end
 end
