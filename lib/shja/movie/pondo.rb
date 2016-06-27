@@ -74,13 +74,6 @@ class Shja::Movie::Pondo < Shja::Movie
     return detail.default_format
   end
 
-  def exists?(format=nil)
-    format = detail.default_format
-    movie_path = to_path(movie_url(format))
-
-    File.file?(movie_path)
-  end
-
   def download_movie(format=nil)
     format = detail.default_format
     detail.download(format)

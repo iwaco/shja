@@ -56,12 +56,23 @@ class Shja::Movie < Shja::ResourceBase
     end
   end
 
+  def exists?(format=nil)
+    format = default_format unless format
+    movie_path = to_path(movie_url(format))
+
+    file_exists?(movie_path)
+  end
+
+  def file_exists?(path)
+    return File.file?(path) && (File.size(path) > 0)
+  end
+
   def _download(from, to, ignore_error: false, unexpected_types: ['html'])
     if from.kind_of?(Symbol)
       from = self.send(from)
     end
     to = to_path(to)
-    unless File.file?(to)
+    unless file_exists?(to)
       return agent.download(from, to, unexpected_types)
     end
     return false

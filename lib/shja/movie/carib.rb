@@ -63,13 +63,6 @@ class Shja::Movie::Carib < Shja::Movie
     return self._download(remote_movie_url, local_movie_url)
   end
 
-  def exists?(format=nil)
-    format = default_format unless format
-    movie_path = to_path(movie_url(format))
-
-    File.file?(movie_path)
-  end
-
   def actor?(name)
     self.actors.each do |actor|
       if actor.include?(name)
