@@ -262,6 +262,7 @@ class Shja::Movie::Pondo::Photosets < Shja::Movie::Pondo::DetailBase
     dir = movie.to_path(movie.photoset_dir_url)
     unless data_hash["Rows"]
       Shja::log.info("No data: #{movie.title}")
+      return
     end
     Shja.log.info("Download Photoset: #{movie.title}, #{dir}")
     FileUtils.mkdir_p(dir)
