@@ -109,12 +109,12 @@ class Shja::Movie::Pondo < Shja::Movie
   end
 
   def detail
-    @detail ||= Shja::Movie::Pondo::Detail.new(context, to_path(metadata_url))
+    @detail ||= Shja::Movie::Pondo::Detail.new(self, to_path(metadata_url))
     @detail
   end
 
   def photosets
-    @photosets ||= Shja::Movie::Pondo::Photosets.new(context, to_path(photoset_metadata_url))
+    @photosets ||= Shja::Movie::Pondo::Photosets.new(self, to_path(photoset_metadata_url))
     @photosets
   end
 
@@ -193,7 +193,10 @@ class Shja::Movie::Pondo < Shja::Movie
 end
 
 class Shja::Movie::Pondo::DetailBase < Shja::ResourceBase
-  def initialize(context, path)
+  attr_reader :movie
+
+  def initialize(movie, path)
+    @movie = movie
     data_hash = nil
     begin
       data_hash = open(path) do |io|
@@ -203,7 +206,7 @@ class Shja::Movie::Pondo::DetailBase < Shja::ResourceBase
       Shja.log.warn("Data couldn't be loaded: #{path}")
       data_hash = {}
     end
-    super(context, data_hash)
+    super(movie.context, data_hash)
   end
 end
 
