@@ -11,6 +11,7 @@ end
 
 class Shja::D2PassClient < Shja::Client
   attr_reader :result
+  attr_reader :fault_result
 
   def agent_class
     raise "Unimplemented"
@@ -47,7 +48,8 @@ class Shja::D2PassClient < Shja::Client
     @db         = db_class.get(@context)
     @movies     = movies_class.new(@context)
 
-    @result     = []
+    @result       = []
+    @fault_result = []
   end
 
   def refresh!(start_page: 0, last_page: 0)
@@ -55,10 +57,18 @@ class Shja::D2PassClient < Shja::Client
   end
 
   def _download_movie(movie, format)
-    if movie.download(format)
-      self.result << movie
-      return true
+    reason = ''
+    begin
+      if movie.download(format)
+        self.result << movie
+        return true
+      end
+    rescue => ex
+      reason = ex.message
+      Shja.log.error(ex.message)
+      Shja.log.error(ex.backtrace.join("\n"))
     end
+    self.fault_result << [movie, reason]
     return false
   end
 
@@ -67,34 +77,24 @@ class Shja::D2PassClient < Shja::Client
     movies.all do |movie|
       _movies << movie unless movie.exists?(format)
     end
-    _movies = _movies.sample(count)
+    _movies = _movies.shuffle
     _movies.each do |movie|
-      begin
-        _download_movie(movie, format)
-      rescue => ex
-        Shja.log.error(ex.message)
-        Shja.log.error(ex.backtrace.join("\n"))
+      if _download_movie(movie, format)
+        count -= 1
+      end
+      if count < 1
+        return
       end
     end
   end
 
-  def download_by_latest(count=10, format=nil, try_ratio=2)
-    try_count = count * try_ratio
+  def download_by_latest(count=10, format=nil)
     movies.all do |movie|
-      begin
+      unless movie.exists?(format)
         if _download_movie(movie, format)
-          Shja.log.debug("Downloaded...")
           count -= 1
         end
-        if count == 0
-          return
-        end
-      rescue => ex
-        Shja.log.error(ex.message)
-        Shja.log.error(ex.backtrace.join("\n"))
-        try_count -= 1
-        if try_count == 0
-          Shja.log.debug("Max try_count exeeded")
+        if count < 1
           return
         end
       end
@@ -119,9 +119,12 @@ class Shja::D2PassClient < Shja::Client
   end
 
   def print_result
-    puts "Downloaded: Total #{result.size}"
+    puts "Downloaded: Total #{result.size} / #{result.size = fault_result.size}"
     result.each do |movie|
-      puts "    ----> #{movie.title}, #{movie.dir_url}"
+      puts "    ----> SUCEEDED: #{movie.title}, #{movie.dir_url}"
+    end
+    fault_result.each do |movie, reason|
+      puts "    ----> FAILED: #{movie.title}, #{movie.dir_url}, #{reason}"
     end
   end
 
