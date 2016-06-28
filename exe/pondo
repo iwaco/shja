@@ -78,6 +78,7 @@ if subcommand == 'download'
     client.download_by_latest(count, format)
   end
   client.generate_html unless html_disable
+  client.print_result
 end
 
 if subcommand == 'html'
