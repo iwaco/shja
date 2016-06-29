@@ -72,7 +72,8 @@ class Shja::D2PassClient < Shja::Client
     return false
   end
 
-  def random_download(count=10, format=nil)
+  def random_download(count=10, format=nil, try_count: 20, try_ratio: 2)
+    try_count = count * try_ratio if (try_count < try_ratio * count)
     _movies = []
     movies.all do |movie|
       _movies << movie unless movie.exists?(format)
@@ -81,22 +82,25 @@ class Shja::D2PassClient < Shja::Client
     _movies.each do |movie|
       if _download_movie(movie, format)
         count -= 1
+      else
+        try_count -= 1
       end
-      if count < 1
-        return
-      end
+      return if count < 1
+      return if try_count < 1
     end
   end
 
-  def download_by_latest(count=10, format=nil)
+  def download_by_latest(count=10, format=nil, try_count: 20, try_ratio: 2)
+    try_count = count * try_ratio if (try_count < try_ratio * count)
     movies.all do |movie|
       unless movie.exists?(format)
         if _download_movie(movie, format)
           count -= 1
+        else
+          try_count -=20
         end
-        if count < 1
-          return
-        end
+        return if count < 1
+        return if try_count < 1
       end
     end
   end
@@ -114,7 +118,9 @@ class Shja::D2PassClient < Shja::Client
       end
     end
     _movies.each do |movie|
-      _download_movie(movie, format)
+      unless movie.exists?(format)
+        _download_movie(movie, format)
+      end
     end
   end
 
