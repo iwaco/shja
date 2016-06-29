@@ -83,10 +83,6 @@ class Shja::Movie::Pondo < Shja::Movie
     photosets.download_from_zip
   end
 
-  def pictures_path
-    Dir.glob(File.join(to_path(photoset_dir_url), '*.jpg'))
-  end
-
   def create_thumbnail
     real_from_path = to_path(thumbnail_url('med'))
     return unless File.file?(real_from_path)

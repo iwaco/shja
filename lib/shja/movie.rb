@@ -126,7 +126,8 @@ class Shja::Movie < Shja::ResourceBase
   end
 
   def pictures_path
-    raise "Unimplemented"
+    Dir.glob(File.join(to_path(photoset_dir_url), '*.jpg'))
+       .sort {|a, b| File.basename(a, ".*").to_i <=>  File.basename(b, ".*").to_i }
   end
 
   def has_pictures?
@@ -134,7 +135,7 @@ class Shja::Movie < Shja::ResourceBase
   end
 
   def pictures_metadata
-    return pictures_path.sort.map do |image|
+    return pictures_path.map do |image|
       basename = File.basename(image)
       size = ::FastImage.size(image)
       if size

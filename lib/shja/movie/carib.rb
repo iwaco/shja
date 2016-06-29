@@ -127,10 +127,6 @@ class Shja::Movie::Carib < Shja::Movie
     "http://www.caribbeancom.com/moviepages/#{self.id}/images/gallery.zip"
   end
 
-  def pictures_path
-    Dir.glob(File.join(to_path(photoset_dir_url), '*.jpg'))
-  end
-
   def photoset_dir_url real=true
     return "#{dir_url(real)}"
   end
