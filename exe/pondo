@@ -60,7 +60,7 @@ if subcommand == 'refresh'
   if actor_id
     client.refresh_by_actor_id!(actor_id)
   else
-    client.refresh!
+    client.refresh!(start_page: start_page, last_page: last_page)
   end
   client.generate_html unless html_disable
 end
