@@ -55,7 +55,7 @@ Shja.log.level = eval("::Logger::#{log_level.upcase}")
 client = Shja::Client::Carib.new(**config)
 
 if subcommand == 'refresh'
-  client.refresh!
+  client.refresh!(start_page: start_page, last_page: last_page)
   client.generate_html unless html_disable
 end
 
