@@ -11,9 +11,31 @@ class Shja::MovieManager::Pondo < Shja::MovieManager
     end
   end
 
+  def actor_index_url(actor_id, index)
+    "http://www.1pondo.tv/dyn/ren/movie_lists/actresses/list_#{actor_id}_#{index * 50}.json"
+  end
+
   def download_actor_index(actor_id)
-    url = "http://www.1pondo.tv/dyn/ren/movie_lists/actresses/list_#{actor_id}_0.json"
-    parse_index_page(url)
+    _download_index_by_id(:actor_index_url, actor_id)
+  end
+
+  def series_index_url(series_id, index)
+    "http://www.1pondo.tv/dyn/ren/movie_lists/series/list_#{series_id}_#{index * 50}.json"
+  end
+
+  def download_series_index(series_id)
+    _download_index_by_id(:series_index_url, series_id)
+  end
+
+  def _download_index_by_id(url_sym, id)
+    url = send(url_sym, id, 0)
+    total_rows = parse_index_page(url)
+    index = 1
+    until total_rows < (index * 50)
+      url = send(url_sym, id, index)
+      parse_index_page(url)
+      index += 1
+    end
     db.save
   end
 
@@ -25,6 +47,7 @@ class Shja::MovieManager::Pondo < Shja::MovieManager
       self.update(movie)
       movie.download_metadata
     end
+    return movies['TotalRows']
   end
 
   def movie_id_key
