@@ -130,7 +130,7 @@ class Shja::D2PassClient < Shja::Client
       puts "    ----> SUCEEDED: #{movie.title}, #{movie.dir_url}"
     end
     fault_result.each do |movie, reason|
-      puts "    ----> FAILED: #{movie.title}, #{movie.dir_url}, #{reason}"
+      puts "    ----> FAILED: #{movie.title}, #{reason}"
     end
   end
 
