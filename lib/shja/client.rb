@@ -125,7 +125,7 @@ class Shja::D2PassClient < Shja::Client
   end
 
   def print_result
-    puts "Downloaded: Total #{result.size} / #{result.size = fault_result.size}"
+    puts "Downloaded: Total #{result.size} / #{result.size + fault_result.size}"
     result.each do |movie|
       puts "    ----> SUCEEDED: #{movie.title}, #{movie.dir_url}"
     end
