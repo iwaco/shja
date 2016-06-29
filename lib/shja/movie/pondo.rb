@@ -80,7 +80,7 @@ class Shja::Movie::Pondo < Shja::Movie
   end
 
   def download_photoset
-    photosets.download
+    photosets.download_from_zip
   end
 
   def pictures_path
@@ -112,12 +112,16 @@ class Shja::Movie::Pondo < Shja::Movie
     @photosets
   end
 
+  def page_remote_url
+    "http://www.1pondo.tv/movies/#{self.meta_movie_id}/"
+  end
+
   def metadata_remote_url
-    "http://www.1pondo.tv/dyn/ren/movie_details/#{self['MetaMovieID']}.json"
+    "http://www.1pondo.tv/dyn/ren/movie_details/#{self.meta_movie_id}.json"
   end
 
   def photoset_metadata_remote_url
-    "http://www.1pondo.tv/dyn/ren/movie_galleries/#{self['MetaMovieID']}.json"
+    "http://www.1pondo.tv/dyn/ren/movie_galleries/#{self.meta_movie_id}.json"
   end
 
   def metadata_url
@@ -249,7 +253,12 @@ end
 class Shja::Movie::Pondo::Photosets < Shja::Movie::Pondo::DetailBase
 
   def zip_remote_url
-    return "http://www.1pondo.tv/assets/members/#{movie.id}/gallery.zip"
+    zip_remote_path = agent.find_attribute(
+      movie.page_remote_url,
+      "movie-details movie-action-panel .ng-scope a",
+      "href"
+    )
+    return "http://www.1pondo.tv#{zip_remote_path}"
   end
 
   def download
@@ -275,11 +284,15 @@ class Shja::Movie::Pondo::Photosets < Shja::Movie::Pondo::DetailBase
   end
 
   def download_from_zip
-    unless movie.has_gallery
-      Shja::log.info("No zip: #{movie.title}")
+    unless movie['HasMemberGalleryZip']
+      Shja::log.debug("No zip: #{movie.title}")
     end
-    Shja.log.info("Download zip: #{zip_remote_url}, #{movie.zip_url}")
-    movie._download(zip_remote_url, movie.zip_url, ignore_error: true)
+    _zip_remote_url = zip_remote_url
+    Shja.log.debug("Download zip: #{_zip_remote_url}, #{movie.zip_url}")
+    movie._download(_zip_remote_url, movie.zip_url, ignore_error: true)
     movie.extract_zip
+  rescue => ex
+    Shja.log.error(ex.message)
+    Shja.log.error(ex.backtrace.join("\n"))
   end
 end

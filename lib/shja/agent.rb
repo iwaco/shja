@@ -206,6 +206,13 @@ class Shja::CapybaraAgent < Shja::CookieBasedAgent
     end
   end
 
+  def find_attribute(url, path, attribute)
+    login unless self.is_login
+    visit(url)
+    screenshot('script.jpg')
+    return find(path)[attribute]
+  end
+
 end
 
 require 'shja/agent/hc'

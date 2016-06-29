@@ -19,7 +19,7 @@ class Shja::Html::Pondo < Shja::Html
       js['jpg'] = relative_path(movie, movie.thumbnail_url)
       js['detail'] = relative_path(movie, movie.photoset_dir_url)
       js['title'] = movie.title
-      js['url'] = "http://www.1pondo.tv/movies/#{movie.meta_movie_id}/"
+      js['url'] = movie.page_remote_url
       js['date'] = movie.release
       js['actors'] = [*movie.actor.split(',')]
       js['tags'] = [*movie.uc_name]
