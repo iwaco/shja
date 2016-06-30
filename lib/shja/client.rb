@@ -97,7 +97,7 @@ class Shja::D2PassClient < Shja::Client
         if _download_movie(movie, format)
           count -= 1
         else
-          try_count -=20
+          try_count -= 1
         end
         return if count < 1
         return if try_count < 1
