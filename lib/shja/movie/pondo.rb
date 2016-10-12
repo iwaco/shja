@@ -259,6 +259,9 @@ class Shja::Movie::Pondo::Detail < Shja::Movie::Pondo::DetailBase
     data_hash["MemberFiles"].map do |file|
       File.basename(file["FileName"], '.*')
     end
+  rescue
+    Shja.log("There are no formats")
+    return {}
   end
 
   def default_format
@@ -303,6 +306,8 @@ class Shja::Movie::Pondo::Photosets < Shja::Movie::Pondo::DetailBase
   end
 
   def download_from_zip
+    # XXX: Skip downloading zip
+    return
     unless movie['HasMemberGalleryZip']
       Shja::log.debug("No zip: #{movie.title}")
     end
