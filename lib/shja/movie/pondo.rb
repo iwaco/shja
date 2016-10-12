@@ -81,7 +81,9 @@ class Shja::Movie::Pondo < Shja::Movie
   def download_metadata
     mkdir
     self._download(metadata_remote_url, metadata_url, ignore_error: true)
+    self._download(new_metadata_remote_url, metadata_url, ignore_error: true)
     self._download(photoset_metadata_remote_url, photoset_metadata_url, ignore_error: true)
+    self._download(new_photoset_metadata_remote_url, photoset_metadata_url, ignore_error: true)
     # self._download(movie_thumb, thumbnail_url)
 
     self._download(thumb_high, thumbnail_url('high'), ignore_error: true)
@@ -141,6 +143,14 @@ class Shja::Movie::Pondo < Shja::Movie
 
   def photoset_metadata_remote_url
     "http://www.1pondo.tv/dyn/ren/movie_galleries/#{self.meta_movie_id}.json"
+  end
+
+  def new_metadata_remote_url
+    "http://www.1pondo.tv/dyn/ren/movie_details/movie_id/#{self.movie_id}.json"
+  end
+
+  def new_photoset_metadata_remote_url
+    "http://www.1pondo.tv/dyn/ren/movie_galleries/movie_id/#{self.movie_id}.json"
   end
 
   def metadata_url
