@@ -270,7 +270,7 @@ class Shja::Movie::Pondo::Detail < Shja::Movie::Pondo::DetailBase
       File.basename(file["FileName"], '.*')
     end
   rescue
-    Shja.log("There are no formats")
+    Shja.log.warn("There are no formats: #{movie.page_remote_url} #{movie.title}")
     return {}
   end
 
