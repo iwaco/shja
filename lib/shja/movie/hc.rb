@@ -75,7 +75,7 @@ class Shja::Movie::Hc < Shja::Movie
       Shja::log.debug("formats: #{self.formats}")
       return
     end
-    self._download(agent, url, movie_path(format))
+    self._download(url, movie_path(format))
   end
 
   def download_photoset(agent)
@@ -97,7 +97,7 @@ class Shja::Movie::Hc < Shja::Movie
 
   def download_thumbnail(agent)
     Shja::log.debug("Start download thumbnail: #{self.id}")
-    self._download(agent, self.thumbnail, self.thumbnail_path)
+    self._download(self.thumbnail, self.thumbnail_path)
   end
 
   def pictures_path

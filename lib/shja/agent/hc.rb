@@ -1,5 +1,5 @@
 
-class Shja::Agent::Hc < Shja::Agent
+class Shja::Agent::Hc < Shja::MechanizeAgent
 
   BASE_URL = "http://ex.shemalejapanhardcore.com"
   LOGIN_URL = "#{BASE_URL}/members/"

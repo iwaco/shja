@@ -3,8 +3,6 @@ require 'mechanize'
 require 'nokogiri'
 require 'capybara'
 require 'capybara/dsl'
-require 'capybara-webkit'
-require 'headless'
 require 'curb'
 require 'webrick/cookie'
 require 'uri'
@@ -16,7 +14,7 @@ class Shja::Agent
   attr_reader :context
   attr_accessor :is_login
 
-  def initialize(username: username, password: password, context: context)
+  def initialize(username: nil, password: nil, context: nil)
     @username = username
     @password = password
     @context = context
@@ -45,7 +43,7 @@ end
 class Shja::MechanizeAgent < Shja::Agent
   extend Memoist
 
-  def initialize(username: username, password: password, context: context)
+  def initialize(username: nil, password: nil, context: nil)
     super
     @agent = Mechanize.new
     @agent.user_agent = 'Mac Safari'
@@ -142,39 +140,16 @@ class Shja::CookieBasedAgent < Shja::Agent
   end
 end
 
-# Monkey patch for capybara-webkit
-require 'capybara/webkit/cookie_jar'
-class Capybara::Webkit::CookieJar
-
-  def cookies_for(url)
-    uri = URI.parse(url)
-    return cookies_for_host(uri.host)
-  end
-
-  def cookies_for_host(host)
-    @cache_cookie ||= {}
-    unless @cache_cookie[host]
-      @cache_cookie[host] = cookies.select {|c| valid_domain?(c, host)}
-                                   .map {|c| "#{c.name}=#{c.value}" }
-                                   .join('; ')
-    end
-    return @cache_cookie[host]
-  end
-
-end
-
 Capybara.run_server     = false
-Capybara.default_driver = :webkit
-Capybara::Webkit.configure do |config|
-  config.allow_url("d2pass.com")
-  config.allow_url("caribbeancom.com")
-  config.allow_url("1pondo.tv")
-  config.allow_url("google-analytics.com")
-  config.allow_url("googleapis.com")
-  config.allow_url("amazonaws.com")
-  config.allow_url("doubleclick.net")
-  config.allow_url("crazyegg.com")
-end
+Capybara.default_driver = :chrome
+Capybara.javascript_driver = :chrome
+Capybara.register_driver :chrome do |app|
+  Capybara::Selenium::Driver.new(app,
+    :browser => :remote,
+    :desired_capabilities => :chrome,
+    :url => "http://10.254.0.57:4444/wd/hub"
+  )
+ end
 
 class Shja::CapybaraAgent < Shja::CookieBasedAgent
   include Capybara::DSL
@@ -186,16 +161,33 @@ class Shja::CapybaraAgent < Shja::CookieBasedAgent
   end
 
   def init_agent
-    h = Headless.new()
-    h.start
     @agent = page
-    ObjectSpace.define_finalizer(@agent) do
-      h.destroy
-    end
   end
 
   def cookies_for(url)
-    self.agent.driver.cookies.cookies_for(url)
+    uri = URI.parse(url)
+    return cookies_for_host(uri.host)
+  end
+
+  def cookies_for_host(host)
+    cookies = self.agent.driver.browser.manage.all_cookies
+    cookies.select{|c| valid_domain?(c, host)}
+           .map{|c| "#{c[:name]}=#{c[:value]}"}
+           .join('; ')
+  end
+
+  def valid_domain?(cookie, domain)
+    ends_with?(("." + domain).downcase,
+               normalize_domain(cookie[:domain]).downcase)
+  end
+
+  def normalize_domain(domain)
+    domain = "." + domain unless domain[0,1] == "."
+    domain
+  end
+
+  def ends_with?(str, suffix)
+    str[-suffix.size..-1] == suffix
   end
 
   def login

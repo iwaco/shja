@@ -46,9 +46,11 @@ class ShjaAgentHcTest < Minitest::Test
     expected_content = 'CONTENT'
     page = mock()
     page.stubs(:content).returns(expected_content)
+    agent = mock()
+    agent.expects(:get).with(expected_url).returns(page)
     @agent.stubs(:is_login).returns(true)
+    @agent.stubs(:agent).returns(agent)
 
-    @agent.agent.expects(:get).with(expected_url).returns(page)
     content = @agent._fetch_page(expected_url)
     assert_equal(expected_content, content)
   end

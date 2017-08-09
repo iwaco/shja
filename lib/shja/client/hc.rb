@@ -7,9 +7,9 @@ class Shja::Client::Hc
   attr_reader :db
 
   def initialize(
-    username: username,
-    password: password,
-    target_dir: target_dir
+    username: nil,
+    password: nil,
+    target_dir: nil
   )
     @target_dir = target_dir
     @context    = Hashie::Mash.new(

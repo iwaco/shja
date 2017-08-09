@@ -3,7 +3,7 @@ class Shja::Html
   attr_reader :movies
   attr_reader :target_dir
 
-  def initialize(movies: movies, target_dir: target_dir)
+  def initialize(movies: nil, target_dir: nil)
     @movies = movies
     @target_dir = target_dir
   end

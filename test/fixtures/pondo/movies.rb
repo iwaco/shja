@@ -127,6 +127,6 @@ TEST_PONDO_MOVIES_ = {
     "Year"=>"2016"}
 }
 
-def mock_pondo_movie(title='mari_movie', context=context)
-  return Shja::Movie::Pondo.new(context, TEST_PONDO_MOVIES_[title].dup)
+def mock_pondo_movie(title='mari_movie', con=context)
+  return Shja::Movie::Pondo.new(con, TEST_PONDO_MOVIES_[title].dup)
 end

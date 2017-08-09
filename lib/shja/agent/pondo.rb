@@ -5,10 +5,10 @@ class Shja::Agent::Pondo < Shja::CapybaraAgent
   attr_reader :answer
 
   def initialize(
-      username: username,
-      password: password,
-      context: context,
-      answer: answer
+      username: nil,
+      password: nil,
+      context: nil,
+      answer: nil
     )
     super(username: username, password: password, context: context)
     @answer = answer
