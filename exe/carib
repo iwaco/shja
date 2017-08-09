@@ -18,10 +18,11 @@ movie_id = []
 actor_name = nil
 
 config = {}
-config[:username]    = ENV['CARIB_USERNAME']
-config[:password]    = ENV['CARIB_PASSWORD']
-config[:answer]      = ENV['CARIB_ANSWER']
-config[:target_dir]  = ENV['CARIB_TARGET_DIR']
+config[:username]     = ENV['CARIB_USERNAME']
+config[:password]     = ENV['CARIB_PASSWORD']
+config[:answer]       = ENV['CARIB_ANSWER']
+config[:target_dir]   = ENV['CARIB_TARGET_DIR']
+config[:selenium_url] = ENV['CARIB_SELENIUM_URL']
 
 parser = OptionParser.new
 parser.on('--log-level LOG_LEVEL') {|v| log_level = v }
@@ -47,7 +48,7 @@ parser.order!(ARGV)
 subcommand = ARGV.shift
 subparsers[subcommand].parse!(ARGV) unless ARGV.empty?
 
-unless config[:username] && config[:password] && config[:answer] && config[:target_dir]
+unless config[:username] && config[:password] && config[:answer] && config[:target_dir] && config[:selenium_url]
   raise "Required parameter is not specified: #{config}"
 end
 

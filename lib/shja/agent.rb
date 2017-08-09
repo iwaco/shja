@@ -140,22 +140,27 @@ class Shja::CookieBasedAgent < Shja::Agent
   end
 end
 
-Capybara.run_server     = false
-Capybara.default_driver = :chrome
-Capybara.javascript_driver = :chrome
-Capybara.register_driver :chrome do |app|
-  Capybara::Selenium::Driver.new(app,
-    :browser => :remote,
-    :desired_capabilities => :chrome,
-    :url => "http://10.254.0.57:4444/wd/hub"
-  )
- end
-
 class Shja::CapybaraAgent < Shja::CookieBasedAgent
   include Capybara::DSL
 
-  def initialize(username: nil, password: nil, context: nil, cookies: '')
+  def initialize(
+    username: nil,
+    password: nil,
+    context: nil,
+    cookies: '',
+    selenium_url: 'http://chrome-headless:4444/wd/hub',
+  )
     super
+    Capybara.run_server     = false
+    Capybara.default_driver = :chrome
+    Capybara.javascript_driver = :chrome
+    Capybara.register_driver :chrome do |app|
+      Capybara::Selenium::Driver.new(app,
+        :browser => :remote,
+        :desired_capabilities => :chrome,
+        :url => "http://10.254.0.57:4444/wd/hub"
+      )
+    end
     self.is_login = false
     init_agent
   end

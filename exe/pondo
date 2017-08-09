@@ -20,10 +20,11 @@ movie_id = []
 actor_name = nil
 
 config = {}
-config[:username]    = ENV['PONDO_USERNAME']
-config[:password]    = ENV['PONDO_PASSWORD']
-config[:answer]      = ENV['PONDO_ANSWER']
-config[:target_dir]  = ENV['PONDO_TARGET_DIR']
+config[:username]     = ENV['PONDO_USERNAME']
+config[:password]     = ENV['PONDO_PASSWORD']
+config[:answer]       = ENV['PONDO_ANSWER']
+config[:target_dir]   = ENV['PONDO_TARGET_DIR']
+config[:selenium_url] = ENV['PONDO_SELENIUM_URL']
 
 parser = OptionParser.new
 parser.on('--log-level LOG_LEVEL') {|v| log_level = v }
@@ -51,7 +52,7 @@ parser.order!(ARGV)
 subcommand = ARGV.shift
 subparsers[subcommand].parse!(ARGV) unless ARGV.empty?
 
-unless config[:username] && config[:password] && config[:answer] && config[:target_dir]
+unless config[:username] && config[:password] && config[:answer] && config[:target_dir] && config[:selenium_url]
   raise "Required parameter is not specified: #{config}"
 end
 

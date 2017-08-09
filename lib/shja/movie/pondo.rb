@@ -316,8 +316,6 @@ class Shja::Movie::Pondo::Photosets < Shja::Movie::Pondo::DetailBase
   end
 
   def download_from_zip
-    # XXX: Skip downloading zip
-    return
     unless movie['HasMemberGalleryZip']
       Shja::log.debug("No zip: #{movie.title}")
     end

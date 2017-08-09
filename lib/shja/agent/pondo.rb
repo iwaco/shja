@@ -8,9 +8,10 @@ class Shja::Agent::Pondo < Shja::CapybaraAgent
       username: nil,
       password: nil,
       context: nil,
-      answer: nil
+      answer: nil,
+      selenium_url: 'http://chrome-headless:4444/wd/hub',
     )
-    super(username: username, password: password, context: context)
+    super(username: username, password: password, context: context, selenium_url: selenium_url)
     @answer = answer
   end
 
