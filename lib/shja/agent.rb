@@ -148,9 +148,9 @@ class Shja::CapybaraAgent < Shja::CookieBasedAgent
     password: nil,
     context: nil,
     cookies: '',
-    selenium_url: 'http://chrome-headless:4444/wd/hub',
+    selenium_url: 'http://chrome-headless:4444/wd/hub'
   )
-    super
+    super(username: username, password: password, context: context)
     Capybara.run_server     = false
     Capybara.default_driver = :chrome
     Capybara.javascript_driver = :chrome
@@ -158,7 +158,7 @@ class Shja::CapybaraAgent < Shja::CookieBasedAgent
       Capybara::Selenium::Driver.new(app,
         :browser => :remote,
         :desired_capabilities => :chrome,
-        :url => "http://10.254.0.57:4444/wd/hub"
+        :url => selenium_url
       )
     end
     self.is_login = false
@@ -211,13 +211,16 @@ class Shja::CapybaraAgent < Shja::CookieBasedAgent
     if Shja.log.debug?
       FileUtils.mkdir_p(logdir) unless File.directory?(logdir)
       agent.save_screenshot(File.join(logdir, filename), full: true)
+      open(File.join(logdir, "#{filename}.html"), 'w') do |io|
+        io.write agent.body
+      end
     end
   end
 
   def find_attribute(url, path, attribute)
     login unless self.is_login
     visit(url)
-    screenshot('script.jpg')
+    screenshot('script.png')
     return find(path)[attribute]
   end
 

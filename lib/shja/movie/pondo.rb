@@ -290,7 +290,7 @@ class Shja::Movie::Pondo::Photosets < Shja::Movie::Pondo::DetailBase
       "movie-details movie-action-panel .ng-scope a",
       "href"
     )
-    return "http://www.1pondo.tv#{zip_remote_path}"
+    return "#{zip_remote_path}"
   end
 
   def download

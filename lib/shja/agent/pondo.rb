@@ -9,7 +9,7 @@ class Shja::Agent::Pondo < Shja::CapybaraAgent
       password: nil,
       context: nil,
       answer: nil,
-      selenium_url: 'http://chrome-headless:4444/wd/hub',
+      selenium_url: 'http://chrome-headless:4444/wd/hub'
     )
     super(username: username, password: password, context: context, selenium_url: selenium_url)
     @answer = answer
@@ -19,18 +19,21 @@ class Shja::Agent::Pondo < Shja::CapybaraAgent
     return if self.is_login
 
     visit(LOGIN_URL)
-    screenshot('01.jpg')
-    find('.age-verification .enter button.color-main').trigger('click')
+    screenshot('01.png')
+    # find('.age-verification .enter button.color-main').click
+    execute_script("document.querySelectorAll('.age-verification .enter button.color-main')[0].click();")
     sleep 2
-    screenshot('02.jpg')
-    find('modal-login .login-btn button').trigger('click')
+    screenshot('02.png')
+    # find('modal-login .login-btn button').click
+    execute_script("document.querySelectorAll('modal-login .login-btn button')[0].click();")
     sleep 1
-    screenshot('03.jpg')
+    screenshot('03.png')
     fill_in('login', with: username)
     fill_in('password', with: password)
-    find('.login-box form button.login-button').trigger('click')
+    # find('.login-box form button.login-button').click
+    execute_script("document.querySelectorAll('.login-box form button.login-button')[0].click();")
     sleep 2
-    screenshot('04.jpg')
+    screenshot('04.png')
 
     self.is_login = true
   end

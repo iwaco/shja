@@ -33,6 +33,7 @@ class Shja::D2PassClient < Shja::Client
     username: nil,
     password: nil,
     answer: nil,
+    selenium_url: nil,
     target_dir: nil
   )
     @target_dir = target_dir
@@ -43,6 +44,7 @@ class Shja::D2PassClient < Shja::Client
       username: username,
       password: password,
       answer: answer,
+      selenium_url: selenium_url,
       context: @context
     )
     @db         = db_class.get(@context)

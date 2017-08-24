@@ -9,7 +9,7 @@ class Shja::Agent::Carib < Shja::CapybaraAgent
       password: nil,
       context: nil,
       answer: nil,
-      selenium_url: 'http://chrome-headless:4444/wd/hub',
+      selenium_url: 'http://chrome-headless:4444/wd/hub'
     )
     super(username: username, password: password, context: context, selenium_url: selenium_url)
     @answer = answer
@@ -19,16 +19,17 @@ class Shja::Agent::Carib < Shja::CapybaraAgent
     return if self.is_login
 
     visit(LOGIN_URL)
-    screenshot('01.jpg')
+    screenshot('01.png')
     fill_in('FORM_USER', with: username)
     fill_in('FORM_PASSWD', with: password)
-    find('input[name="login_btn"].loginButton').trigger('click')
-    screenshot('02.jpg')
+    find('input[name="login_btn"].loginButton').click
+    screenshot('02.png')
     # puts agent.html
     find('#sqaform input[name="a"]').send_keys(*answer.split(''))
-    screenshot('03.jpg')
-    find('#sqaform').trigger('submit')
-    screenshot('04.jpg')
+    screenshot('03.png')
+    # find('#sqaform').trigger('submit')
+    execute_script("document.getElementById('sqaform').submit();")
+    screenshot('04.png')
 
     self.is_login = true
   end
