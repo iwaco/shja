@@ -1,0 +1,67 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ template "shja.fullname" . }}
+  labels:
+    app: {{ template "shja.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: {{ template "shja.fullname" . }}
+spec:
+  schedule: "{{ .Values.schedule }}"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: {{ template "shja.name" . }}
+            release: {{ .Release.Name }}
+            component: {{ template "shja.fullname" . }}
+        spec:
+          containers:
+          - name: hello
+            image: busybox
+            args:
+            {{- range .Values.cmd }}
+            - name: {{ . }}
+            {{- end }}
+            env:
+            {{- range $key, $value :=  .Values.env }}
+            - name: {{ $key | upper | replace "-" "_" }}
+              value: {{ $value | quote }}
+            {{- end }}
+            - name: ENV PONDO_USERNAME
+              value: {{ .Values.pondo.username }}
+            - name: ENV PONDO_PASSWORD
+              value: {{ .Values.pondo.password }}
+            - name: ENV PONDO_ANSWER
+              value: {{ .Values.pondo.answer }}
+            - name: CARIB_USERNAME
+              value: {{ .Values.carib.username }}
+            - name: CARIB_PASSWORD
+              value: {{ .Values.carib.password }}
+            - name: CARIB_ANSWER
+              value: {{ .Values.carib.answer }}
+            - name: PONDO_TARGET_DIR
+              value: /var/shja
+            - name: CARIB_TARGET_DIR
+              value: /var/shja
+            - name: PONDO_SELENIUM_URL
+              value: http://{{ template "shja.chrome.fullname" . }}:{{ .Values.chrome.service.externalPort }}/wd/hub
+            - name: CARIB_SELENIUM_URL
+              value: http://{{ template "shja.chrome.fullname" . }}:{{ .Values.chrome.service.externalPort }}/wd/hub
+            volumeMounts:
+              - name: config
+                mountPath: /etc/nginx/conf.d
+              - name: data
+                mountPath: /var/shja
+          restartPolicy: Never
+          volumes:
+            - name: data
+            {{- if .Values.persistentVolume.enabled }}
+              persistentVolumeClaim:
+                claimName: {{ if .Values.persistentVolume.existingClaim }}{{ .Values.persistentVolume.existingClaim }}{{- else }}{{ template "fullname" . }}{{- end }}
+            {{- else }}
+              emptyDir: {}
+            {{- end -}}

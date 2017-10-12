@@ -1,3 +1,24 @@
+---
+schedule: "4 5 * * *"
+image:
+  repository: iwaco/shja
+  tag: latest
+  pullPolicy: IfNotPresent
+pondo:
+  username: username
+  password: password
+  answer: anser
+carib:
+  username: username
+  password: password
+  answer: anser
+cmd:
+  - "bundle"
+  - "exec"
+  - "ruby"
+  - "exe/carib"
+  - "refresh"
+
 chrome:
   replicaCount: 1
   image:
