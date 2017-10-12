@@ -1,3 +1,26 @@
+chrome:
+  replicaCount: 1
+  image:
+    repository: yukinying/chrome-headless-browser-selenium
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    name: chrome
+    type: ClusterIP
+    externalPort: 4444
+    internalPort: 4444
+  resources: {}
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #  cpu: 100m
+    #  memory: 128Mi
+    # requests:
+    #  cpu: 100m
+    #  memory: 128Mi
+
 nginx:
   replicaCount: 1
   image:

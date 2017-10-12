@@ -1,0 +1,39 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "shja.chrome.fullname" . }}
+  labels:
+    app: {{ template "shja.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: {{ template "shja.chrome.fullname" . }}
+spec:
+  replicas: {{ .Values.chrome.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "shja.name" . }}
+        release: {{ .Release.Name }}
+        component: {{ template "shja.chrome.fullname" . }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.chrome.image.repository }}:{{ .Values.chrome.image.tag }}"
+          imagePullPolicy: {{ .Values.chrome.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.chrome.service.internalPort }}
+          livenessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.chrome.service.internalPort }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.chrome.service.internalPort }}
+          resources:
+{{ toYaml .Values.chrome.resources | indent 12 }}
+    {{- if .Values.chrome.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.chrome.nodeSelector | indent 8 }}
+    {{- end }}
