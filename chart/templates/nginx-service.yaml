@@ -8,12 +8,12 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  type: {{ .Values.service.type }}
+  type: {{ .Values.nginx.service.type }}
   ports:
-    - port: {{ .Values.service.externalPort }}
-      targetPort: {{ .Values.service.internalPort }}
+    - port: {{ .Values.nginx.service.externalPort }}
+      targetPort: {{ .Values.nginx.service.internalPort }}
       protocol: TCP
-      name: {{ .Values.service.name }}
+      name: {{ .Values.nginx.service.name }}
   selector:
     app: {{ template "shja.name" . }}
     release: {{ .Release.Name }}

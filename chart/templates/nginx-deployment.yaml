@@ -7,8 +7,9 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
+    component: {{ template "shja.nginx.fullname" . }}
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.nginx.replicaCount }}
   template:
     metadata:
       labels:
@@ -18,21 +19,37 @@ spec:
     spec:
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: "{{ .Values.nginx.image.repository }}:{{ .Values.nginx.image.tag }}"
+          imagePullPolicy: {{ .Values.nginx.image.pullPolicy }}
           ports:
-            - containerPort: {{ .Values.service.internalPort }}
+            - containerPort: {{ .Values.nginx.service.internalPort }}
           livenessProbe:
             httpGet:
               path: /
-              port: {{ .Values.service.internalPort }}
+              port: {{ .Values.nginx.service.internalPort }}
           readinessProbe:
             httpGet:
               path: /
-              port: {{ .Values.service.internalPort }}
+              port: {{ .Values.nginx.service.internalPort }}
+          volumeMounts:
+            - name: config
+              mountPath: /etc/nginx/conf.d
+            - name: data
+              mountPath: /var/shja
           resources:
-{{ toYaml .Values.resources | indent 12 }}
-    {{- if .Values.nodeSelector }}
+{{ toYaml .Values.nginx.resources | indent 12 }}
+    {{- if .Values.nginx.nodeSelector }}
       nodeSelector:
-{{ toYaml .Values.nodeSelector | indent 8 }}
+{{ toYaml .Values.nginx.nodeSelector | indent 8 }}
     {{- end }}
+      volumes:
+        - name: config
+          configMap:
+            name: {{ template "shja.nginx.fullname" . }}
+        - name: data
+        {{- if .Values.persistentVolume.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ if .Values.persistentVolume.existingClaim }}{{ .Values.persistentVolume.existingClaim }}{{- else }}{{ template "fullname" . }}{{- end }}
+        {{- else }}
+          emptyDir: {}
+        {{- end -}}
