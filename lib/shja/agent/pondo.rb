@@ -19,20 +19,21 @@ class Shja::Agent::Pondo < Shja::CapybaraAgent
     return if self.is_login
 
     visit(LOGIN_URL)
+    sleep(3)
     screenshot('01.png')
     # find('.age-verification .enter button.color-main').click
     execute_script("document.querySelectorAll('.age-verification .enter button.color-main')[0].click();")
-    sleep 2
+    sleep 3
     screenshot('02.png')
     # find('modal-login .login-btn button').click
     execute_script("document.querySelectorAll('modal-login .login-btn button')[0].click();")
-    sleep 1
+    sleep 3
     screenshot('03.png')
     fill_in('login', with: username)
     fill_in('password', with: password)
     # find('.login-box form button.login-button').click
     execute_script("document.querySelectorAll('.login-box form button.login-button')[0].click();")
-    sleep 2
+    sleep 3
     screenshot('04.png')
 
     self.is_login = true

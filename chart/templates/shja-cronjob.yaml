@@ -1,5 +1,5 @@
-apiVersion: batch/v1beta1
-kind: CronJob
+apiVersion: extensions/v1beta1
+kind: Deployment
 metadata:
   name: {{ template "shja.fullname" . }}
   labels:
@@ -9,59 +9,62 @@ metadata:
     heritage: {{ .Release.Service }}
     component: {{ template "shja.fullname" . }}
 spec:
-  schedule: "{{ .Values.schedule }}"
-  jobTemplate:
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "shja.name" . }}
+        release: {{ .Release.Name }}
+        component: {{ template "shja.fullname" . }}
     spec:
-      template:
-        metadata:
-          labels:
-            app: {{ template "shja.name" . }}
-            release: {{ .Release.Name }}
-            component: {{ template "shja.fullname" . }}
-        spec:
-          containers:
-          - name: hello
-            image: busybox
-            args:
-            {{- range .Values.cmd }}
-            - name: {{ . }}
-            {{- end }}
-            env:
-            {{- range $key, $value :=  .Values.env }}
-            - name: {{ $key | upper | replace "-" "_" }}
-              value: {{ $value | quote }}
-            {{- end }}
-            - name: ENV PONDO_USERNAME
-              value: {{ .Values.pondo.username }}
-            - name: ENV PONDO_PASSWORD
-              value: {{ .Values.pondo.password }}
-            - name: ENV PONDO_ANSWER
-              value: {{ .Values.pondo.answer }}
-            - name: CARIB_USERNAME
-              value: {{ .Values.carib.username }}
-            - name: CARIB_PASSWORD
-              value: {{ .Values.carib.password }}
-            - name: CARIB_ANSWER
-              value: {{ .Values.carib.answer }}
-            - name: PONDO_TARGET_DIR
-              value: /var/shja
-            - name: CARIB_TARGET_DIR
-              value: /var/shja
-            - name: PONDO_SELENIUM_URL
-              value: http://{{ template "shja.chrome.fullname" . }}:{{ .Values.chrome.service.externalPort }}/wd/hub
-            - name: CARIB_SELENIUM_URL
-              value: http://{{ template "shja.chrome.fullname" . }}:{{ .Values.chrome.service.externalPort }}/wd/hub
-            volumeMounts:
-              - name: config
-                mountPath: /etc/nginx/conf.d
-              - name: data
-                mountPath: /var/shja
-          restartPolicy: Never
-          volumes:
-            - name: data
-            {{- if .Values.persistentVolume.enabled }}
-              persistentVolumeClaim:
-                claimName: {{ if .Values.persistentVolume.existingClaim }}{{ .Values.persistentVolume.existingClaim }}{{- else }}{{ template "fullname" . }}{{- end }}
-            {{- else }}
-              emptyDir: {}
-            {{- end -}}
+      containers:
+      - name: shja
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        env:
+        {{- range $key, $value :=  .Values.env }}
+        - name: {{ $key | upper | replace "-" "_" }}
+          value: {{ $value | quote }}
+        {{- end }}
+        - name: PONDO_USERNAME
+          value: {{ .Values.pondo.username }}
+        - name: PONDO_PASSWORD
+          value: {{ .Values.pondo.password }}
+        - name: PONDO_ANSWER
+          value: {{ .Values.pondo.answer }}
+        - name: CARIB_USERNAME
+          value: {{ .Values.carib.username }}
+        - name: CARIB_PASSWORD
+          value: {{ .Values.carib.password }}
+        - name: CARIB_ANSWER
+          value: {{ .Values.carib.answer }}
+        - name: PONDO_TARGET_DIR
+          value: /var/shja
+        - name: CARIB_TARGET_DIR
+          value: /var/shja
+        - name: PONDO_SELENIUM_URL
+          value: http://{{ template "shja.chrome.fullname" . }}:{{ .Values.chrome.service.externalPort }}/wd/hub
+        - name: CARIB_SELENIUM_URL
+          value: http://{{ template "shja.chrome.fullname" . }}:{{ .Values.chrome.service.externalPort }}/wd/hub
+        volumeMounts:
+          - name: data
+            mountPath: /var/shja
+          - name: script
+            mountPath: /var/bin/shja.sh
+            subPath: shja.sh
+          - name: crontab
+            mountPath: /var/spool/cron/crontabs/root
+            subPath: root
+      volumes:
+        - name: script
+          configMap:
+            name: {{ template "shja.fullname" . }}-script
+        - name: crontab
+          configMap:
+            name: {{ template "shja.fullname" . }}-crontab
+        - name: data
+        {{- if .Values.persistentVolume.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ if .Values.persistentVolume.existingClaim }}{{ .Values.persistentVolume.existingClaim }}{{- else }}{{ template "shja.fullname" . }}{{- end }}
+        {{- else }}
+          emptyDir: {}
+        {{- end -}}

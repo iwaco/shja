@@ -18,7 +18,7 @@ spec:
         component: {{ template "shja.chrome.fullname" . }}
     spec:
       containers:
-        - name: {{ .Chart.Name }}
+        - name: chrome
           image: "{{ .Values.chrome.image.repository }}:{{ .Values.chrome.image.tag }}"
           imagePullPolicy: {{ .Values.chrome.image.pullPolicy }}
           ports:

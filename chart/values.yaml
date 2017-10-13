@@ -1,8 +1,12 @@
 ---
+exe: "carib"
+download:
+  enabled: true
+  options: "-r true -c 10"
 schedule: "4 5 * * *"
 image:
-  repository: iwaco/shja
-  tag: latest
+  repository: iwaco/shja-cron
+  tag: v0.0.5
   pullPolicy: IfNotPresent
 pondo:
   username: username
@@ -12,12 +16,6 @@ carib:
   username: username
   password: password
   answer: anser
-cmd:
-  - "bundle"
-  - "exec"
-  - "ruby"
-  - "exe/carib"
-  - "refresh"
 
 chrome:
   replicaCount: 1
