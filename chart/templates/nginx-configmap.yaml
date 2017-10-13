@@ -15,6 +15,10 @@ data:
         listen       80;
         server_name localhost;
         index index.html index.htm;
+        {{- if .Values.auth.enabled }}
+        auth_basic  "{{ .Values.auth.banner }}";
+        auth_basic_user_file "conf.d/htpasswd";
+        {{- end }}
         location / {
             root  /var/shja;
             try_files $uri $uri/ $uri.html $uri.xml $uri.jpg $uri.png =404;
@@ -24,3 +28,7 @@ data:
             root  /usr/share/nginx/html;
         }
     }
+  {{- if .Values.auth.enabled }}
+  htpasswd: |
+    {{ .Values.auth.htpasswd | indent 4 }}
+  {{- end }}

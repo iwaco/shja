@@ -1,4 +1,10 @@
 ---
+auth:
+  enabled: false
+  banner: "Shja"
+  htpasswd: |
+    test:rmqTJ03o8MSH.
+
 exe: "carib"
 download:
   enabled: true
