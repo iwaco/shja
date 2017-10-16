@@ -1,4 +1,4 @@
-# docker build -t iwaco/shja:v0.0.5 -f docker/shja/Dockerfile .
+# docker build -t iwaco/shja:v0.0.6 -f docker/shja/Dockerfile .
 # docker run -d -v /volumes/downloads:/usr/src/app/contents iwaco/shja
 FROM ruby:2.4
 MAINTAINER Iwaco "iwaco@iwaco.pink"
@@ -9,15 +9,8 @@ RUN apt-get update && \
     apt-get install -y busybox-static curl vim jq dnsutils libcurl3 libcurl3-gnutls libcurl4-openssl-dev && \
     apt-get clean
 
-RUN mkdir -p /usr/src/app
+RUN mkdir -p /usr/src/app/lib/shja
 WORKDIR /usr/src/app
-
-COPY Gemfile /usr/src/app/
-COPY Gemfile.lock /usr/src/app/
-COPY shja.gemspec /usr/src/app/
-
-COPY . /usr/src/app
-RUN bundle install
 
 ENV PONDO_USERNAME=XXXXXXX
 ENV PONDO_PASSWORD=XXXXXXX
@@ -34,3 +27,11 @@ ENV CARIB_SELENIUM_URL=http://10.254.0.228:4444/wd/hub
 ENTRYPOINT []
 
 CMD ["bundle", "exec", "ruby", "exe/carib", "refresh"]
+
+COPY Gemfile /usr/src/app/
+COPY Gemfile.lock /usr/src/app/
+COPY shja.gemspec /usr/src/app/
+COPY lib/shja/version.rb /usr/src/app/lib/shja/
+RUN bundle install
+
+COPY . /usr/src/app
