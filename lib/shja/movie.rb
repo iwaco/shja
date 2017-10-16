@@ -47,6 +47,9 @@ class Shja::Movie < Shja::ResourceBase
     else
       return nil
     end
+  rescue => ex
+    Shja.log.info("Fail to retrieve update_date: #{id}, #{ex.message}")
+    return nil
   end
 
   def mkdir
