@@ -45,7 +45,7 @@ subparsers['download'] = OptionParser.new
 subparsers['download'].on('-f FORMAT') {|v| format = v }
 subparsers['download'].on('-r RANDOM') {|v| random = (v == 'true') }
 subparsers['download'].on('-c COUNT') {|v| count = v.to_i }
-subparsers['download'].on('-m MOVIE_ID') {|v| movie_id << v.to_i }
+subparsers['download'].on('-m MOVIE_ID') {|v| movie_id << v }
 subparsers['download'].on('-a ACTOR_NAME') {|v| actor_name << v }
 subparsers['download'].on('--html-disable HTML_DISABLE') {|v| html_disable = (v == 'true')}
 subparsers['html'] = OptionParser.new
