@@ -156,6 +156,5 @@ class Shja::Movie < Shja::ResourceBase
 
 end
 
-require 'shja/movie/hc'
 require 'shja/movie/pondo'
 require 'shja/movie/carib'

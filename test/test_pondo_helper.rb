@@ -7,7 +7,6 @@ require 'fixtures/pondo/movies'
 
 class ShjaPondoTest < Minitest::Test
   attr_reader :target_dir
-  attr_reader :db
   attr_reader :agent
   attr_reader :context
 
@@ -18,11 +17,8 @@ class ShjaPondoTest < Minitest::Test
       target_dir: @target_dir,
       agent: @agent,
     )
-    @db         = Shja::Db::Pondo.get(@context)
-    # @db         = Shja::Db::Pondo.get(@target_dir)
   end
 
   def teardown
-    FileUtils.rm_r(target_dir) if File.directory?(target_dir)
   end
 end

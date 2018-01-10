@@ -20,8 +20,6 @@ end
 
 require 'shja/base'
 require 'shja/movie'
-require 'shja/db'
 require 'shja/parser'
 require 'shja/agent'
 require 'shja/client'
-require 'shja/html'

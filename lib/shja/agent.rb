@@ -226,6 +226,5 @@ class Shja::CapybaraAgent < Shja::CookieBasedAgent
 
 end
 
-require 'shja/agent/hc'
 require 'shja/agent/pondo'
 require 'shja/agent/carib'

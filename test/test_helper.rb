@@ -10,5 +10,4 @@ require 'securerandom'
 TMP_ROOT = File.join(File.dirname(__FILE__), '..', 'tmp')
 FIXTURES_ROOT = File.join(File.dirname(__FILE__), 'fixtures')
 
-require 'test_hc_helper'
 require 'test_pondo_helper'
