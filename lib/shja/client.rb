@@ -17,10 +17,6 @@ class Shja::D2PassClient < Shja::Client
     raise "Unimplemented"
   end
 
-  def movies_class
-    raise "Unimplemented"
-  end
-
   def initialize(
     username: nil,
     password: nil,
@@ -39,8 +35,6 @@ class Shja::D2PassClient < Shja::Client
       selenium_url: selenium_url,
       context: @context
     )
-    @db         = db_class.get(@context)
-    @movies     = movies_class.new(@context)
 
     @result       = []
     @fault_result = []
