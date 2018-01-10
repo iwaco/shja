@@ -5,7 +5,7 @@ class Shja::Client::Carib < Shja::D2PassClient
     Shja::Agent::Carib
   end
 
-  def download_index(start_page: 0, last_page: 0, &blk)
+  def download_index(start_page: 0, last_page: 0)
     rtn = []
     agent.login
     (start_page..last_page).each do |index|
@@ -16,7 +16,7 @@ class Shja::Client::Carib < Shja::D2PassClient
 
       Shja::Parser::CaribIndexPage.new(html).parse do |movie|
         Shja.log.info("Processing: #{movie['title']}")
-        if blk
+        if block_given?
           yield movie
         else
           rtn << movie
