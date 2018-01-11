@@ -1,6 +1,4 @@
 require 'json'
-require 'speedpetal'
-require 'zip'
 require 'fastimage'
 
 class Shja::Movie
@@ -28,65 +26,11 @@ class Shja::Movie
     context.target_dir
   end
 
-  def mkdir
-    dir_path = to_path(:dir_url)
-    unless File.directory?(dir_path)
-      FileUtils.mkdir_p(dir_path)
-    end
-  end
-
   def exists?(format=nil)
     format = default_format unless format
     movie_path = to_path(movie_url(format))
 
     file_exists?(movie_path)
-  end
-
-  def file_exists?(path)
-    return File.file?(path) && (File.size(path) > 0)
-  end
-
-  def _download(from, to, ignore_error: false, unexpected_types: ['html'])
-    if from.kind_of?(Symbol)
-      from = self.send(from)
-    end
-    to = to_path(to)
-    unless file_exists?(to)
-      return agent.download(from, to, unexpected_types)
-    end
-    return false
-  rescue => ex
-    if ignore_error
-      Shja.log.error(ex.message)
-      Shja.log.error(ex.backtrace.join("\n"))
-      return false
-    else
-      raise ex
-    end
-  end
-
-  def extract_zip
-    zip_path = to_path(zip_url)
-    return unless File.file?(zip_path)
-    return if has_pictures?
-
-    photoset_dir_path = to_path(photoset_dir_url)
-    FileUtils.mkdir_p(photoset_dir_path)
-
-    Zip::File.open(zip_path) do |zip|
-      zip.each do |entry|
-        basename = File.basename(entry.name)
-        if File.extname(basename) == '.jpg'
-          entry_path = File.join(photoset_dir_path, basename)
-          unless File.file?(entry_path)
-            zip.extract(entry, entry_path) { true }
-          end
-        end
-      end
-    end
-  rescue => ex
-    Shja.log.warn("Failed extract zip: #{zip_url}")
-    FileUtils.rm(zip_path) if File.file?(zip_path)
   end
 
   def to_path(url_sym_or_str)

@@ -1,28 +1,6 @@
 require 'test_helper'
 
-class CaribMovieTest < Minitest::Test
-  attr_reader :fixtures
-  attr_reader :context
-  attr_reader :target_dir
-
-  def setup
-    @fixtures = {}
-    @target_dir ||= File.join(TMP_ROOT, SecureRandom.hex(8))
-    @context    = Hashie::Mash.new(
-      target_dir: @target_dir,
-    )
-    db_fixture_path = File.join(FIXTURES_ROOT, 'carib', 'db.yml')
-    open(db_fixture_path) do |io|
-      YAML.load(io.read).each do |movie|
-        movie = Shja::Db::Carib::Movie.new(movie)
-        @fixtures[movie.key] = Shja::Movie::Carib.new(@context, movie)
-      end
-    end
-  end
-
-  def movie
-    fixtures['movie/2017-07-18/071817-463']
-  end
+class CaribMovieTest < CaribFixturesTest
 
   def test_dir_url
     assert_equal 'movies/2017-07/071817-463', movie.dir_url

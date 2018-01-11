@@ -13,29 +13,6 @@ class Shja::Movie::Carib < Shja::Movie
     base.key
   end
 
-  def download(format)
-    Shja.log.debug("Download start: #{dir_url}")
-    download_metadata
-    return download_movie(format)
-  end
-
-  def download_metadata
-    mkdir
-    self._download(remote_thumbnail_url, thumbnail_url, ignore_error: true)
-    self._download(remote_zip_url, zip_url, ignore_error: true)
-
-    extract_zip
-  end
-
-  def download_movie(format)
-    format = default_format unless format
-    remote_movie_url = self.formats[format]
-    local_movie_url = movie_url(format)
-    Shja.log.info("Movie download: #{title}, #{remote_movie_url}")
-
-    return self._download(remote_movie_url, local_movie_url)
-  end
-
   def actor?(name)
     self.actors.each do |actor|
       if actor.include?(name)
