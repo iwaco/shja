@@ -1,2 +1,23 @@
 @import "custom";
 @import "~bootstrap/scss/bootstrap";
+
+.navbar-brand {
+  position: relative;
+  a {
+
+  }
+}
+
+.glyph-icon {
+  width: 20px;
+  height: 20px;
+  svg {
+    margin-top: 4px;
+    width: 16px;
+    height: 16px;
+  }
+
+  * {
+    fill: white;
+  }
+}

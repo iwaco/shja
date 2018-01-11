@@ -2,7 +2,7 @@
 .env
 
 /node_modules/
-/dist/js/
+/dist/js/main.js
 /dist/css/
 /.bundle/
 /.yardoc
