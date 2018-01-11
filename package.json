@@ -1,0 +1,32 @@
+{
+  "name": "shja",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "webpack -d --watch",
+    "build": "webpack -p"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.1",
+    "bootstrap": "^4.0.0-beta.3",
+    "css-loader": "^0.28.8",
+    "eslint": "^4.15.0",
+    "eslint-loader": "^1.9.0",
+    "file-loader": "^1.1.6",
+    "imports-loader": "^0.7.1",
+    "jquery": "^3.2.1",
+    "mithril": "^1.1.6",
+    "node-sass": "^4.7.2",
+    "popper.js": "^1.12.9",
+    "postcss-loader": "^2.0.10",
+    "precss": "^2.0.0",
+    "sass-loader": "^6.0.6",
+    "style-loader": "^0.19.1",
+    "url-loader": "^0.6.2",
+    "webpack": "^3.10.0"
+  }
+}
