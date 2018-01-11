@@ -3,42 +3,14 @@ require 'speedpetal'
 require 'zip'
 require 'fastimage'
 
-class Shja::MovieManager < Shja::ManagerBase
+class Shja::Movie
+  attr_reader :context
+  attr_reader :base
 
-  def initialize(context)
-    super
-    context.movies = self
+  def initialize(context, base)
+    @context = context
+    @base = base
   end
-
-  def _all
-    self.db.movies.each do |movie|
-      yield movie
-    end
-  end
-
-  def movie_id_key
-    return 'id'
-  end
-
-  def _find(id)
-    self.db.movies.find{|e| e[movie_id_key] == id }.tap do |movie|
-      raise "Movie not found: #{id}" unless movie
-    end
-  end
-
-  def update(movie)
-    _movie = self.db.movies.find{|e| e[movie_id_key] == movie[movie_id_key] }
-    movie = movie.to_h
-    if _movie
-      _movie.update(movie)
-    else
-      self.db.movies << movie
-    end
-  end
-
-end
-
-class Shja::Movie < Shja::ResourceBase
 
   def updated_date
     movie_path = to_path(movie_url(default_format))
@@ -50,6 +22,10 @@ class Shja::Movie < Shja::ResourceBase
   rescue => ex
     Shja.log.info("Fail to retrieve update_date: #{id}, #{ex.message}")
     return nil
+  end
+
+  def target_dir
+    context.target_dir
   end
 
   def mkdir
@@ -118,10 +94,6 @@ class Shja::Movie < Shja::ResourceBase
       url_sym_or_str = self.send(url_sym_or_str)
     end
     return File.join(target_dir, url_sym_or_str)
-  end
-
-  def photoset_dir_path
-    to_path(photoset_dir_url)
   end
 
   def actor?

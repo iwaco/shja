@@ -1,44 +1,17 @@
 
-class Shja::MovieManager::Carib < Shja::MovieManager
-
-  def download_index(start_page: 0, last_page: 0)
-    agent.login
-    (start_page..last_page).each do |index|
-      index += 1
-      url = "http://www.caribbeancom.com/listpages/all#{index}.htm"
-      Shja.log.info("Fetch Index: #{url}")
-      html = agent.fetch_page(url)
-
-      Shja::Parser::CaribIndexPage.new(html).parse do |movie|
-        Shja.log.info("Processing: #{movie['title']}")
-        begin
-          _find(movie['id'])
-        rescue
-          Shja.log.info("Loading Detail for: #{movie['url']}")
-          html = agent.fetch_page(movie['url'])
-          Shja::Parser::CaribDetailPage.new(html).parse(movie)
-        end
-        movie = Shja::Movie::Carib.new(context, movie)
-        self.update(movie)
-        movie.download_metadata
-      end
-    end
-    self.db.save
-  end
-
-  def find(id)
-    Shja::Movie::Carib.new(context, _find(id))
-  end
-
-  def all
-    _all do |movie|
-      yield Shja::Movie::Carib.new(context, movie)
-    end
-  end
-
-end
-
 class Shja::Movie::Carib < Shja::Movie
+
+  def method_missing(name, *args, **kwargs)
+    if base.include?(name.to_s)
+      base.send(name, *args, **kwargs)
+    else
+      super
+    end
+  end
+
+  def key
+    base.key
+  end
 
   def download(format)
     Shja.log.debug("Download start: #{dir_url}")
@@ -83,38 +56,6 @@ class Shja::Movie::Carib < Shja::Movie
     raise "No format found!!"
   end
 
-  def create_symlinks
-    create_symlink(:dir_url)
-    create_symlink(:zip_url)
-    create_symlink(:thumbnail_url)
-    supported_formats.each do |format|
-      create_symlink(:movie_url, format)
-    end
-  end
-
-  def create_symlink url_sym, format=nil
-    unless format
-      to = to_path(self.send(url_sym))
-      from = to_path(self.send(url_sym, false))
-    else
-      to = to_path(self.send(url_sym, format))
-      from = to_path(self.send(url_sym, format, false))
-    end
-    return unless File.exist?(to)
-    Shja.log.debug("Create symlink #{from} to #{to}")
-
-    path_to = Pathname(to)
-    path_from = Pathname(File.dirname(from))
-
-    relative_path = path_to.relative_path_from(path_from).to_s
-    begin
-      FileUtils.rm(from, { force: true })
-      FileUtils.mkdir_p(File.dirname(from.to_s))
-      File.symlink(relative_path, from)
-    rescue Errno::EEXIST
-    end
-  end
-
   def remote_thumbnail_url
     if self.thumbnail.start_with?('http')
       return self.thumbnail
@@ -127,37 +68,28 @@ class Shja::Movie::Carib < Shja::Movie
     "http://www.caribbeancom.com/moviepages/#{self.id}/images/gallery.zip"
   end
 
-  def photoset_dir_url real=true
-    return "#{dir_url(real)}"
+  def photoset_dir_url
+    return "#{dir_url()}"
   end
 
-  def movie_url format, real=true
-    return "#{dir_url(real)}-#{format}.mp4"
+  def movie_url format
+    return "#{dir_url()}-#{format}.mp4"
   end
 
-  def zip_url real=true
-    return "#{dir_url(real)}.zip"
+  def zip_url
+    return "#{dir_url()}.zip"
   end
 
-  def thumbnail_url real=true
-    return "#{dir_url(real)}.jpg"
+  def thumbnail_url
+    return "#{dir_url()}.jpg"
   end
 
-  def dir_url real=true
-    if real
-      basename = "#{self.actors.join(' ')} #{self.title}"
-      return "#{top_dir_url}/#{basename}"
-    else
-      return "#{top_dir_url(false)}/#{id}"
-    end
+  def dir_url
+    return "#{top_dir_url()}/#{id}"
   end
 
-  def top_dir_url real=true
-    if real
-      return self.date.split('-')[0, 2].join('-')
-    else
-      return "movies/#{top_dir_url}"
-    end
+  def top_dir_url
+    return "movies/#{self.date.split('-')[0, 2].join('-')}"
   end
 
 end

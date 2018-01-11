@@ -3,7 +3,7 @@ require_relative '../../test_helper'
 class DbCaribFunctionalDbTest < CaribFunctionalDbTest
 
   def test_get_movie
-    movie = db.get_movie("movie/2017-08-24/082417-001")
+    movie = db.get_movie("movie/2018-08-24/082417-001")
     assert_kind_of Shja::Db::Carib::Movie, movie
     assert_equal '082417-001', movie.id
     assert_equal 'https://tarimages.caribbeancom.com/images/flash256x144/114747.jpg', movie.thumbnail

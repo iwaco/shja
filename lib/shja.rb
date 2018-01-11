@@ -18,7 +18,6 @@ module Shja
   end
 end
 
-require 'shja/base'
 require 'shja/db'
 require 'shja/movie'
 require 'shja/parser'

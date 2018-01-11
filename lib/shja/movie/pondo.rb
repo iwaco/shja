@@ -1,71 +1,4 @@
 
-class Shja::MovieManager::Pondo < Shja::MovieManager
-
-  def download_index(start_page: 0, last_page: 0)
-    return [].tap do |movie_ids|
-      (start_page..last_page).each do |index|
-        url = "http://www.1pondo.tv/dyn/ren/movie_lists/list_newest_#{index * 50}.json"
-        parse_index_page(url)
-      end
-      db.save
-    end
-  end
-
-  def actor_index_url(actor_id, index)
-    "http://www.1pondo.tv/dyn/ren/movie_lists/actresses/list_#{actor_id}_#{index * 50}.json"
-  end
-
-  def download_actor_index(actor_id)
-    _download_index_by_id(:actor_index_url, actor_id)
-  end
-
-  def series_index_url(series_id, index)
-    "http://www.1pondo.tv/dyn/ren/movie_lists/series/list_#{series_id}_#{index * 50}.json"
-  end
-
-  def download_series_index(series_id)
-    _download_index_by_id(:series_index_url, series_id)
-  end
-
-  def _download_index_by_id(url_sym, id)
-    url = send(url_sym, id, 0)
-    total_rows = parse_index_page(url)
-    index = 1
-    until total_rows < (index * 50)
-      url = send(url_sym, id, index)
-      parse_index_page(url)
-      index += 1
-    end
-    db.save
-  end
-
-  def parse_index_page(url)
-    Shja.log.info("Fetch Actor Index: #{url}")
-    movies = JSON.load(agent.fetch_page(url))
-    movies['Rows'].each do |movie|
-      movie = Shja::Movie::Pondo.new(context, movie)
-      self.update(movie)
-      movie.download_metadata
-    end
-    return movies['TotalRows']
-  end
-
-  def movie_id_key
-    return 'MovieID'
-  end
-
-  def find(id)
-    Shja::Movie::Pondo.new(context, _find(id))
-  end
-
-  def all
-    _all do |movie|
-      yield Shja::Movie::Pondo.new(context, movie)
-    end
-  end
-
-end
-
 class Shja::Movie::Pondo < Shja::Movie
 
   def id
@@ -223,7 +156,7 @@ class Shja::Movie::Pondo < Shja::Movie
 
 end
 
-class Shja::Movie::Pondo::DetailBase < Shja::ResourceBase
+class Shja::Movie::Pondo::DetailBase
   attr_reader :movie
 
   def initialize(movie, path)
@@ -327,4 +260,71 @@ class Shja::Movie::Pondo::Photosets < Shja::Movie::Pondo::DetailBase
     Shja.log.error(ex.message)
     Shja.log.error(ex.backtrace.join("\n"))
   end
+end
+
+class Shja::MovieManagerPondo
+
+  def download_index(start_page: 0, last_page: 0)
+    return [].tap do |movie_ids|
+      (start_page..last_page).each do |index|
+        url = "http://www.1pondo.tv/dyn/ren/movie_lists/list_newest_#{index * 50}.json"
+        parse_index_page(url)
+      end
+      db.save
+    end
+  end
+
+  def actor_index_url(actor_id, index)
+    "http://www.1pondo.tv/dyn/ren/movie_lists/actresses/list_#{actor_id}_#{index * 50}.json"
+  end
+
+  def download_actor_index(actor_id)
+    _download_index_by_id(:actor_index_url, actor_id)
+  end
+
+  def series_index_url(series_id, index)
+    "http://www.1pondo.tv/dyn/ren/movie_lists/series/list_#{series_id}_#{index * 50}.json"
+  end
+
+  def download_series_index(series_id)
+    _download_index_by_id(:series_index_url, series_id)
+  end
+
+  def _download_index_by_id(url_sym, id)
+    url = send(url_sym, id, 0)
+    total_rows = parse_index_page(url)
+    index = 1
+    until total_rows < (index * 50)
+      url = send(url_sym, id, index)
+      parse_index_page(url)
+      index += 1
+    end
+    db.save
+  end
+
+  def parse_index_page(url)
+    Shja.log.info("Fetch Actor Index: #{url}")
+    movies = JSON.load(agent.fetch_page(url))
+    movies['Rows'].each do |movie|
+      movie = Shja::Movie::Pondo.new(context, movie)
+      self.update(movie)
+      movie.download_metadata
+    end
+    return movies['TotalRows']
+  end
+
+  def movie_id_key
+    return 'MovieID'
+  end
+
+  def find(id)
+    Shja::Movie::Pondo.new(context, _find(id))
+  end
+
+  def all
+    _all do |movie|
+      yield Shja::Movie::Pondo.new(context, movie)
+    end
+  end
+
 end
