@@ -33,6 +33,10 @@ class Shja::Server < Sinatra::Base
     end
   end
 
+  get '/api/years' do
+    return json db.years
+  end
+
 end
 
 require 'shja/server/carib'

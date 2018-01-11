@@ -32,4 +32,10 @@ class CaribRackTest < RackTest
     end
   end
 
+  def test_years
+    get '/api/years'
+    years = JSON.load(last_response.body)
+    assert_equal ['2018', '2017', '2016'], years
+  end
+
 end

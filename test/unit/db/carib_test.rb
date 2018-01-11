@@ -17,4 +17,8 @@ class DbCaribFunctionalDbTest < CaribFunctionalDbTest
     assert_equal 8, movies.size
   end
 
+  def test_years
+    assert_equal ['2018', '2017', '2016'], db.years
+  end
+
 end

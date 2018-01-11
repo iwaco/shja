@@ -36,6 +36,18 @@ class Shja::Db
     rtn
   end
 
+  def years
+    key = "#{prefix}/movie"
+    [].tap do |rtn|
+      connection.get(key, range_end: key.succ, keys_only: true).kvs.each do |k|
+        rtn << k.key.split('/')[2].split('-')[0]
+      end
+      rtn.uniq!
+      rtn.sort!
+      rtn.reverse!
+    end
+  end
+
   def to_key(obj)
     if obj.respond_to?(:key)
       obj = obj.key
